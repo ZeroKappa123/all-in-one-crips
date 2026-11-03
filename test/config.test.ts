@@ -28,3 +28,19 @@ describe('clipboard', () => {
     expect(looksLikeItem('hello')).toBe(false)
   })
 })
+
+import { toUrl, safeIcon } from '../src/renderer/src/pricecheck/icons'
+describe('appearance and icons', () => {
+  it('defaults to dark, keeps older settings working', () => {
+    expect(DEFAULT_CONFIG.theme).toBe('dark')
+    const { theme: _t, ...old } = DEFAULT_CONFIG
+    expect(loadConfig(old)).toMatchObject({ repaired: false, config: { theme: 'dark' } })
+    expect(loadConfig({ ...DEFAULT_CONFIG, theme: 'light' }).config.theme).toBe('light')
+  })
+  it('only ever shows images from GGG’s image server', () => {
+    expect(toUrl('/image/Art/2DItems/Currency/X.png')).toBe('https://web.poecdn.com/image/Art/2DItems/Currency/X.png')
+    expect(safeIcon('https://web.poecdn.com/gen/image/a.png')).toBe('https://web.poecdn.com/gen/image/a.png')
+    expect(safeIcon('https://evil.example/a.png')).toBeUndefined()
+    expect(safeIcon(undefined)).toBeUndefined()
+  })
+})

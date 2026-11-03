@@ -3,7 +3,7 @@ import { Bug, Info, Keyboard, Map as MapIcon, MessageSquare, Plus, RefreshCw, Sl
 import { type Config, findConflict, HOTKEY_ACTIONS, KeyCombo } from '@shared/config'
 import { useLeagues } from '@/web/background/Leagues'
 import { onAptChange } from 'vue'
-import { Button, Group, HotkeyRecorder, IconTile, NumberInput, Popup, Row, Spinner, StatusBanner, Switch, TextField } from '../components/ui'
+import { Button, Group, HotkeyRecorder, IconTile, NumberInput, Popup, Row, Segmented, Spinner, StatusBanner, Switch, TextField } from '../components/ui'
 import { S } from '../strings'
 import { ActSettings } from './ActSettings'
 
@@ -89,6 +89,12 @@ function General({ config, save }: { config: Config; save: (p: Partial<Config>) 
   const list = leagues.list.value
   return (
     <>
+      <Group title={S.appearance.title} footer={S.appearance.help}>
+        <Row label={S.appearance.label}>
+          <Segmented label={S.appearance.label} value={config.theme} onChange={v => void save({ theme: v })}
+            options={[{ value: 'dark', label: S.appearance.dark }, { value: 'light', label: S.appearance.light }, { value: 'system', label: S.appearance.system }]} />
+        </Row>
+      </Group>
       <Group title={S.pcSettings.trade} footer={S.pcSettings.leagueHelp}>
         <Row label={S.league} htmlFor="league">
           {leagues.isLoading.value && <Spinner size={12} />}
@@ -211,6 +217,7 @@ function About() {
         <Row label="exile-leveling" detail={S.about.leveling} />
         <Row label="Path of Exile skill tree data" detail={S.about.tree} />
         <Row label="Inter" detail={S.about.inter} />
+        <Row label="Path of Exile icons" detail={S.iconsNote} />
       </Group>
       <div className="flex justify-center"><Button variant="danger" onClick={() => window.crips.quit()}>{S.quit}</Button></div>
     </>

@@ -1,7 +1,112 @@
-{ "result": [
-  { "id": "a1", "item": { "ilvl": 84, "note": "~price 25 chaos" }, "listing": { "indexed": "2026-11-03T10:00:00Z", "price": { "amount": 25, "currency": "chaos", "type": "~price" }, "account": { "name": "Trader1", "online": {}, "lastCharacterName": "One" } } },
-  { "id": "a2", "item": { "ilvl": 85 }, "listing": { "indexed": "2026-11-02T10:00:00Z", "price": { "amount": 30, "currency": "chaos", "type": "~price" }, "account": { "name": "Trader2", "online": { "status": "afk" }, "lastCharacterName": "Two" } } },
-  { "id": "a3", "item": { "ilvl": 85 }, "listing": { "indexed": "2026-11-02T11:00:00Z", "price": { "amount": 30, "currency": "chaos", "type": "~price" }, "account": { "name": "Trader2", "online": { "status": "afk" }, "lastCharacterName": "Two" } } },
-  { "id": "a4", "item": { "ilvl": 86, "note": "~b/o 1 divine" }, "listing": { "indexed": "2026-10-20T10:00:00Z", "price": { "amount": 1, "currency": "divine", "type": "~price" }, "account": { "name": "Trader3", "online": null, "lastCharacterName": "Three" } } },
-  { "id": "a5", "item": { "ilvl": 86, "note": "~b/o 2 divine" }, "listing": { "indexed": "2026-10-19T10:00:00Z", "price": { "amount": 2, "currency": "divine", "type": "~price" }, "fee": 1, "account": { "name": "Trader4", "online": {}, "lastCharacterName": "Four" } } }
-]}
+{
+ "result": [
+  {
+   "id": "a1",
+   "item": {
+    "ilvl": 84,
+    "note": "~price 25 chaos",
+    "icon": "https://web.poecdn.com/gen/image/test/boots.png"
+   },
+   "listing": {
+    "indexed": "2026-11-03T10:00:00Z",
+    "price": {
+     "amount": 25,
+     "currency": "chaos",
+     "type": "~price"
+    },
+    "account": {
+     "name": "Trader1",
+     "online": {},
+     "lastCharacterName": "One"
+    }
+   }
+  },
+  {
+   "id": "a2",
+   "item": {
+    "ilvl": 85,
+    "icon": "https://web.poecdn.com/gen/image/test/boots.png"
+   },
+   "listing": {
+    "indexed": "2026-11-02T10:00:00Z",
+    "price": {
+     "amount": 30,
+     "currency": "chaos",
+     "type": "~price"
+    },
+    "account": {
+     "name": "Trader2",
+     "online": {
+      "status": "afk"
+     },
+     "lastCharacterName": "Two"
+    }
+   }
+  },
+  {
+   "id": "a3",
+   "item": {
+    "ilvl": 85,
+    "icon": "https://web.poecdn.com/gen/image/test/boots.png"
+   },
+   "listing": {
+    "indexed": "2026-11-02T11:00:00Z",
+    "price": {
+     "amount": 30,
+     "currency": "chaos",
+     "type": "~price"
+    },
+    "account": {
+     "name": "Trader2",
+     "online": {
+      "status": "afk"
+     },
+     "lastCharacterName": "Two"
+    }
+   }
+  },
+  {
+   "id": "a4",
+   "item": {
+    "ilvl": 86,
+    "note": "~b/o 1 divine",
+    "icon": "https://web.poecdn.com/gen/image/test/boots.png"
+   },
+   "listing": {
+    "indexed": "2026-10-20T10:00:00Z",
+    "price": {
+     "amount": 1,
+     "currency": "divine",
+     "type": "~price"
+    },
+    "account": {
+     "name": "Trader3",
+     "online": null,
+     "lastCharacterName": "Three"
+    }
+   }
+  },
+  {
+   "id": "a5",
+   "item": {
+    "ilvl": 86,
+    "note": "~b/o 2 divine",
+    "icon": "https://web.poecdn.com/gen/image/test/boots.png"
+   },
+   "listing": {
+    "indexed": "2026-10-19T10:00:00Z",
+    "price": {
+     "amount": 2,
+     "currency": "divine",
+     "type": "~price"
+    },
+    "fee": 1,
+    "account": {
+     "name": "Trader4",
+     "online": {},
+     "lastCharacterName": "Four"
+    }
+   }
+  }
+ ]
+}

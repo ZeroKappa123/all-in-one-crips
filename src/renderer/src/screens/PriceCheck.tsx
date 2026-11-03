@@ -17,6 +17,7 @@ import { bootstrapPriceCheck } from '../pricecheck/bootstrap'
 import { useAct } from '../act/useAct'
 import { S } from '../strings'
 import { aptText } from '../pricecheck/i18n'
+import { currencyIcon, iconByName, loadIcons, onIcons, safeIcon } from '../pricecheck/icons'
 
 const P = S.pc
 
@@ -48,6 +49,8 @@ export function PriceCheck() {
 
   useEffect(() => { bootstrapPriceCheck().then(() => setReady('ok'), () => setReady('error')) }, [])
   useEffect(() => onAptChange(bump), [])
+  useEffect(() => onIcons(bump), [])
+  const [itemIcon, setItemIcon] = useState<string | undefined>()
   useEffect(() => {
     if (!root.current) return
     const ro = new ResizeObserver(([e]) => { if (e) window.crips.resizePanel(e.target.getBoundingClientRect().height) })
@@ -77,6 +80,8 @@ export function PriceCheck() {
       currency: cfg.defaultCurrency
     })
     setError(null)
+    setItemIcon(undefined)
+    void loadIcons()
     setItem(it)
     setPresets(p)
     // Same initial-search rules as the original: search right away when the result needs no choices.
@@ -108,7 +113,7 @@ export function PriceCheck() {
   return (
     <main
       ref={root}
-      data-theme="dark"
+     
       aria-label={item ? `${P.title}: ${item.info.name}` : P.title}
       onMouseEnter={() => { entered.current = true }}
       onMouseLeave={() => { if (entered.current && !locked) window.crips.hidePanel() }}
@@ -125,7 +130,7 @@ export function PriceCheck() {
 
         {item && presets && preset && (
           <>
-            <ItemTitle item={item} />
+            <ItemTitle item={item} icon={itemIcon ?? iconByName(item.info.refName)} />
             {presets.presets.length > 1 && (
               <div className="px-6 pb-4">
                 <Segmented size="sm" label={P.presets} value={presets.active}
@@ -140,7 +145,7 @@ export function PriceCheck() {
               {!doSearch && <Button variant="primary" onClick={search}>{S.search}</Button>}
               {item.unknownModifiers.length > 0 && <span className="text-sm text-warning">{P.unknownMods(item.unknownModifiers.length)}</span>}
             </div>
-            {doSearch && api === 'trade' && <TradeListing key={searchKey} item={item} filters={preset.filters} stats={preset.stats} />}
+            {doSearch && api === 'trade' && <TradeListing key={searchKey} item={item} filters={preset.filters} stats={preset.stats} onIcon={setItemIcon} />}
             {doSearch && api === 'bulk' && <TradeBulk key={searchKey} item={item} filters={preset.filters} />}
             <BuildInfo item={item} />
           </>
@@ -188,15 +193,18 @@ function titleClass(item: ParsedItem): string {
   return RARITY_CLASS[item.rarity ?? ''] ?? 'text-text'
 }
 
-function ItemTitle({ item }: { item: ParsedItem }) {
+function ItemTitle({ item, icon }: { item: ParsedItem; icon?: string }) {
   const name = item.info.name
   const base = item.rarity === ItemRarity.Unique ? item.info.unique?.base : undefined
   return (
-    <header className="px-6 pt-2 pb-4">
+    <header className="flex items-center gap-5 px-6 pt-2 pb-4">
+      <ItemArt url={icon} />
+      <div className="min-w-0 flex-1">
       <h2 className={`text-xl leading-[25px] truncate ${titleClass(item)}`}>{name}</h2>
       <p className="text-sm text-text-muted truncate">
         {[base, item.category, item.itemLevel ? `${P.ilvl} ${item.itemLevel}` : null].filter(Boolean).join(' · ')}
       </p>
+      </div>
     </header>
   )
 }
@@ -215,7 +223,7 @@ function Trend({ item }: { item: ParsedItem }) {
     <section aria-label={P.marketValue} className="mx-6 mb-4 flex items-center gap-5 rounded-lg bg-fill/60 px-5 py-4">
       <div className="flex-1">
         <p className="text-xs text-text-muted">{P.marketValue}</p>
-        <p className="text-xl tabular">{displayRounding(v.min)} <span className="text-base text-text-muted">{v.currency === 'div' ? 'div' : 'chaos'}</span></p>
+        <p className="flex items-center gap-2 text-xl tabular">{displayRounding(v.min)} <CurrencyMark id={v.currency === 'div' ? 'divine' : 'chaos'} size={20} /></p>
         {v.currency === 'chaos' && xchgRate.value && trend.chaos > 20 && <p className="text-xs text-text-muted tabular">≈ {displayRounding(trend.chaos / xchgRate.value)} div</p>}
       </div>
       {change !== null && (
@@ -383,7 +391,7 @@ function groupResults(results: PricingResult[], collapseMerchant: boolean): Grou
   return out
 }
 
-function TradeListing({ item, filters, stats }: { item: ParsedItem; filters: ItemFilters; stats: FilterOrGroup[] }) {
+function TradeListing({ item, filters, stats, onIcon }: { item: ParsedItem; filters: ItemFilters; stats: FilterOrGroup[]; onIcon: (url: string | undefined) => void }) {
   const [list, setList] = useState<SearchResult | null>(null)
   const [results, setResults] = useState<PricingResult[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -401,6 +409,7 @@ function TradeListing({ item, filters, stats }: { item: ParsedItem; filters: Ite
           if (cancelled) return
           acc.push(...batch)
           setResults([...acc])
+          if (from === 0) onIcon(safeIcon(batch.find(b => b.icon)?.icon))
           if (groupResults(acc, filters.trade.collapseMerchant).length >= 10) break
         }
       } catch (e) {
@@ -459,7 +468,37 @@ function TradeListing({ item, filters, stats }: { item: ParsedItem; filters: Ite
 const CURRENCY: Record<string, string> = { chaos: 'chaos', divine: 'div', exalted: 'ex', alch: 'alch', 'mirror': 'mirror' }
 
 function Price({ amount, currency }: { amount: number; currency: string }) {
-  return <span className={currency === 'exalted' ? 'line-through' : ''}><span className="font-semibold">{amount}</span> <span className={currency === 'divine' ? 'text-rarity-currency' : 'text-text-muted'}>{CURRENCY[currency] ?? currency}</span></span>
+  return <span className={`inline-flex items-center gap-2 ${currency === 'exalted' ? 'line-through' : ''}`}><span className="font-semibold">{amount}</span> <CurrencyMark id={currency} /></span>
+}
+
+/** Currency icon from GGG's image server, or its short name until the icon list has loaded (or offline). */
+function CurrencyMark({ id, size = 16 }: { id: string; size?: number }) {
+  const icon = currencyIcon(id)
+  const [state, setState] = useState<'loading' | 'ok' | 'broken'>('loading')
+  const text = <span className={id === 'divine' ? 'text-rarity-currency' : 'text-text-muted'}>{CURRENCY[id] ?? id}</span>
+  if (!icon || state === 'broken') return text
+  return (
+    <>
+      {state === 'loading' && text}
+      <img src={icon.url} alt={icon.name} title={icon.name} width={size} height={size} draggable={false}
+        className={state === 'ok' ? 'inline-block object-contain' : 'hidden'} style={{ width: size, height: size }}
+        onLoad={() => setState('ok')} onError={() => setState('broken')} />
+    </>
+  )
+}
+
+/** The item's own art next to its name, when the trade site or the currency list provides it. */
+function ItemArt({ url }: { url?: string }) {
+  const [loaded, setLoaded] = useState(false)
+  const [broken, setBroken] = useState(false)
+  useEffect(() => { setLoaded(false); setBroken(false) }, [url])
+  const safe = safeIcon(url)
+  if (!safe || broken) return null
+  return (
+    <span className={`shrink-0 h-[52px] w-[52px] rounded-lg bg-fill/60 items-center justify-center overflow-hidden ${loaded ? 'flex' : 'hidden'}`}>
+      <img src={safe} alt="" className="max-h-[48px] max-w-[48px] object-contain" onLoad={() => setLoaded(true)} onError={() => setBroken(true)} draggable={false} />
+    </span>
+  )
 }
 
 function Status({ status }: { status: 'online' | 'afk' | 'offline' }) {
@@ -486,7 +525,7 @@ function TradeBulk({ item, filters }: { item: ParsedItem; filters: ItemFilters }
   return (
     <section aria-label={P.bulk} className="pb-4">
       <div className="flex items-center gap-4 px-6 pb-3">
-        {have.length > 1 && <Segmented size="sm" label={P.payWith} value={tab} onChange={setTab} options={have.map(h => ({ value: h, label: `${CURRENCY[h] ?? h} (${res[have.indexOf(h)]?.total ?? 0})` }))} />}
+        {have.length > 1 && <Segmented size="sm" label={P.payWith} value={tab} onChange={setTab} options={have.map(h => ({ value: h, label: <span className="inline-flex items-center gap-2"><CurrencyMark id={h} size={14} /> {res[have.indexOf(h)]?.total ?? 0}</span> }))} />}
         <span className="flex-1" />
         {url && <Button variant="plain" size="sm" onClick={() => window.crips.openExternal(url)}>{P.openTrade}<ArrowUpRight aria-hidden className="h-[12px] w-[12px]" /></Button>}
       </div>
@@ -499,7 +538,7 @@ function TradeBulk({ item, filters }: { item: ParsedItem; filters: ItemFilters }
               {current.listed.map(r => (
                 <tr key={r.id} className="odd:bg-fill/30">
                   <td className="px-6 py-[5px] whitespace-nowrap tabular">
-                    <span className="font-semibold">{displayRounding(r.exchangeAmount / r.itemAmount, true)}</span> <span className="text-text-muted">{CURRENCY[tab] ?? tab}</span>
+                    <span className="inline-flex items-center gap-2"><span className="font-semibold">{displayRounding(r.exchangeAmount / r.itemAmount, true)}</span> <CurrencyMark id={tab} /></span>
                     <span className="text-xs text-text-muted"> ({r.exchangeAmount}:{r.itemAmount})</span>
                   </td>
                   <td className="px-3 text-right tabular">{r.stock}</td>

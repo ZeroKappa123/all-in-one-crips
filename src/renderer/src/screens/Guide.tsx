@@ -42,7 +42,7 @@ export function Guide() {
   const gearReady = charLevel ? store.gear.filter(g => g.level <= charLevel).length : 0
 
   return (
-    <div className="h-full flex items-end" data-theme="dark">
+    <div className="h-full flex items-end">
       <div ref={root} className="w-full rounded-xl material-hud text-text" style={{ opacity: store.overlay.opacity, fontSize: `${14 * store.overlay.fontScale}px` }}>
         <div className="flex items-start gap-4 px-5 pt-4 pb-3">
           <span {...hot} aria-hidden className="mt-[2px] cursor-move text-text-muted" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties} title="Drag to move">

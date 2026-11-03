@@ -58,6 +58,8 @@ export const S = {
   editWidgets: 'Arrange widgets', doneEditing: 'Done',
   quit: 'Quit All-In-One CRIPS',
   appName: 'All-In-One CRIPS',
+  appearance: { title: 'Appearance', label: 'Appearance', dark: 'Dark', light: 'Light', system: 'System', help: 'Applies to every window, the overlays above the game included.' },
+  iconsNote: 'Item and currency icons are shown from Grinding Gear Games’ own image server.',
   pcSettings: {
     trade: 'Trade', game: 'Game', priceGroup: 'Price Check',
     leagueHelp: 'Prices come from the official trade site and poe.ninja for this league.',

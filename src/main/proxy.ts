@@ -27,6 +27,7 @@ function fixtureFor(url: string): ProxyResponse | null {
     [/\/api\/trade\/search\//, 'apt-search.json'],
     [/\/api\/trade\/fetch\//, 'apt-fetch.json'],
     [/\/api\/trade\/exchange\//, 'apt-exchange.json'],
+    [/\/api\/trade\/data\/static/, 'apt-static.json'],
     [/\/api\/leagues/, 'apt-leagues.json'],
     [/poe\.ninja\//, 'apt-ninja.json']
   ]

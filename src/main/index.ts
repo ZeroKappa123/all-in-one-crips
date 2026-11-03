@@ -5,7 +5,7 @@ import { expandChatCommand } from '@shared/config'
 import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './configStore'
 import { registerProxyIpc } from './proxy'
 import { sendChat, startInput, stopInput, updateInputConfig } from './input'
-import { allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
+import { applyTheme, allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
 import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
 import { getLogs, log } from './log'
 
@@ -25,6 +25,7 @@ function registerIpc(): void {
   ipcMain.handle('config:set', (_e, patch: Partial<Config>) => {
     const next = setConfig(patch)
     updateInputConfig(next)
+    if ('theme' in patch) applyTheme()
     for (const w of allWindows()) w.webContents.send('config:changed', next)
     return next
   })
@@ -62,6 +63,7 @@ app.whenReady().then(() => {
   migrateOldData()
   registerIpc()
   const config = getConfig()
+  applyTheme()
   setGuideMovedHandler(guideOverlayMoved)
   initAct()
   createTray()

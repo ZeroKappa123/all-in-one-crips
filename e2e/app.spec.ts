@@ -1,5 +1,5 @@
 import { _electron as electron, test, expect, type ElectronApplication, type Page } from '@playwright/test'
-import { mkdtempSync, readFileSync, mkdirSync } from 'node:fs'
+import { mkdtempSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -8,10 +8,12 @@ const fx = (f: string) => readFileSync(join(root, 'test/fixtures', f), 'utf8')
 const shots = join(root, '..', 'replica', 'clone-screens')
 mkdirSync(shots, { recursive: true })
 
-async function launch(env: Record<string, string>): Promise<{ app: ElectronApplication; page: Page }> {
+async function launch(env: Record<string, string>, config?: object): Promise<{ app: ElectronApplication; page: Page }> {
+  const data = mkdtempSync(join(tmpdir(), 'crips-'))
+  if (config) writeFileSync(join(data, 'config.json'), JSON.stringify(config))
   const app = await electron.launch({
     args: [join(root, 'out/main/index.js'), '--no-sandbox'],
-    env: { ...process.env, CRIPS_FIXTURES: join(root, 'test/fixtures'), CRIPS_DATA_DIR: mkdtempSync(join(tmpdir(), 'crips-')), ...env }
+    env: { ...process.env, CRIPS_FIXTURES: join(root, 'test/fixtures'), CRIPS_DATA_DIR: data, ...env }
   })
   const route = ['settings', 'overlay'].includes(env.CRIPS_OPEN ?? '') ? env.CRIPS_OPEN! : 'panel'
   let page: Page | undefined
@@ -36,6 +38,12 @@ test('F01 rare: game-data parser, pseudo filters, search, grouped listings', asy
   await expect(page.getByText('214')).toBeVisible()
   await expect(page.getByRole('img', { name: 'Away' }).first()).toBeVisible()
   await expect(page.getByText('×2')).toHaveCount(0) // grouped only from 3 listings on, like the original
+  // currency icons and the item art come from GGG's image server
+  // (offline here, so the text label stays visible until an image actually loads)
+  await expect(page.locator('img[alt="Chaos Orb"]').first()).toHaveAttribute('src', /^https:\/\/web\.poecdn\.com\//)
+  await expect(page.locator('header img[src^="https://web.poecdn.com/gen/image/"]')).toHaveCount(1)
+  await expect(page.getByText('chaos').first()).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark')
   await page.screenshot({ path: join(shots, 'S01-S03.png') })
   // changing a filter hides the results until the next search
   await page.getByRole('checkbox').first().click()
@@ -109,5 +117,30 @@ test('S05 overlay widgets', async () => {
   await page.getByRole('button', { name: 'Stop', exact: true }).click()
   await page.screenshot({ path: join(shots, 'S05-overlay.png') })
   expect((page as any).__errors).toEqual([])
+  await app.close()
+})
+
+test('appearance: dark by default, switch to light in settings, overlays follow', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'settings' })
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark')
+  await page.screenshot({ path: join(shots, 'S06-dark.png') })
+  await page.getByRole('radio', { name: 'Light' }).click()
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme)).toBe('light')
+  const panel = app.windows().find(w => w.url().endsWith('#panel'))!
+  await expect.poll(() => panel.evaluate(() => document.documentElement.dataset.theme)).toBe('light')
+  await page.screenshot({ path: join(shots, 'S06-light.png') })
+  await page.getByRole('radio', { name: 'System' }).click()
+  await expect.poll(() => page.evaluate(() => document.documentElement.dataset.theme ?? 'system')).toBe('system')
+  await app.close()
+})
+
+test('light appearance in the price panel', async () => {
+  const base = JSON.parse(JSON.stringify({ version: 1 }))
+  const { app, page } = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: fx('rare-boots-advanced.txt') }, { ...base, theme: 'light' })
+  await expect(page.getByRole('heading', { name: 'Two-Toned Boots' })).toBeVisible()
+  await page.getByRole('button', { name: 'Search' }).click()
+  await expect(page.getByText('214')).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('light')
+  await page.screenshot({ path: join(shots, 'S01-light.png') })
   await app.close()
 })

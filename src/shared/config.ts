@@ -16,6 +16,7 @@ export const ConfigSchema = z.object({
   searchTolerancePct: z.number().min(0).max(50),
   onlineOnly: z.boolean(),
   autoSearch: z.boolean().default(true),
+  theme: z.enum(['dark', 'light', 'system']).default('dark'),
   showSellerStatus: z.boolean().default(true),
   ninjaBase: z.string().url(),
   hotkeys: z.array(Hotkey),
@@ -31,6 +32,7 @@ export const DEFAULT_CONFIG: Config = {
   searchTolerancePct: 10,
   onlineOnly: true,
   autoSearch: true,
+  theme: 'dark',
   showSellerStatus: true,
   ninjaBase: 'https://poe.ninja/api/data',
   hotkeys: [

@@ -1,7 +1,21 @@
-import { BrowserWindow, screen } from 'electron'
+import { BrowserWindow, nativeTheme, screen } from 'electron'
+import { getConfig } from './configStore'
 import { join } from 'node:path'
 
 const PANEL_WIDTH = 480
+
+/** Window background behind the page while it loads, matching the chosen appearance. */
+export function windowBackground(): string {
+  const t = getConfig().theme
+  const dark = t === 'dark' || (t === 'system' && nativeTheme.shouldUseDarkColors)
+  return dark ? '#1c1c1e' : '#f2f2f7'
+}
+
+export function applyTheme(): void {
+  const t = getConfig().theme
+  nativeTheme.themeSource = t === 'system' ? 'system' : t
+  for (const w of [settings, gear, editor]) if (w && !w.isDestroyed()) w.setBackgroundColor(windowBackground())
+}
 
 function load(win: BrowserWindow, route: string): void {
   const url = process.env.ELECTRON_RENDERER_URL
@@ -82,14 +96,14 @@ export function hideTreeOverlay(): void {
 
 export function openGearWindow(): void {
   if (gear && !gear.isDestroyed()) { gear.show(); gear.focus(); return }
-  gear = new BrowserWindow({ ...common, width: 420, height: 520, title: 'All-In-One CRIPS – Gear tracker', autoHideMenuBar: true, alwaysOnTop: true, backgroundColor: '#0e1014' })
+  gear = new BrowserWindow({ ...common, width: 420, height: 520, title: 'All-In-One CRIPS – Gear tracker', autoHideMenuBar: true, alwaysOnTop: true, backgroundColor: windowBackground() })
   load(gear, 'gear')
   gear.once('ready-to-show', () => gear?.show())
 }
 
 export function openEditor(slot: number): void {
   if (editor && !editor.isDestroyed()) editor.close()
-  editor = new BrowserWindow({ ...common, width: 980, height: 720, title: 'All-In-One CRIPS – Guide editor', autoHideMenuBar: true, backgroundColor: '#0e1014' })
+  editor = new BrowserWindow({ ...common, width: 980, height: 720, title: 'All-In-One CRIPS – Guide editor', autoHideMenuBar: true, backgroundColor: windowBackground() })
   load(editor, `editor/${slot}`)
   editor.once('ready-to-show', () => editor?.show())
 }
@@ -148,7 +162,7 @@ export function hidePanel(): void {
 
 export function openSettings(): BrowserWindow {
   if (settings && !settings.isDestroyed()) { settings.show(); settings.focus(); return settings }
-  settings = new BrowserWindow({ ...common, width: 720, height: 600, minWidth: 560, minHeight: 420, title: 'All-In-One CRIPS', autoHideMenuBar: true, backgroundColor: '#0e1014' })
+  settings = new BrowserWindow({ ...common, width: 720, height: 600, minWidth: 560, minHeight: 420, title: 'All-In-One CRIPS', autoHideMenuBar: true, backgroundColor: windowBackground() })
   load(settings, 'settings')
   settings.once('ready-to-show', () => settings?.show())
   return settings

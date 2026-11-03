@@ -116,7 +116,7 @@ export function Tree() {
 
   return (
     <div
-      data-theme="dark" className="fixed inset-0 select-none"
+      className="fixed inset-0 select-none"
       onContextMenu={e => e.preventDefault()}
       onPointerDown={e => {
         if (e.button === 1 && view) {

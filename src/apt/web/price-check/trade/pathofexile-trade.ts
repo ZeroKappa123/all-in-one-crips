@@ -218,6 +218,7 @@ export interface SearchResult {
 interface FetchResult {
   id: string
   item: {
+    icon?: string // image on GGG's CDN, shown as-is
     ilvl?: number
     stackSize?: number
     corrupted?: boolean
@@ -256,6 +257,7 @@ export interface PricingResult {
   isMine: boolean
   hasNote: boolean
   hasFee: boolean
+  icon?: string
   accountName: string
   accountStatus: 'offline' | 'online' | 'afk'
   ign: string
@@ -829,6 +831,7 @@ export async function requestResults (
       priceCurrency: result.listing.price?.currency ?? 'no price',
       hasNote: result.item.note != null,
       hasFee: result.listing.fee != null,
+      icon: result.item.icon,
       isMine: (result.listing.account.name === opts.accountName),
       ign: result.listing.account.lastCharacterName,
       accountName: result.listing.account.name,

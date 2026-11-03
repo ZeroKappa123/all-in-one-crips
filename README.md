@@ -22,6 +22,11 @@ Hover an item and press **Ctrl+D** (**Ctrl+Alt+D** keeps the panel open). The ap
 
 **Shift+Space** opens the overlay with settings, stopwatch, guide and tree buttons. **Alt+W** opens the item in the wiki, **Ctrl+wheel** scrolls stash tabs, chat commands (F5 hideout, F9 character select, `@last` for your last whisper) are set under *Chat Commands*.
 
+## Appearance and icons
+
+Dark by default. Switch to **Light** or **System** under Settings → Price Check → Appearance; every window follows, the overlays above the game included.
+Item and currency icons are shown straight from Grinding Gear Games' image server (`web.poecdn.com`), like on the official trade site. No game artwork is packaged with the app. Without a connection the short names (chaos, div) are shown instead.
+
 ## Act Tracker
 
 1. Settings → **Act Tracker**. The game's `Client.txt` is found automatically in the usual folders; otherwise choose it by hand.

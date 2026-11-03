@@ -16,12 +16,15 @@ function Router() {
     addEventListener('hashchange', on)
     return () => removeEventListener('hashchange', on)
   }, [])
-  // Overlays above the game always use the dark HUD look; windows of their own follow the system.
+  // Appearance: dark by default, light or "like the system" from Settings. Applies to every window, overlays included.
   useEffect(() => {
-    const hud = ['panel', 'guide', 'overlay', 'tree'].includes(route)
-    if (hud) document.documentElement.dataset.theme = 'dark'
-    else delete document.documentElement.dataset.theme
-  }, [route])
+    const apply = (theme: 'dark' | 'light' | 'system') => {
+      if (theme === 'system') delete document.documentElement.dataset.theme
+      else document.documentElement.dataset.theme = theme
+    }
+    void window.crips.getConfig().then(r => apply(r.config.theme))
+    return window.crips.onConfig(c => apply(c.theme))
+  }, [])
   useEffect(() => { document.body.classList.toggle('solid', route === 'settings' || route === 'gear' || route.startsWith('editor')) }, [route])
   if (route === 'settings') return <Settings />
   if (route === 'guide') return <Guide />

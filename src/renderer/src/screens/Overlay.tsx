@@ -26,7 +26,7 @@ export function Overlay() {
   }
 
   return (
-    <div data-theme="dark" className="fixed inset-0 text-text" style={{ background: 'rgba(0,0,0,.25)' }} onMouseDown={e => { if (e.target === e.currentTarget && !editing) window.crips.hideOverlay() }}>
+    <div className="fixed inset-0 text-text" style={{ background: 'rgba(0,0,0,.25)' }} onMouseDown={e => { if (e.target === e.currentTarget && !editing) window.crips.hideOverlay() }}>
       {config.widgets.map((w, i) => (
         <Draggable key={w.type} w={w} editing={editing} onMove={(x, y) => move(i, x, y)} onDrop={(x, y) => void window.crips.setConfig({ widgets: move(i, x, y) })}>
           {w.type === 'settings' && (

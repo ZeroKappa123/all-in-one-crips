@@ -1,0 +1,5 @@
+{ "result": [ { "id": "Currency", "label": "Currency", "entries": [
+  { "id": "chaos", "text": "Chaos Orb", "image": "/image/Art/2DItems/Currency/CurrencyRerollRare.png" },
+  { "id": "divine", "text": "Divine Orb", "image": "/image/Art/2DItems/Currency/CurrencyModValues.png" },
+  { "id": "exalted", "text": "Exalted Orb", "image": "/image/Art/2DItems/Currency/CurrencyAddModToRare.png" }
+] } ] }
