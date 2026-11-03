@@ -1,4 +1,32 @@
-# Third-party data
+# Third-party code, data and fonts
+
+All-In-One CRIPS is made by zero. It contains work by others under the licences below.
+
+## Awakened PoE Trade (price-check logic, item parser, game data)
+https://github.com/SnosMe/awakened-poe-trade – ported to React/Electron; files under src/apt keep their original structure.
+
+MIT License
+
+Copyright (c) 2020 Alexander Drozdov
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
 
 ## exile-leveling (route, areas, quests, gems, characters)
 https://github.com/HeartofPhos/exile-leveling
@@ -28,4 +56,7 @@ SOFTWARE.
 
 ## Passive skill tree data
 https://github.com/grindinggear/skilltree-export – published by Grinding Gear Games for community tools.
-Assay isn't affiliated with or endorsed by Grinding Gear Games.
+All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.
+
+## Inter
+Inter typeface by Rasmus Andersson, licensed under the SIL Open Font License 1.1 (https://openfontlicense.org). Shipped via @fontsource-variable/inter.

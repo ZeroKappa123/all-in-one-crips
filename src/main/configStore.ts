@@ -1,10 +1,18 @@
 import { app } from 'electron'
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync, copyFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync, copyFileSync, cpSync } from 'node:fs'
 import { join } from 'node:path'
 import { type Config, ConfigSchema, loadConfig } from '@shared/config'
 import { log } from './log'
 
-const dir = () => process.env.ASSAY_DATA_DIR ?? join(app.getPath('userData'), 'assay-data')
+const dir = () => process.env.CRIPS_DATA_DIR ?? join(app.getPath('userData'), 'crips-data')
+
+/** Settings from the version that was still called "Assay" move over once. */
+export function migrateOldData(): void {
+  if (process.env.CRIPS_DATA_DIR || existsSync(dir())) return
+  const old = join(app.getPath('appData'), 'assay', 'assay-data')
+  if (!existsSync(old)) return
+  try { cpSync(old, dir(), { recursive: true }); log('info', 'moved settings from the previous version') } catch (e) { log('warn', `could not move old settings: ${String(e)}`) }
+}
 const file = () => join(dir(), 'config.json')
 
 let current: Config | null = null

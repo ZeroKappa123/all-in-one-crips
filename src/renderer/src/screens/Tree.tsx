@@ -33,7 +33,7 @@ export function Tree() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') window.assay.act.hideTree()
+      if (e.key === 'Escape') window.crips.act.hideTree()
       else if (e.key === 'q' || e.key === 'Q') setSpec(s => Math.max(0, s - 1))
       else if (e.key === 'e' || e.key === 'E') setSpec(s => Math.min(specs.length - 1, s + 1))
       else if (['1', '2', '3', '4'].includes(e.key)) setHeld(e.key)
@@ -112,11 +112,11 @@ export function Tree() {
   }, [view, held, current, states, mode, specs])
 
   if (!act) return null
-  const save = (v: typeof view) => { if (v) void window.assay.act.update({ treeView: v }) }
+  const save = (v: typeof view) => { if (v) void window.crips.act.update({ treeView: v }) }
 
   return (
     <div
-      className="fixed inset-0 select-none"
+      data-theme="dark" className="fixed inset-0 select-none"
       onContextMenu={e => e.preventDefault()}
       onPointerDown={e => {
         if (e.button === 1 && view) {
@@ -132,7 +132,7 @@ export function Tree() {
       onPointerMove={e => { if (drag.current && view) setView({ ...view, x: drag.current.vx + e.clientX - drag.current.x, y: drag.current.vy + e.clientY - drag.current.y }) }}
       onPointerUp={() => { if (drag.current) { drag.current = null; save(view) } }}
       onWheel={e => {
-        if (mode === 'images') { void window.assay.act.update({ treeImageIndex: Math.max(0, Math.min(images.length - 1, act.store.treeImageIndex + (e.deltaY > 0 ? 1 : -1))) }); return }
+        if (mode === 'images') { void window.crips.act.update({ treeImageIndex: Math.max(0, Math.min(images.length - 1, act.store.treeImageIndex + (e.deltaY > 0 ? 1 : -1))) }); return }
         if (!view) return
         const k = e.deltaY > 0 ? 0.92 : 1.08
         const v = { scale: view.scale * k, x: e.clientX - (e.clientX - view.x) * k, y: e.clientY - (e.clientY - view.y) * k }
@@ -142,7 +142,7 @@ export function Tree() {
       {mode === 'pob' && <canvas ref={canvas} className="absolute inset-0 w-full h-full" />}
       {mode === 'images' && <Screenshot index={act.store.treeImageIndex} total={images.length} caption={images[act.store.treeImageIndex]?.caption ?? ''} />}
       <div className="absolute top-0 inset-x-0 flex justify-center pt-4 pointer-events-none">
-        <div className="pointer-events-auto flex items-center gap-4 rounded-md bg-surface border border-border px-5 py-2 text-sm">
+        <div className="pointer-events-auto flex items-center gap-4 rounded-full material-hud px-6 py-3 text-base text-text">
           {specs.length > 0 && images.length > 0 && (
             <button onClick={() => setMode(m => (m === 'pob' ? 'images' : 'pob'))} className="text-accent">{mode === 'pob' ? A.images : A.pobTree}</button>
           )}
@@ -169,7 +169,7 @@ function classIndex(name: string | undefined): number {
 
 function Screenshot({ index, total, caption }: { index: number; total: number; caption: string }) {
   const [src, setSrc] = useState<string | null>(null)
-  useEffect(() => { void window.assay.act.treeImage(index).then(setSrc) }, [index])
+  useEffect(() => { void window.crips.act.treeImage(index).then(setSrc) }, [index])
   if (!total) return <p className="absolute inset-0 flex items-center justify-center text-text-muted">{A.noTree}</p>
   return (
     <figure className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8">

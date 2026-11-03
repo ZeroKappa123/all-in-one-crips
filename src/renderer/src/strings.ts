@@ -1,4 +1,4 @@
-// Every user-facing string lives here, written for Assay. Voice: brief, clear, calm.
+// Every user-facing string lives here. Voice: brief, clear, calm.
 export const S = {
   search: 'Search',
   searching: 'Searching…',
@@ -11,7 +11,7 @@ export const S = {
   pickStat: 'Pick at least one stat to search.',
   clipboardEmpty: 'No item found on the clipboard. Hover an item in the game and press the hotkey again.',
   notEnglish: 'Only English item text is supported. Switch the game language to English.',
-  unsupported: "Assay can't read this item yet.",
+  unsupported: "This item can't be read yet.",
   rateLimited: (s: number) => `Trade site is busy. Ready again in ${s} s.`,
   network: "Couldn't reach the trade site. Check your connection.",
   statsFailed: "Couldn't load the stat list from the trade site, so mods can't be matched.",
@@ -32,7 +32,7 @@ export const S = {
   baseType: 'Same base type',
   waiting: 'Hover an item in the game and press your price-check hotkey.',
   settingsTitle: 'Settings',
-  tabs: { general: 'General', act: 'Act Tracker', hotkeys: 'Hotkeys', chat: 'Chat', debug: 'Debug' } as const,
+  tabs: { general: 'Price Check', act: 'Act Tracker', hotkeys: 'Keyboard', chat: 'Chat Commands', debug: 'Diagnostics', about: 'About' } as const,
   league: 'League',
   tolerance: 'Start searches this far below your roll',
   onlineOnly: 'Only show sellers who are online',
@@ -48,15 +48,55 @@ export const S = {
   addCommand: 'Add command',
   remove: 'Remove',
   saved: 'Saved',
-  configRepaired: 'Your settings file was damaged. Assay kept what it could and reset the rest.',
+  configRepaired: 'Your settings file was damaged. We kept what we could and reset the rest.',
   fallbackInput: "Global key hook isn't available on this system. Hotkeys work, but the copy step and chat commands don't.",
   logsEmpty: 'Nothing logged yet.',
   dataFolder: 'Settings folder',
-  thirdParty: "Assay isn't affiliated with or endorsed by Grinding Gear Games.",
+  thirdParty: "All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.",
   stopwatch: 'Stopwatch',
   start: 'Start', stop: 'Stop', reset: 'Reset',
   editWidgets: 'Arrange widgets', doneEditing: 'Done',
-  quit: 'Quit Assay',
+  quit: 'Quit All-In-One CRIPS',
+  appName: 'All-In-One CRIPS',
+  pcSettings: {
+    trade: 'Trade', game: 'Game', priceGroup: 'Price Check',
+    leagueHelp: 'Prices come from the official trade site and poe.ninja for this league.',
+    autoSearch: 'Search automatically', autoSearchHelp: 'Run the search right away for uniques, currency and other items that need no choices.',
+    toleranceHelp: 'Minimum values start this far below your own roll.'
+  },
+  about: {
+    credits: 'Acknowledgements',
+    apt: 'Price-check logic and game data. © 2020 Alexander Drozdov, MIT License.',
+    leveling: 'Campaign route, areas, quests and gems. © HeartofPhos, MIT License.',
+    tree: 'Passive tree export published by Grinding Gear Games.',
+    inter: 'Typeface by Rasmus Andersson, SIL Open Font License.'
+  },
+  madeBy: 'Made by zero',
+  pc: {
+    title: 'Price check',
+    presets: 'Search mode',
+    presetExact: 'Exact', presetPseudo: 'Pseudo', presetBase: 'Base item', presetBulk: 'Bulk',
+    sellers: 'Sellers', online: 'Online', inLeague: 'In league', any: 'Any',
+    marketValue: 'Market value (poe.ninja)', sevenDays: 'Change over the last 7 days', openNinja: 'Open on poe.ninja',
+    itemFilters: 'Item filters', modifiers: 'Modifiers',
+    ilvl: 'iLvl', quality: 'Quality', links: 'Links', whiteSockets: 'White sockets', gemLevel: 'Level', mapTier: 'Tier', areaLevel: 'Area level', stack: 'Stack', charge: 'Charge',
+    corrupted: 'Corrupted', notCorrupted: 'Not corrupted', unidentified: 'Unidentified', mirrored: 'Mirrored',
+    rarity: (r: string) => r === 'nonunique' ? 'Any non-unique' : r,
+    exactBase: 'Same base', exactBaseHelp: 'On: search this exact base type. Off: any base of the same category.',
+    min: 'min', max: 'max',
+    unknownMods: (n: number) => `${n} modifier${n === 1 ? '' : 's'} not recognised`,
+    listings: 'Listings', matched: 'Matched', openTrade: 'Trade site', price: 'Price', stock: 'Stock', listed: 'Listed',
+    bulk: 'Bulk exchange', payWith: 'Pay with', rate: 'Rate',
+    poweredBy: 'Price-check logic based on Awakened PoE Trade (MIT)',
+    errors: {
+      clipboard: 'No item on the clipboard. Hover an item in the game and press the hotkey again.',
+      UNKNOWN_ITEM: "This item isn't in the game data yet.",
+      PARSER_SKIPPED: "This item can't be price-checked.",
+      UNSUPPORTED_ITEM: "This kind of item isn't supported.",
+      data: "Couldn't load the game data. Reinstall the app.",
+      unknown: "This item can't be read. Make sure the game language is English."
+    }
+  },
   act: {
     enabled: 'Show the campaign guide',
     log: 'Game log (Client.txt)',
@@ -95,6 +135,9 @@ export const S = {
     addImages: 'Add screenshots…',
     gear: 'Open gear tracker',
     thirdParty: 'Default route and game data: exile-leveling by HeartofPhos (MIT). Passive tree: Grinding Gear Games skill tree export.',
+    overlayGroup: 'Overlay', tools: 'Tools', route: 'Route', buildGroup: 'Build',
+    notBefore: 'Not before', skip: 'Skip', anyAct: 'Any act', startingGem: 'starting gem', notOffered: 'not in campaign',
+    libraryHint: 'First available in the Act 3 library',
     // overlay
     noGuide: 'No guide set up yet. Open Settings → Act Tracker.',
     waitingLog: 'Waiting for the game log…',

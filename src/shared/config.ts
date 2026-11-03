@@ -15,6 +15,8 @@ export const ConfigSchema = z.object({
   windowTitle: z.string().min(1),
   searchTolerancePct: z.number().min(0).max(50),
   onlineOnly: z.boolean(),
+  autoSearch: z.boolean().default(true),
+  showSellerStatus: z.boolean().default(true),
   ninjaBase: z.string().url(),
   hotkeys: z.array(Hotkey),
   chatCommands: z.array(ChatCommand),
@@ -28,6 +30,8 @@ export const DEFAULT_CONFIG: Config = {
   windowTitle: 'Path of Exile',
   searchTolerancePct: 10,
   onlineOnly: true,
+  autoSearch: true,
+  showSellerStatus: true,
   ninjaBase: 'https://poe.ninja/api/data',
   hotkeys: [
     { action: 'priceCheck', keys: 'Ctrl+D', enabled: true },

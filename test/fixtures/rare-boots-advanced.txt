@@ -1,0 +1,32 @@
+Item Class: Boots
+Rarity: Rare
+Storm Stride
+Two-Toned Boots
+--------
+Armour: 120
+Energy Shield: 30
+--------
+Requirements:
+Level: 70
+Str: 62
+Int: 62
+--------
+Sockets: R-B-B G
+--------
+Item Level: 85
+--------
+{ Implicit Modifier — Elemental, Fire, Cold, Resistance }
++12(8-12)% to Fire and Cold Resistances (implicit)
+--------
+{ Prefix Modifier "Virile" (Tier: 4) — Life }
++70(70-79) to maximum Life
+{ Prefix Modifier "Hellion's" (Tier: 3) — Speed }
+30% increased Movement Speed
+{ Suffix Modifier "of the Lion" (Tier: 5) — Attribute }
++30(28-32) to Strength
+{ Suffix Modifier "of the Polar Bear" (Tier: 3) — Elemental, Cold, Resistance }
++40(36-41)% to Cold Resistance
+{ Suffix Modifier "of the Squall" (Tier: 6) — Elemental, Lightning, Resistance }
++21(18-23)% to Lightning Resistance
+{ Suffix Modifier "of Fen" (Tier: 4) — Chaos, Resistance }
++12(11-15)% to Chaos Resistance

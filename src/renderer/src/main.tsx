@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { PricePanel } from './screens/PricePanel'
+import { PriceCheck } from './screens/PriceCheck'
 import { Settings } from './screens/Settings'
 import { Overlay } from './screens/Overlay'
 import { Guide } from './screens/Guide'
@@ -16,6 +16,12 @@ function Router() {
     addEventListener('hashchange', on)
     return () => removeEventListener('hashchange', on)
   }, [])
+  // Overlays above the game always use the dark HUD look; windows of their own follow the system.
+  useEffect(() => {
+    const hud = ['panel', 'guide', 'overlay', 'tree'].includes(route)
+    if (hud) document.documentElement.dataset.theme = 'dark'
+    else delete document.documentElement.dataset.theme
+  }, [route])
   useEffect(() => { document.body.classList.toggle('solid', route === 'settings' || route === 'gear' || route.startsWith('editor')) }, [route])
   if (route === 'settings') return <Settings />
   if (route === 'guide') return <Guide />
@@ -23,7 +29,7 @@ function Router() {
   if (route === 'gear') return <Gear />
   if (route.startsWith('editor/')) return <Editor slotIndex={Number(route.slice(7)) || 0} />
   if (route === 'overlay') return <Overlay />
-  return <PricePanel />
+  return <PriceCheck />
 }
 
 createRoot(document.getElementById('root')!).render(<StrictMode><Router /></StrictMode>)

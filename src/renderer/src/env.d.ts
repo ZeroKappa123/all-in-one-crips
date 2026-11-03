@@ -1,5 +1,5 @@
-import type { AssayApi } from '../../preload/index'
+import type { CripsApi } from '../../preload/index'
 declare global {
-  interface Window { assay: AssayApi }
+  interface Window { crips: CripsApi }
 }
 export {}

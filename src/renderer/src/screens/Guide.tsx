@@ -13,8 +13,8 @@ const A = S.act
 
 /** Interactive parts tell the main process to stop letting clicks through while hovered. */
 const hot = {
-  onMouseEnter: () => window.assay.act.interactive(true),
-  onMouseLeave: () => window.assay.act.interactive(false)
+  onMouseEnter: () => window.crips.act.interactive(true),
+  onMouseLeave: () => window.crips.act.interactive(false)
 }
 
 export function Guide() {
@@ -27,13 +27,13 @@ export function Guide() {
 
   useEffect(() => {
     if (!root.current) return
-    const ro = new ResizeObserver(([e]) => { if (e) window.assay.act.resizeGuide(e.target.getBoundingClientRect().height + 2) })
+    const ro = new ResizeObserver(([e]) => { if (e) window.crips.act.resizeGuide(e.target.getBoundingClientRect().height + 2) })
     ro.observe(root.current)
     return () => ro.disconnect()
   }, [])
 
-  const prev = usePress(() => void window.assay.act.page('prev'), () => void window.assay.act.page('reset'))
-  const next = usePress(() => void window.assay.act.page('next'), () => void window.assay.act.page('jump'))
+  const prev = usePress(() => void window.crips.act.page('prev'), () => void window.crips.act.page('reset'))
+  const next = usePress(() => void window.crips.act.page('next'), () => void window.crips.act.page('jump'))
 
   if (!act || !slot) return null
   const { store, live } = act
@@ -42,9 +42,9 @@ export function Guide() {
   const gearReady = charLevel ? store.gear.filter(g => g.level <= charLevel).length : 0
 
   return (
-    <div className="h-full flex items-end">
-      <div ref={root} className="w-full rounded-md border border-border bg-bg text-text shadow-pop" style={{ opacity: store.overlay.opacity, fontSize: `${14 * store.overlay.fontScale}px` }}>
-        <div className="flex items-start gap-3 px-4 pt-3 pb-2">
+    <div className="h-full flex items-end" data-theme="dark">
+      <div ref={root} className="w-full rounded-xl material-hud text-text" style={{ opacity: store.overlay.opacity, fontSize: `${14 * store.overlay.fontScale}px` }}>
+        <div className="flex items-start gap-4 px-5 pt-4 pb-3">
           <span {...hot} aria-hidden className="mt-[2px] cursor-move text-text-muted" style={{ WebkitAppRegion: 'drag' } as React.CSSProperties} title="Drag to move">
             <GripHorizontal className="h-[14px] w-[14px]" />
           </span>
@@ -56,21 +56,21 @@ export function Guide() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 border-t border-border px-4 h-[30px] text-xs">
+        <div className="flex items-center gap-4 border-t hairline px-5 h-[34px] text-sm">
           <button {...hot} {...prev} aria-label={`${A.prev}. ${A.holdReset}`} title={A.holdReset} className="text-text-muted hover:text-text"><ChevronLeft className="h-[16px] w-[16px]" /></button>
-          <span className="font-mono text-text-muted tabular-nums">{A.pageOf(slot.page + 1, pages.length)}</span>
+          <span className="tabular text-text-muted">{A.pageOf(slot.page + 1, pages.length)}</span>
           <button {...hot} {...next} aria-label={`${A.next}. ${A.holdJump}`} title={A.holdJump} className="text-text-muted hover:text-text"><ChevronRight className="h-[16px] w-[16px]" /></button>
           {store.timerEnabled && <Timer timer={store.timer} afk={live.afk || live.idle} />}
           <span className="flex-1" />
           {gearReady > 0 && (
-            <button {...hot} onClick={() => window.assay.act.open('gear')} className="flex items-center gap-2 text-success">
+            <button {...hot} onClick={() => window.crips.act.open('gear')} className="flex items-center gap-2 text-success">
               <Package aria-hidden className="h-[12px] w-[12px]" />{A.gearReady(gearReady)}
             </button>
           )}
           {charLevel && live.areaLevel !== null && <Exp level={charLevel} area={live.areaLevel} />}
           <button {...hot} onClick={() => setHelp(h => !h)} aria-expanded={help} aria-label="Help" className="text-text-muted hover:text-text"><CircleHelp className="h-[14px] w-[14px]" /></button>
         </div>
-        {help && <p className="px-4 pb-3 text-xs text-text-muted">{A.help}</p>}
+        {help && <p className="px-5 pb-4 text-sm text-text-muted">{A.help}</p>}
       </div>
     </div>
   )
@@ -80,16 +80,16 @@ function Timer({ timer, afk }: { timer: TimerState; afk: boolean }) {
   const holdRight = useRef<ReturnType<typeof setTimeout> | null>(null)
   const tone = timer.finished ? 'text-success' : timer.running && !afk ? 'text-text' : 'text-text-muted'
   return (
-    <span className={`flex items-center gap-3 font-mono tabular-nums ${tone}`} title={afk && timer.running ? A.afk : A.pausedHint}>
+    <span className={`flex items-center gap-3 tabular ${tone}`} title={afk && timer.running ? A.afk : A.pausedHint}>
       <span>{fmtDuration(timer.totalMs)}</span>
       <button
         {...hot}
         aria-label={`Act ${timer.act}, ${timer.running ? 'running' : 'paused'}. ${A.pausedHint}`}
-        onClick={() => void window.assay.act.timer('toggle')}
+        onClick={() => void window.crips.act.timer('toggle')}
         onContextMenu={e => e.preventDefault()}
-        onPointerDown={e => { if (e.button === 2) holdRight.current = setTimeout(() => void window.assay.act.timer('reset'), 800) }}
+        onPointerDown={e => { if (e.button === 2) holdRight.current = setTimeout(() => void window.crips.act.timer('reset'), 800) }}
         onPointerUp={() => { if (holdRight.current) clearTimeout(holdRight.current) }}
-        className={`px-2 rounded-sm border ${timer.running ? 'border-accent' : 'border-border'}`}
+        className={`px-3 h-[18px] rounded-full text-xs font-semibold ${timer.running ? 'bg-accent text-on-accent' : 'bg-fill text-text-muted'}`}
       >A{timer.act}</button>
       <span>{fmtDuration(timer.actMs[timer.act] ?? 0)}</span>
     </span>
@@ -100,7 +100,7 @@ function Exp({ level, area }: { level: number; area: number }) {
   const e = expInfo(level, area)
   const ok = e.offBy === 0
   return (
-    <span className={`font-mono ${ok ? 'text-success' : 'text-danger'}`} title={`${A.expTitle}: ${e.min}–${e.max}. ${Math.round(e.factor * 100)}% experience here.`}>
+    <span className={`tabular ${ok ? 'text-success' : 'text-danger'}`} title={`${A.expTitle}: ${e.min}–${e.max}. ${Math.round(e.factor * 100)}% experience here.`}>
       {e.min} | {area} | {e.max}{!ok && ` (${e.offBy > 0 ? '+' : ''}${e.offBy})`}
     </span>
   )
@@ -121,7 +121,7 @@ function Frag({ f, plan, slot }: { f: Fragment; plan: GemPlan | null; slot: Slot
   switch (f.t) {
     case 'text': return <>{f.v}</>
     case 'kill': return <strong className="text-danger">{f.v}</strong>
-    case 'enter': case 'area': return <span className="text-accent">{AREAS[f.area]?.n ?? f.area}</span>
+    case 'enter': case 'area': return <span className="text-accent-text font-medium">{AREAS[f.area]?.n ?? f.area}</span>
     case 'waypoint': return f.area
       ? <span className="text-rarity-gem"><Waypoints aria-hidden className="inline h-[1em] w-[1em] -mt-[2px] mr-1" />{AREAS[f.area]?.n ?? f.area}</span>
       : <span className="text-rarity-gem">waypoint</span>

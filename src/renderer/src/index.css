@@ -1,13 +1,48 @@
+@import '@fontsource-variable/inter';
 @import './tokens.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html, body, #root { margin: 0; height: 100%; }
-body { font-family: var(--font-sans); color: var(--c-text); background: transparent; -webkit-font-smoothing: antialiased; font-size: 14px; }
+body {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--c-text);
+  background: transparent;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'cv11', 'ss01', 'tnum' 0;
+  letter-spacing: -0.003em;
+  user-select: none;
+}
 body.solid { background: var(--c-bg); }
-:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 1px; }
-input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+input, textarea, select { user-select: text; }
+:focus { outline: none; }
+:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--c-focus) 55%, transparent); border-radius: var(--r-sm); }
+.tabular { font-variant-numeric: tabular-nums; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 4px; }
+
+/* Apple-style materials: translucent fill + blur. Overlays always use the dark HUD material. */
+.material-hud {
+  background: rgba(28, 28, 30, 0.82);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 0.5px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--sh-pop);
+}
+.material-bar {
+  background: color-mix(in srgb, var(--c-surface) 72%, transparent);
+  backdrop-filter: blur(30px) saturate(180%);
+  border-bottom: 0.5px solid var(--c-border);
+}
+.hairline { border-color: var(--c-border); border-width: 0.5px; }
+.separator { height: 0.5px; background: var(--c-border); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--c-text-muted) 45%, transparent); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@keyframes pop-in { from { opacity: 0; transform: scale(.97) translateY(4px); } to { opacity: 1; transform: none; } }
+.animate-pop { animation: pop-in var(--m-base) var(--m-ease); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

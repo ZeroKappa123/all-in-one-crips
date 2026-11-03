@@ -11,9 +11,9 @@ mkdirSync(shots, { recursive: true })
 async function launch(env: Record<string, string>): Promise<{ app: ElectronApplication; page: Page }> {
   const app = await electron.launch({
     args: [join(root, 'out/main/index.js'), '--no-sandbox'],
-    env: { ...process.env, ASSAY_FIXTURES: join(root, 'test/fixtures'), ASSAY_DATA_DIR: mkdtempSync(join(tmpdir(), 'assay-')), ...env }
+    env: { ...process.env, CRIPS_FIXTURES: join(root, 'test/fixtures'), CRIPS_DATA_DIR: mkdtempSync(join(tmpdir(), 'crips-')), ...env }
   })
-  const route = env.ASSAY_OPEN === 'settings' || env.ASSAY_OPEN === 'overlay' ? env.ASSAY_OPEN : 'panel'
+  const route = ['settings', 'overlay'].includes(env.CRIPS_OPEN ?? '') ? env.CRIPS_OPEN! : 'panel'
   let page: Page | undefined
   for (let i = 0; i < 40 && !page; i++) {
     page = app.windows().find(w => w.url().endsWith('#' + route))
@@ -27,93 +27,86 @@ async function launch(env: Record<string, string>): Promise<{ app: ElectronAppli
   return { app, page }
 }
 
-test('F01 rare item: pseudo totals, search, listings (S01, S03)', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'panel', ASSAY_ITEM: fx('rare-boots.txt') })
-  await expect(page.getByRole('heading', { name: /Storm Stride/ })).toBeVisible()
+test('F01 rare: game-data parser, pseudo filters, search, grouped listings', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: fx('rare-boots-advanced.txt') })
+  await expect(page.getByRole('heading', { name: 'Two-Toned Boots' })).toBeVisible()
   await expect(page.getByText('+85 total maximum Life')).toBeVisible()
-  await expect(page.getByText('+85% total Elemental Resistance')).toBeVisible()
-  await expect(page.getByText(/of 214 listings/)).toBeVisible()
-  await expect(page.getByRole('img', { name: 'Away' })).toBeVisible()
-  await expect(page.getByText('×2')).toBeVisible()
+  await expect(page.getByRole('radio', { name: 'Pseudo' })).toHaveAttribute('aria-checked', 'true')
+  await page.getByRole('button', { name: 'Search' }).click()
+  await expect(page.getByText('214')).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Away' }).first()).toBeVisible()
+  await expect(page.getByText('×2')).toHaveCount(0) // grouped only from 3 listings on, like the original
   await page.screenshot({ path: join(shots, 'S01-S03.png') })
-  // untick everything -> search disabled with a hint
-  const ticked = page.getByRole('checkbox', { checked: true })
-  while (await ticked.count()) await ticked.first().uncheck()
-  await expect(page.getByRole('button', { name: 'Search' })).toBeDisabled()
-  await expect(page.getByText('Pick at least one stat to search.')).toBeVisible()
-  // keyboard: tick one stat, submit with Enter
-  await page.getByLabel(/Minimum for \+70 to maximum Life/).fill('60')
-  await page.getByLabel(/Minimum for \+70 to maximum Life/).press('Enter')
-  await expect(page.getByText(/of 214 listings/)).toBeVisible()
+  // changing a filter hides the results until the next search
+  await page.getByRole('checkbox').first().click()
+  await expect(page.getByRole('button', { name: 'Search' })).toBeVisible()
   expect((page as any).__errors).toEqual([])
   await app.close()
 })
 
-test('F02 unique: market value and search (S01, S04)', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'panel', ASSAY_ITEM: fx('unique-belt.txt') })
-  await expect(page.getByRole('heading', { name: /Coiled Promise/ })).toBeVisible()
-  await expect(page.getByText('42.3c')).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Corrupted' })).toHaveAttribute('aria-pressed', 'true')
+test('F02 unique: market value with trend, automatic search', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: fx('unique-goldrim.txt') })
+  await expect(page.getByRole('heading', { name: 'Goldrim' })).toBeVisible()
+  await expect(page.getByLabel('Market value (poe.ninja)')).toContainText('3')
+  await expect(page.getByText('-10%')).toBeVisible()
+  await expect(page.getByText('Matched')).toBeVisible()
   await page.screenshot({ path: join(shots, 'S02-unique.png') })
   await app.close()
 })
 
-test('F03 currency: market value only (S04)', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'panel', ASSAY_ITEM: fx('currency.txt') })
-  await expect(page.getByText('183c')).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Search' })).toHaveCount(0)
-  // the window shrinks to the panel so no invisible area covers the game
-  await expect.poll(() => app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().find(w => w.webContents.getURL().endsWith('#panel'))!.getBounds().height)).toBeLessThan(300)
+test('F03 currency: bulk exchange and market value', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: fx('currency.txt') })
+  await expect(page.getByRole('heading', { name: 'Divine Orb' })).toBeVisible()
+  await expect(page.getByLabel('Market value (poe.ninja)')).toContainText('1 div') // like the original: ~1 divine is shown as 1 div
+  await expect(page.getByRole('columnheader', { name: 'Rate' })).toBeVisible()
+  await expect(page.getByText('(180:1)')).toBeVisible()
   await page.screenshot({ path: join(shots, 'S04-currency.png') })
+  await expect.poll(() => app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().find(w => w.webContents.getURL().endsWith('#panel'))!.getBounds().height)).toBeLessThan(560)
   await app.close()
 })
 
-test('errors: empty clipboard and non-English text', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'panel', ASSAY_ITEM: '' })
-  await expect(page.getByRole('alert')).toContainText('No item found on the clipboard')
-  await page.screenshot({ path: join(shots, 'S01-error.png') })
+test('errors: empty clipboard and other client languages', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: '' })
+  await expect(page.getByRole('alert')).toContainText('No item on the clipboard')
   await app.close()
-  const b = await launch({ ASSAY_OPEN: 'panel', ASSAY_ITEM: fx('german.txt') })
-  await expect(b.page.getByRole('alert')).toContainText('Only English')
+  const b = await launch({ CRIPS_OPEN: 'panel', CRIPS_ITEM: fx('german.txt') })
+  await expect(b.page.getByRole('alert')).toContainText('English')
   await b.app.close()
 })
 
-test('F04/F05 settings: league, hotkey conflict, keyboard tabs (S06, S07)', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'settings' })
-  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
-  await page.getByLabel('League').selectOption('Hardcore')
+test('settings: sidebar, league from the trade site, hotkey conflict, about', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'settings' })
+  await expect(page.getByRole('heading', { name: 'Price Check' })).toBeVisible()
+  await page.getByLabel('League').selectOption('Mercenaries')
   await expect(page.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible()
+  await page.getByLabel('Search automatically').click()
   await page.screenshot({ path: join(shots, 'S06-general.png') })
-  await page.getByRole('tab', { name: 'General' }).focus()
-  await page.keyboard.press('ArrowRight')
-  await expect(page.getByRole('tab', { name: 'Act Tracker' })).toHaveAttribute('aria-selected', 'true')
-  await page.keyboard.press('ArrowRight')
-  await expect(page.getByRole('tab', { name: 'Hotkeys' })).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('tab', { name: 'Keyboard' }).click()
   await page.getByRole('button', { name: /^Open item in wiki:/ }).click()
   await page.keyboard.press('Control+D')
   await expect(page.getByRole('alert')).toContainText('Already used by priceCheck')
   await page.getByRole('button', { name: /^Open item in wiki:/ }).click()
   await page.keyboard.press('Alt+Q')
-  await expect(page.getByRole('button', { name: /^Open item in wiki: Alt\+Q/ })).toBeVisible()
   await page.screenshot({ path: join(shots, 'S06-hotkeys.png') })
-  await page.getByRole('tab', { name: 'Debug' }).click()
+  await page.getByRole('tab', { name: 'About' }).click()
+  await expect(page.getByText('Made by zero').last()).toBeVisible()
+  await expect(page.getByText(/Alexander Drozdov, MIT License/)).toBeVisible()
+  await page.screenshot({ path: join(shots, 'S06-about.png') })
+  await page.getByRole('tab', { name: 'Diagnostics' }).click()
   await expect(page.getByText(/ready, input mode/)).toBeVisible()
-  await page.screenshot({ path: join(shots, 'S07-debug.png') })
-  const cfg = await app.evaluate(async () => (globalThis as any).process.env.ASSAY_DATA_DIR)
-  const saved = JSON.parse(readFileSync(join(cfg, 'config.json'), 'utf8'))
-  expect(saved.leagueId).toBe('Hardcore')
+  const dir = await app.evaluate(async () => (globalThis as any).process.env.CRIPS_DATA_DIR)
+  const saved = JSON.parse(readFileSync(join(dir, 'config.json'), 'utf8'))
+  expect(saved).toMatchObject({ leagueId: 'Mercenaries', autoSearch: false })
   expect(saved.hotkeys.find((h: any) => h.action === 'wiki').keys).toBe('Alt+Q')
   await app.close()
 })
 
-test('S05 overlay: stopwatch widget toggles and runs', async () => {
-  const { app, page } = await launch({ ASSAY_OPEN: 'overlay' })
+test('S05 overlay widgets', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'overlay' })
   await page.getByRole('button', { name: 'Stopwatch' }).click()
   await page.getByRole('button', { name: 'Start' }).click()
   await expect(page.getByText(/^00:0[1-9]$/)).toBeVisible({ timeout: 4000 })
   await page.getByRole('button', { name: 'Stop', exact: true }).click()
-  await page.getByRole('button', { name: 'Arrange widgets' }).click()
-  await expect(page.getByRole('button', { name: 'Done' })).toBeVisible()
   await page.screenshot({ path: join(shots, 'S05-overlay.png') })
   expect((page as any).__errors).toEqual([])
   await app.close()

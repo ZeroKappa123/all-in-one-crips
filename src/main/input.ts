@@ -1,6 +1,5 @@
 import { clipboard, globalShortcut } from 'electron'
 import type { Config, HotkeyAction } from '@shared/config'
-import { looksLikeItem } from '@shared/parser/parseItem'
 import { log } from './log'
 
 /**
@@ -121,10 +120,12 @@ export async function copyItemText(ctrlHeld = false): Promise<string | null> {
     // Alt or Shift held for the hotkey would turn Ctrl+C into something else in the game.
     uIOhook.keyToggle(UiohookKey.Alt, 'up')
     uIOhook.keyToggle(UiohookKey.Shift, 'up')
-    // If the player already holds Ctrl (Ctrl+D), tapping C completes Ctrl+C. Otherwise press it for them,
-    // and never release a Ctrl the player is still holding.
+    // Ctrl+Alt+C copies the advanced item description (mod tiers and ranges), which the parser needs.
+    // If the player already holds Ctrl (Ctrl+D), keep it; never release a Ctrl the player is still holding.
     if (!ctrlHeld) uIOhook.keyToggle(UiohookKey.Ctrl, 'down')
+    uIOhook.keyToggle(UiohookKey.Alt, 'down')
     uIOhook.keyTap(UiohookKey.C)
+    uIOhook.keyToggle(UiohookKey.Alt, 'up')
     if (!ctrlHeld) uIOhook.keyToggle(UiohookKey.Ctrl, 'up')
   }
   let text = ''
@@ -136,6 +137,11 @@ export async function copyItemText(ctrlHeld = false): Promise<string | null> {
   if (!text && !hook) text = before
   if (text !== before) setTimeout(() => clipboard.writeText(before), 150)
   return text && looksLikeItem(text) ? text : null
+}
+
+/** Item text from the game always has a rarity line near the top. */
+export function looksLikeItem(text: string): boolean {
+  return /^(Item Class: .+\r?\n)?Rarity: /m.test(text.slice(0, 160))
 }
 
 /** Focuses the in-game search box (Ctrl+F) and pastes text into it. No server action involved. */

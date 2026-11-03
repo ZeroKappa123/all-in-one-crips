@@ -1,5 +1,6 @@
 const t = require('./src/renderer/tokens.json')
-const colors = Object.fromEntries(Object.keys(t.color).map(k => [k, `var(--c-${k})`]))
+// color-mix lets opacity modifiers like bg-danger/20 work with CSS-variable colours
+const colors = Object.fromEntries(Object.keys(t.dark).map(k => [k, `color-mix(in srgb, var(--c-${k}) calc(<alpha-value> * 100%), transparent)`]))
 const fontSize = Object.fromEntries(Object.entries(t.type).map(([k, v]) => [k, [`${v.size}px`, { lineHeight: `${v.line}px`, fontWeight: String(v.weight) }]]))
 const spacing = Object.fromEntries(t.space.map((v, i) => [String(i), `${v}px`]))
 module.exports = {

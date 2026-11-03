@@ -1,7 +1,7 @@
 import { BrowserWindow, screen } from 'electron'
 import { join } from 'node:path'
 
-const PANEL_WIDTH = 460
+const PANEL_WIDTH = 480
 
 function load(win: BrowserWindow, route: string): void {
   const url = process.env.ELECTRON_RENDERER_URL
@@ -40,7 +40,7 @@ export function getGuideWindow(pos: { x: number | null; y: number | null }): Bro
     x: pos.x ?? Math.round(area.x + (area.width - width) / 2),
     y: pos.y ?? area.y + area.height - 240,
     frame: false, transparent: true, resizable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false,
-    focusable: false, title: 'Assay Guide'
+    focusable: false, title: 'All-In-One CRIPS – Guide'
   })
   guide.setAlwaysOnTop(true, 'screen-saver')
   guide.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
@@ -70,7 +70,7 @@ export function resizeGuide(contentHeight: number): void {
 export function openTreeOverlay(): void {
   if (tree && !tree.isDestroyed()) { if (tree.isVisible()) { tree.hide(); return } tree.show(); tree.focus(); return }
   const area = screen.getPrimaryDisplay().bounds
-  tree = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, title: 'Assay Tree' })
+  tree = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, title: 'All-In-One CRIPS – Tree' })
   tree.setAlwaysOnTop(true, 'screen-saver')
   load(tree, 'tree')
   tree.once('ready-to-show', () => { tree?.show(); tree?.focus() })
@@ -82,14 +82,14 @@ export function hideTreeOverlay(): void {
 
 export function openGearWindow(): void {
   if (gear && !gear.isDestroyed()) { gear.show(); gear.focus(); return }
-  gear = new BrowserWindow({ ...common, width: 420, height: 520, title: 'Assay – Gear tracker', autoHideMenuBar: true, alwaysOnTop: true, backgroundColor: '#0e1014' })
+  gear = new BrowserWindow({ ...common, width: 420, height: 520, title: 'All-In-One CRIPS – Gear tracker', autoHideMenuBar: true, alwaysOnTop: true, backgroundColor: '#0e1014' })
   load(gear, 'gear')
   gear.once('ready-to-show', () => gear?.show())
 }
 
 export function openEditor(slot: number): void {
   if (editor && !editor.isDestroyed()) editor.close()
-  editor = new BrowserWindow({ ...common, width: 980, height: 720, title: 'Assay – Guide editor', autoHideMenuBar: true, backgroundColor: '#0e1014' })
+  editor = new BrowserWindow({ ...common, width: 980, height: 720, title: 'All-In-One CRIPS – Guide editor', autoHideMenuBar: true, backgroundColor: '#0e1014' })
   load(editor, `editor/${slot}`)
   editor.once('ready-to-show', () => editor?.show())
 }
@@ -109,7 +109,7 @@ export function getPanel(): BrowserWindow {
     skipTaskbar: true,
     alwaysOnTop: true,
     hasShadow: false,
-    title: 'Assay'
+    title: 'All-In-One CRIPS'
   })
   panel.setAlwaysOnTop(true, 'screen-saver')
   panel.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
@@ -148,7 +148,7 @@ export function hidePanel(): void {
 
 export function openSettings(): BrowserWindow {
   if (settings && !settings.isDestroyed()) { settings.show(); settings.focus(); return settings }
-  settings = new BrowserWindow({ ...common, width: 720, height: 600, minWidth: 560, minHeight: 420, title: 'Assay – Settings', autoHideMenuBar: true, backgroundColor: '#0e1014' })
+  settings = new BrowserWindow({ ...common, width: 720, height: 600, minWidth: 560, minHeight: 420, title: 'All-In-One CRIPS', autoHideMenuBar: true, backgroundColor: '#0e1014' })
   load(settings, 'settings')
   settings.once('ready-to-show', () => settings?.show())
   return settings
@@ -160,7 +160,7 @@ export function toggleOverlay(): void {
     if (overlay.isVisible()) { overlay.hide(); return }
   } else {
     const area = screen.getPrimaryDisplay().bounds
-    overlay = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, title: 'Assay Overlay' })
+    overlay = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, title: 'All-In-One CRIPS – Overlay' })
     overlay.setAlwaysOnTop(true, 'screen-saver')
     load(overlay, 'overlay')
     overlay.once('ready-to-show', () => { overlay?.show(); overlay?.focus() })

@@ -2,11 +2,8 @@ import { app, ipcMain, Menu, nativeImage, shell, Tray } from 'electron'
 import { join } from 'node:path'
 import type { Config } from '@shared/config'
 import { expandChatCommand } from '@shared/config'
-import type { SearchBody } from '@shared/trade/query'
-import type { ParsedItem } from '@shared/types'
-import { overviewTypeFor } from '@shared/prices/ninja'
-import { getConfig, setConfig, wasRepaired, dataDir } from './configStore'
-import { aggregatorPrice, fetchListings, getLeagues, getStats, search, TradeError } from './tradeClient'
+import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './configStore'
+import { registerProxyIpc } from './proxy'
 import { sendChat, startInput, stopInput, updateInputConfig } from './input'
 import { allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
 import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
@@ -19,20 +16,9 @@ if (!app.requestSingleInstanceLock()) app.quit()
 app.on('second-instance', () => openSettings())
 
 // Transparent windows need the compositor; some Linux setups render them black on the GPU path.
-if (process.platform === 'linux' && process.env.ASSAY_DISABLE_GPU !== '0') app.disableHardwareAcceleration()
+if (process.platform === 'linux' && process.env.CRIPS_DISABLE_GPU !== '0') app.disableHardwareAcceleration()
 
-const ALLOWED_EXTERNAL = [/^https:\/\/www\.pathofexile\.com\/trade\//, /^https:\/\/www\.poewiki\.net\/wiki\//]
-
-function wrap<T>(fn: () => Promise<T>): Promise<{ ok: true; data: T } | { ok: false; error: { kind: string; detail?: string; retryInSec?: number } }> {
-  return fn().then(
-    data => ({ ok: true as const, data }),
-    (e: unknown) => {
-      if (e instanceof TradeError) return { ok: false as const, error: { kind: e.kind, detail: e.message, retryInSec: e.retryInSec } }
-      log('error', String(e))
-      return { ok: false as const, error: { kind: 'network', detail: String(e) } }
-    }
-  )
-}
+const ALLOWED_EXTERNAL = [/^https:\/\/www\.pathofexile\.com\/trade\//, /^https:\/\/www\.poewiki\.net\/wiki\//, /^https:\/\/poe\.ninja\//]
 
 function registerIpc(): void {
   ipcMain.handle('config:get', () => ({ config: getConfig(), repaired: wasRepaired(), inputMode, dataDir: dataDir() }))
@@ -42,16 +28,7 @@ function registerIpc(): void {
     for (const w of allWindows()) w.webContents.send('config:changed', next)
     return next
   })
-  ipcMain.handle('data:stats', () => wrap(getStats))
-  ipcMain.handle('data:leagues', () => wrap(getLeagues))
-  ipcMain.handle('trade:search', (_e, league: string, body: SearchBody) => wrap(() => search(league, body)))
-  ipcMain.handle('trade:fetch', (_e, id: string, ids: string[]) => wrap(() => fetchListings(id, ids)))
-  ipcMain.handle('prices:aggregate', (_e, item: ParsedItem) => wrap(async () => {
-    const t = overviewTypeFor(item)
-    if (!t) return null
-    const c = getConfig()
-    return aggregatorPrice(c.ninjaBase, c.leagueId, item, t.kind, t.type)
-  }))
+  registerProxyIpc()
   ipcMain.handle('logs:get', () => getLogs())
   ipcMain.on('panel:hide', () => hidePanel())
   ipcMain.on('panel:resize', (_e, h: number) => resizePanel(h))
@@ -69,7 +46,7 @@ function registerIpc(): void {
 function createTray(): void {
   const icon = nativeImage.createFromPath(join(__dirname, '../../resources/tray.png'))
   tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon)
-  tray.setToolTip('Assay')
+  tray.setToolTip('All-In-One CRIPS')
   tray.setContextMenu(Menu.buildFromTemplate([
     { label: 'Settings', click: () => openSettings() },
     { label: 'Open data folder', click: () => void shell.openPath(dataDir()) },
@@ -79,7 +56,10 @@ function createTray(): void {
   tray.on('click', () => openSettings())
 }
 
+app.setName('All-In-One CRIPS')
+
 app.whenReady().then(() => {
+  migrateOldData()
   registerIpc()
   const config = getConfig()
   setGuideMovedHandler(guideOverlayMoved)
@@ -109,18 +89,18 @@ app.whenReady().then(() => {
     }
   })
   log('info', `ready, input mode ${inputMode}`)
-  if (process.env.ASSAY_OPEN === 'panel') {
+  if (process.env.CRIPS_OPEN === 'panel') {
     // Used by end-to-end tests: show the panel with a canned item.
     const win = showPanelAtCursor()
-    const send = () => setTimeout(() => win.webContents.send('item:checked', { text: process.env.ASSAY_ITEM ?? '', locked: true }), 300)
+    const send = () => setTimeout(() => win.webContents.send('item:checked', { text: process.env.CRIPS_ITEM ?? '', locked: true }), 300)
     if (win.webContents.isLoading()) win.webContents.once('did-finish-load', send)
     else send()
   }
-  if (process.env.ASSAY_OPEN === 'settings') openSettings()
-  if (process.env.ASSAY_OPEN === 'overlay') toggleOverlay()
-  if (process.env.ASSAY_OPEN === 'tree') openTreeOverlay()
-  if (process.env.ASSAY_OPEN === 'gear') openGearWindow()
-  if (process.env.ASSAY_OPEN === 'editor') openEditor(0)
+  if (process.env.CRIPS_OPEN === 'settings') openSettings()
+  if (process.env.CRIPS_OPEN === 'overlay') toggleOverlay()
+  if (process.env.CRIPS_OPEN === 'tree') openTreeOverlay()
+  if (process.env.CRIPS_OPEN === 'gear') openGearWindow()
+  if (process.env.CRIPS_OPEN === 'editor') openEditor(0)
 })
 
 app.on('window-all-closed', () => { /* stay in tray */ })

@@ -60,21 +60,21 @@ export function Editor({ slotIndex }: { slotIndex: number }) {
   }
 
   const save = async () => {
-    await window.assay.act.updateSlot(slotIndex, { guide: pages.join('\n'), page: Math.min(slot.page, pages.length) })
+    await window.crips.act.updateSlot(slotIndex, { guide: pages.join('\n'), page: Math.min(slot.page, pages.length) })
     setDirty(new Set())
   }
 
   return (
     <div className="h-full flex flex-col bg-bg">
-      <header className="flex items-center gap-4 px-7 py-5 border-b border-border">
-        <h1 className="text-xl flex-1">{A.editorTitle} – {slot.name}</h1>
-        {dirty.size > 0 && <span className="text-xs text-accent">{A.unsaved}</span>}
-        <Button variant="ghost" size="sm" onClick={async () => { await window.assay.act.updateSlot(slotIndex, { guide: null }); setPages(splitPages(DEFAULT_ROUTE)); setDirty(new Set()) }}>
+      <header className="flex items-center gap-4 px-8 h-[56px] material-bar">
+        <h1 className="text-lg flex-1">{A.editorTitle} – {slot.name}</h1>
+        {dirty.size > 0 && <span className="text-sm text-accent-text">{A.unsaved}</span>}
+        <Button variant="ghost" size="sm" onClick={async () => { await window.crips.act.updateSlot(slotIndex, { guide: null }); setPages(splitPages(DEFAULT_ROUTE)); setDirty(new Set()) }}>
           <RotateCcw aria-hidden className="h-[12px] w-[12px]" />{A.revert}
         </Button>
         <Button variant="primary" onClick={() => void save()} disabled={dirty.size === 0}><Save aria-hidden className="h-[14px] w-[14px]" />{A.save}</Button>
       </header>
-      <div className="flex items-center gap-3 px-7 py-3 border-b border-border text-xs text-text-muted">
+      <div className="flex items-center gap-3 px-8 py-3 border-b hairline text-sm text-text-muted">
         Mark selection as:
         <Button size="sm" onMouseDown={e => e.preventDefault()} onClick={() => wrap('kill')}>kill</Button>
         <Button size="sm" onMouseDown={e => e.preventDefault()} onClick={() => wrap('quest_text')}>item</Button>
@@ -95,7 +95,7 @@ export function Editor({ slotIndex }: { slotIndex: number }) {
                 spellCheck={false}
                 rows={Math.min(12, text.split('\n').length + 1)}
                 onChange={e => { const v = e.target.value; setPages(p => p!.map((x, j) => (j === i ? v : x))); setDirty(d => new Set(d).add(i)) }}
-                className={`w-full rounded-sm bg-surface p-3 font-mono text-sm border ${problems[i]!.length ? 'border-danger' : dirty.has(i) ? 'border-accent' : 'border-border'}`}
+                className={`w-full rounded-lg bg-surface p-4 font-mono text-sm shadow-card border ${problems[i]!.length ? 'border-danger' : dirty.has(i) ? 'border-accent' : 'border-transparent'}`}
               />
               {problems[i]!.map(p => <p key={p} role="alert" className="text-xs text-danger">{p}</p>)}
               <Button size="sm" variant="ghost" aria-expanded={preview === i} onClick={() => setPreview(preview === i ? null : i)}><Eye aria-hidden className="h-[12px] w-[12px]" />{A.preview}</Button>

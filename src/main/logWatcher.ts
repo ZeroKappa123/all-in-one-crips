@@ -20,7 +20,7 @@ export class LogWatcher {
 
   start(preferred: string | null): 'ok' | 'missing' {
     this.stop()
-    const candidates = [preferred, process.env.ASSAY_CLIENT_LOG, ...defaultLogPaths(process.platform, homedir())].filter((p): p is string => !!p)
+    const candidates = [preferred, process.env.CRIPS_CLIENT_LOG, ...defaultLogPaths(process.platform, homedir())].filter((p): p is string => !!p)
     this.path = candidates.find(p => existsSync(p)) ?? null
     if (!this.path) { log('warn', 'Client.txt not found'); return 'missing' }
     log('info', `following ${this.path}`)

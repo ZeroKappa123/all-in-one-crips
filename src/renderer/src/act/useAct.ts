@@ -8,8 +8,8 @@ import type { ActLive, ActStore, Slot } from '@shared/act/state'
 export function useAct() {
   const [state, setState] = useState<{ store: ActStore; live: ActLive } | null>(null)
   useEffect(() => {
-    void window.assay.act.get().then(setState)
-    return window.assay.act.onState(setState)
+    void window.crips.act.get().then(setState)
+    return window.crips.act.onState(setState)
   }, [])
   return state
 }

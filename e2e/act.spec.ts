@@ -10,13 +10,13 @@ const stamp = (s: number) => `2026/11/03 18:00:${String(s).padStart(2, '0')} 1 a
 const area = (s: number, id: string, lvl = 1) => `${stamp(s)} Generating level ${lvl} area "${id}" with seed 1\n`
 
 async function launch(open: string, opts: { act?: object; log?: string } = {}): Promise<{ app: ElectronApplication; page: Page; data: string; log: string }> {
-  const data = mkdtempSync(join(tmpdir(), 'assay-act-'))
+  const data = mkdtempSync(join(tmpdir(), 'crips-act-'))
   const log = join(data, 'Client.txt')
   writeFileSync(log, opts.log ?? area(0, '1_1_1'))
   if (opts.act) writeFileSync(join(data, 'act.json'), JSON.stringify(opts.act))
   const app = await electron.launch({
     args: [join(root, 'out/main/index.js'), '--no-sandbox'],
-    env: { ...process.env, ASSAY_FIXTURES: join(root, 'test/fixtures'), ASSAY_DATA_DIR: data, ASSAY_CLIENT_LOG: log, ASSAY_OPEN: open }
+    env: { ...process.env, CRIPS_FIXTURES: join(root, 'test/fixtures'), CRIPS_DATA_DIR: data, CRIPS_CLIENT_LOG: log, CRIPS_OPEN: open }
   })
   const want = open === 'editor' ? '#editor/0' : `#${open}`
   let page: Page | undefined
@@ -95,7 +95,7 @@ test('F13 PoB import fills gem plan, gear tracker and tree (S14, S16, S18, S20)'
 })
 
 test('S18 tree overlay renders the build and switches specs', async () => {
-  const data = mkdtempSync(join(tmpdir(), 'assay-tree-'))
+  const data = mkdtempSync(join(tmpdir(), 'crips-tree-'))
   void data
   const tree = JSON.parse(readFileSync(join(root, 'src/shared/act/data/tree.json'), 'utf8'))
   const witchStart = Object.entries(tree.nodes).find(([, n]: any) => n[5] === 3)![0]

@@ -1,0 +1,5 @@
+{ "id": "Ex1Test", "total": 3, "result": {
+  "e1": { "id": "e1", "listing": { "indexed": "2026-11-03T09:00:00Z", "offers": [{ "exchange": { "currency": "chaos", "amount": 180 }, "item": { "currency": "divine", "amount": 1, "stock": 12 } }], "account": { "name": "Bulk1", "online": {}, "lastCharacterName": "B1" } } },
+  "e2": { "id": "e2", "listing": { "indexed": "2026-11-03T08:00:00Z", "offers": [{ "exchange": { "currency": "chaos", "amount": 363 }, "item": { "currency": "divine", "amount": 2, "stock": 40 } }], "account": { "name": "Bulk2", "online": { "status": "afk" }, "lastCharacterName": "B2" } } },
+  "e3": { "id": "e3", "listing": { "indexed": "2026-11-02T08:00:00Z", "offers": [{ "exchange": { "currency": "chaos", "amount": 185 }, "item": { "currency": "divine", "amount": 1, "stock": 5 } }], "account": { "name": "Bulk3", "online": {}, "lastCharacterName": "B3" } } }
+}}

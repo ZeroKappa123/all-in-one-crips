@@ -11,9 +11,9 @@ export function Overlay() {
   const [config, setConfig] = useState<Config | null>(null)
   const [editing, setEditing] = useState(false)
   useEffect(() => {
-    void window.assay.getConfig().then(r => setConfig(r.config))
-    const off = window.assay.onConfig(setConfig)
-    const key = (e: KeyboardEvent) => { if (e.key === 'Escape') window.assay.hideOverlay() }
+    void window.crips.getConfig().then(r => setConfig(r.config))
+    const off = window.crips.onConfig(setConfig)
+    const key = (e: KeyboardEvent) => { if (e.key === 'Escape') window.crips.hideOverlay() }
     addEventListener('keydown', key)
     return () => { off(); removeEventListener('keydown', key) }
   }, [])
@@ -26,24 +26,24 @@ export function Overlay() {
   }
 
   return (
-    <div className="fixed inset-0" style={{ background: 'rgba(0,0,0,.25)' }} onMouseDown={e => { if (e.target === e.currentTarget && !editing) window.assay.hideOverlay() }}>
+    <div data-theme="dark" className="fixed inset-0 text-text" style={{ background: 'rgba(0,0,0,.25)' }} onMouseDown={e => { if (e.target === e.currentTarget && !editing) window.crips.hideOverlay() }}>
       {config.widgets.map((w, i) => (
-        <Draggable key={w.type} w={w} editing={editing} onMove={(x, y) => move(i, x, y)} onDrop={(x, y) => void window.assay.setConfig({ widgets: move(i, x, y) })}>
+        <Draggable key={w.type} w={w} editing={editing} onMove={(x, y) => move(i, x, y)} onDrop={(x, y) => void window.crips.setConfig({ widgets: move(i, x, y) })}>
           {w.type === 'settings' && (
             <div className="flex gap-2">
-              <Button aria-label={S.settingsTitle} title={S.settingsTitle} onClick={() => window.assay.openSettings()}><Cog aria-hidden className="h-[16px] w-[16px]" /></Button>
+              <Button aria-label={S.settingsTitle} title={S.settingsTitle} onClick={() => window.crips.openSettings()}><Cog aria-hidden className="h-[16px] w-[16px]" /></Button>
               <Button aria-pressed={editing} onClick={() => setEditing(e => !e)}>{editing ? S.doneEditing : S.editWidgets}</Button>
               <Button aria-pressed={config.widgets.find(x => x.type === 'stopwatch')?.visible} aria-label={S.stopwatch} title={S.stopwatch}
-                onClick={() => void window.assay.setConfig({ widgets: config.widgets.map(x => (x.type === 'stopwatch' ? { ...x, visible: !x.visible } : x)) })}>
+                onClick={() => void window.crips.setConfig({ widgets: config.widgets.map(x => (x.type === 'stopwatch' ? { ...x, visible: !x.visible } : x)) })}>
                 <Timer aria-hidden className="h-[16px] w-[16px]" />
               </Button>
-              <Button aria-label={S.actions.guideToggle} title={S.actions.guideToggle} onClick={async () => { const a = await window.assay.act.get(); await window.assay.act.update({ overlay: { ...a.store.overlay, visible: !a.store.overlay.visible } }) }}>
+              <Button aria-label={S.actions.guideToggle} title={S.actions.guideToggle} onClick={async () => { const a = await window.crips.act.get(); await window.crips.act.update({ overlay: { ...a.store.overlay, visible: !a.store.overlay.visible } }) }}>
                 <MapIcon aria-hidden className="h-[16px] w-[16px]" />
               </Button>
-              <Button aria-label={S.actions.treeOverlay} title={S.actions.treeOverlay} onClick={() => { window.assay.hideOverlay(); window.assay.act.open('tree') }}>
+              <Button aria-label={S.actions.treeOverlay} title={S.actions.treeOverlay} onClick={() => { window.crips.hideOverlay(); window.crips.act.open('tree') }}>
                 <Network aria-hidden className="h-[16px] w-[16px]" />
               </Button>
-              <Button aria-label={S.act.gear} title={S.act.gear} onClick={() => window.assay.act.open('gear')}>
+              <Button aria-label={S.act.gear} title={S.act.gear} onClick={() => window.crips.act.open('gear')}>
                 <Package aria-hidden className="h-[16px] w-[16px]" />
               </Button>
             </div>
@@ -59,7 +59,7 @@ function Draggable({ w, editing, onMove, onDrop, children }: { w: Widget; editin
   const start = useRef<{ dx: number; dy: number } | null>(null)
   if (w.type !== 'settings' && !w.visible) return null
   return (
-    <div className={`absolute flex items-center gap-2 bg-surface rounded-md shadow-card p-2 ${editing ? 'outline-dashed outline-1 outline-border-input' : ''}`} style={{ left: w.x, top: w.y }}>
+    <div className={`absolute flex items-center gap-2 rounded-full material-hud p-2 ${editing ? 'outline-dashed outline-1 outline-border-input' : ''}`} style={{ left: w.x, top: w.y }}>
       {editing && (
         <span aria-hidden className="cursor-move text-text-muted"
           onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); start.current = { dx: e.clientX - w.x, dy: e.clientY - w.y } }}

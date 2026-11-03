@@ -1,7 +1,0 @@
-{ "result": [
-  { "id": "a1", "listing": { "indexed": "2026-11-01T10:00:00Z", "account": { "name": "Seller1", "online": {} }, "price": { "amount": 5, "currency": "chaos" }, "stash": { "name": "sale" } }, "item": { "note": "~price 5 chaos" } },
-  { "id": "a2", "listing": { "indexed": "2026-11-01T11:00:00Z", "account": { "name": "Seller2", "online": { "status": "afk" } }, "price": { "amount": 7, "currency": "chaos" }, "stash": { "name": "~b/o 7 chaos" } }, "item": {} },
-  { "id": "a3", "listing": { "indexed": "2026-11-01T12:00:00Z", "account": { "name": "Seller2", "online": { "status": "afk" } }, "price": { "amount": 7, "currency": "chaos" }, "stash": { "name": "~b/o 7 chaos" } }, "item": {} },
-  { "id": "a4", "listing": { "indexed": "2026-10-20T12:00:00Z", "account": { "name": "Seller3", "online": null }, "price": { "amount": 1, "currency": "divine" }, "stash": { "name": "x" } }, "item": { "note": "~b/o 1 divine" } },
-  null
-]}

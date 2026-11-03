@@ -9,7 +9,7 @@ export function StepPreview({ text, slot }: { text: string; slot: Slot }) {
   const plan = useGemPlan(slot)
   const { pages } = parseRoute(text, slot.options, AREAS)
   return (
-    <div className="rounded-md border border-border bg-bg px-4 py-3">
+    <div data-theme="dark" className="rounded-xl material-hud text-text px-5 py-4">
       {pages.flatMap(p => p.steps).map((s, i) => <StepLine key={i} step={s} plan={plan} slot={slot} />)}
     </div>
   )

@@ -147,9 +147,9 @@ async function importInto(index: number, text: string): Promise<{ ok: boolean; m
   let code: string
   if (kind.kind === 'pobbin') {
     try {
-      if (process.env.ASSAY_FIXTURES) code = readFileSync(join(process.env.ASSAY_FIXTURES, 'pob-code.txt'), 'utf8')
+      if (process.env.CRIPS_FIXTURES) code = readFileSync(join(process.env.CRIPS_FIXTURES, 'pob-code.txt'), 'utf8')
       else {
-        const res = await fetch(`https://pobb.in/${encodeURIComponent(kind.id)}/raw`, { headers: { 'User-Agent': 'Assay/0.1.0' }, signal: AbortSignal.timeout(10_000) })
+        const res = await fetch(`https://pobb.in/${encodeURIComponent(kind.id)}/raw`, { headers: { 'User-Agent': 'All-In-One-CRIPS/1.0.0' }, signal: AbortSignal.timeout(10_000) })
         if (!res.ok) return { ok: false, message: `pobb.in answered ${res.status}.` }
         code = await res.text()
       }
