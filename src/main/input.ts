@@ -185,7 +185,7 @@ export async function sendChat(message: string): Promise<void> {
 }
 
 function toAccelerator(keys: string): string {
-  return keys.replace('Ctrl', 'CommandOrControl')
+  return keys.replace('Ctrl', 'Control') // Windows only: never the Mac Command key
 }
 
 /** Actions that only exist while their feature is switched on (checked before they fire). */

@@ -211,9 +211,10 @@ export function HotkeyRecorder({ value, onChange, conflict, label, allowWheel }:
   )
 }
 
-const KEY_GLYPH: Record<string, string> = { Ctrl: '⌃', Shift: '⇧', Alt: '⌥', Space: 'Space', Wheel: 'Wheel', Up: '↑', Down: '↓' }
+// Windows key names, written the way Windows shows them: Ctrl + Alt + C
+const KEY_LABEL: Record<string, string> = { Space: 'Space', Wheel: 'Mouse wheel', Up: '↑', Down: '↓' }
 export function Keys({ combo }: { combo: string }) {
-  return <span className="tracking-wide">{combo.split('+').map(k => KEY_GLYPH[k] ?? k).join(' ')}</span>
+  return <span aria-label={combo}>{combo.split('+').map(k => KEY_LABEL[k] ?? k).join(' + ')}</span>
 }
 
 export function normaliseKey(code: string): string | null {

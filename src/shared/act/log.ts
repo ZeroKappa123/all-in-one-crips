@@ -79,7 +79,6 @@ export function defaultLogPaths(platform: NodeJS.Platform, home: string): string
       ['C:', 'Program Files (x86)', 'Epic Games', 'PathOfExile', 'logs', 'Client.txt'].join('\\')
     ]
   }
-  if (platform === 'darwin') return [`${home}/Library/Caches/com.GGG.PathOfExile/Logs/Client.txt`]
   return [
     `${home}/.local/share/Steam/steamapps/common/Path of Exile/logs/Client.txt`,
     `${home}/.steam/steam/steamapps/common/Path of Exile/logs/Client.txt`
