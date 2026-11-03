@@ -67,14 +67,4 @@ write('tree.json', {
   edges: [...edges].map(e => e.split('-').map(Number))
 })
 
-write('../../../../resources/THIRD_PARTY.md', `# Third-party data
-
-## exile-leveling (route, areas, quests, gems, characters)
-https://github.com/HeartofPhos/exile-leveling
-
-${readFileSync(join(el, 'LICENSE'), 'utf8')}
-
-## Passive skill tree data
-https://github.com/grindinggear/skilltree-export – published by Grinding Gear Games for community tools.
-Assay isn't affiliated with or endorsed by Grinding Gear Games.
-`)
+// licences are kept by hand in resources/THIRD_PARTY.md
