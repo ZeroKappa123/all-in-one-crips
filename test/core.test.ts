@@ -114,6 +114,12 @@ describe('buildFilters', () => {
     expect(unmatched).toEqual([])
   })
 
+  it('adds implicit and explicit spell damage into one total', () => {
+    const item = parseItem(fx('rare-wand.txt').replace('+38 to maximum Mana', '20% increased Spell Damage'))
+    const { stats: f } = buildFilters(item, index)
+    expect(f.find(s => s.statId === 'pseudo.pseudo_increased_spell_damage')?.value).toBe(56)
+  })
+
   it('drops pseudo rules whose ID the live stat list does not know', () => {
     const small = new StatIndex(stats.filter(s => s.id !== 'pseudo.pseudo_total_chaos_resistance'))
     const { stats: f } = buildFilters(parseItem(fx('rare-boots.txt')), small)

@@ -13,7 +13,7 @@ async function launch(env: Record<string, string>): Promise<{ app: ElectronAppli
     args: [join(root, 'out/main/index.js'), '--no-sandbox'],
     env: { ...process.env, ASSAY_FIXTURES: join(root, 'test/fixtures'), ASSAY_DATA_DIR: mkdtempSync(join(tmpdir(), 'assay-')), ...env }
   })
-  const route = env.ASSAY_OPEN === 'settings' ? 'settings' : 'panel'
+  const route = env.ASSAY_OPEN === 'settings' || env.ASSAY_OPEN === 'overlay' ? env.ASSAY_OPEN : 'panel'
   let page: Page | undefined
   for (let i = 0; i < 40 && !page; i++) {
     page = app.windows().find(w => w.url().endsWith('#' + route))
@@ -101,5 +101,18 @@ test('F04/F05 settings: league, hotkey conflict, keyboard tabs (S06, S07)', asyn
   const saved = JSON.parse(readFileSync(join(cfg, 'config.json'), 'utf8'))
   expect(saved.leagueId).toBe('Hardcore')
   expect(saved.hotkeys.find((h: any) => h.action === 'wiki').keys).toBe('Alt+Q')
+  await app.close()
+})
+
+test('S05 overlay: stopwatch widget toggles and runs', async () => {
+  const { app, page } = await launch({ ASSAY_OPEN: 'overlay' })
+  await page.getByRole('button', { name: 'Stopwatch' }).click()
+  await page.getByRole('button', { name: 'Start' }).click()
+  await expect(page.getByText(/^00:0[1-9]$/)).toBeVisible({ timeout: 4000 })
+  await page.getByRole('button', { name: 'Stop', exact: true }).click()
+  await page.getByRole('button', { name: 'Arrange widgets' }).click()
+  await expect(page.getByRole('button', { name: 'Done' })).toBeVisible()
+  await page.screenshot({ path: join(shots, 'S05-overlay.png') })
+  expect((page as any).__errors).toEqual([])
   await app.close()
 })

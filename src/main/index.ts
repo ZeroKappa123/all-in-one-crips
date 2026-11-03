@@ -110,6 +110,7 @@ app.whenReady().then(() => {
     win.webContents.once('did-finish-load', () => win.webContents.send('item:checked', { text: process.env.ASSAY_ITEM ?? '', locked: true }))
   }
   if (process.env.ASSAY_OPEN === 'settings') openSettings()
+  if (process.env.ASSAY_OPEN === 'overlay') toggleOverlay()
 })
 
 app.on('window-all-closed', () => { /* stay in tray */ })

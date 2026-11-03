@@ -54,6 +54,12 @@ export const PSEUDO_RULES: PseudoRule[] = [
     hides: false
   },
   {
+    id: 'pseudo.pseudo_increased_spell_damage',
+    label: '#% total increased Spell Damage',
+    parts: [{ re: /^(\d+)% increased Spell Damage$/, factor: 1 }],
+    hides: false
+  },
+  {
     id: 'pseudo.pseudo_increased_movement_speed',
     label: '#% increased Movement Speed',
     parts: [{ re: /^(\d+)% increased Movement Speed$/, factor: 1 }],

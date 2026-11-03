@@ -1,9 +1,10 @@
 appId: dev.local.assay
 productName: Assay
 directories: { output: dist, buildResources: resources }
-files: ["out/**", "package.json"]
+files: ["out/**", "package.json", "resources/tray.png"]
 asarUnpack: ["node_modules/uiohook-napi/**"]
-win: { target: nsis, icon: resources/icon.png }
+win: { target: nsis, icon: resources/icon.png, signAndEditExecutable: false }
 nsis: { oneClick: false, allowToChangeInstallationDirectory: true }
 linux: { target: AppImage, category: Game, icon: resources/icon.png }
 publish: null
+npmRebuild: false

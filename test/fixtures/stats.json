@@ -5,6 +5,7 @@
       { "id": "pseudo.pseudo_total_life", "text": "+# total maximum Life", "type": "pseudo" },
       { "id": "pseudo.pseudo_total_elemental_resistance", "text": "+#% total Elemental Resistance", "type": "pseudo" },
       { "id": "pseudo.pseudo_total_chaos_resistance", "text": "+#% total Chaos Resistance", "type": "pseudo" },
+      { "id": "pseudo.pseudo_increased_spell_damage", "text": "#% total increased Spell Damage", "type": "pseudo" },
       { "id": "pseudo.pseudo_increased_movement_speed", "text": "#% increased Movement Speed", "type": "pseudo" }
     ]},
     { "label": "Explicit", "entries": [
