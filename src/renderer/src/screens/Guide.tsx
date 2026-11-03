@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, CircleHelp, GripHorizontal, Waypoints, Package } from 'lucide-react'
+import { ChevronLeft, ChevronRight, CircleHelp, GripHorizontal, RotateCcw, Waypoints, Package } from 'lucide-react'
 import { AREAS, GEMS, QUESTS, CHARACTERS } from '@shared/act/data'
 import { arrow, type Fragment, type Step } from '@shared/act/route'
 import { fmtDuration, type TimerState } from '@shared/act/timer'
@@ -69,11 +69,53 @@ export function Guide() {
             </button>
           )}
           {charLevel && live.areaLevel !== null && <Exp level={charLevel} area={live.areaLevel} />}
+          <HoldReset />
           <button {...hot} onClick={() => setHelp(h => !h)} aria-expanded={help} aria-label="Help" className="text-text-muted hover:text-text"><CircleHelp className="h-[14px] w-[14px]" /></button>
         </div>
         {help && <p className="px-5 pb-4 text-sm text-text-muted">{A.help}</p>}
       </div>
     </div>
+  )
+}
+
+const HOLD_MS = 1200
+
+/** Restart button: hold it until the ring is full, then the guide goes back to page 1 and the timer to zero. */
+function HoldReset() {
+  const [progress, setProgress] = useState(0)
+  const [done, setDone] = useState(false)
+  const raf = useRef<number | null>(null)
+  const stop = () => { if (raf.current !== null) cancelAnimationFrame(raf.current); raf.current = null; setProgress(0) }
+  const start = (e: React.PointerEvent) => {
+    if (e.button !== 0) return
+    if (e.pointerId >= 0) e.currentTarget.setPointerCapture(e.pointerId)
+    if (raf.current !== null) return
+    const t0 = performance.now()
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / HOLD_MS)
+      setProgress(p)
+      if (p < 1) { raf.current = requestAnimationFrame(tick); return }
+      raf.current = null
+      void window.crips.act.timer('reset')
+      setDone(true)
+      setTimeout(() => { setDone(false); setProgress(0) }, 900)
+    }
+    raf.current = requestAnimationFrame(tick)
+  }
+  useEffect(() => () => { if (raf.current !== null) cancelAnimationFrame(raf.current) }, [])
+  const r = 8, c = 2 * Math.PI * r
+  return (
+    <button {...hot} type="button" aria-label={A.resetHold} title={A.resetHold} data-testid="act-reset"
+      onPointerDown={start} onPointerUp={() => { if (!done) stop() }} onPointerCancel={stop} onLostPointerCapture={() => { if (!done) stop() }}
+      onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) start({ button: 0, currentTarget: e.currentTarget, pointerId: -1 } as unknown as React.PointerEvent) }}
+      onKeyUp={() => { if (!done) stop() }}
+      className={`relative grid place-items-center h-[20px] w-[20px] ${done ? 'text-success' : progress > 0 ? 'text-danger' : 'text-text-muted hover:text-text'}`}>
+      <svg aria-hidden viewBox="0 0 20 20" className="absolute inset-0 -rotate-90">
+        <circle cx="10" cy="10" r={r} fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray={c} strokeDashoffset={c * (1 - progress)} opacity={progress > 0 ? 1 : 0} />
+      </svg>
+      <RotateCcw aria-hidden className="h-[11px] w-[11px]" />
+      {done && <span role="status" className="sr-only">{A.resetDone}</span>}
+    </button>
   )
 }
 

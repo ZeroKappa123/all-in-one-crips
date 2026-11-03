@@ -23,6 +23,7 @@ export function Stash() {
       window.crips.trades.onHighlight(p => setHl(p)),
       window.crips.trades.onCalibrate(on => setCalibrating(on))
     ]
+    void window.crips.trades.isCalibrating().then(on => { if (on) setCalibrating(true) })
     return () => offs.forEach(o => o())
   }, [])
 

@@ -16,6 +16,7 @@ const api = {
     interactive: (on: boolean) => ipcRenderer.send('trades:interactive', on),
     resize: (h: number) => ipcRenderer.send('trades:resize', h),
     show: () => ipcRenderer.send('trades:show'),
+    isCalibrating: (): Promise<boolean> => ipcRenderer.invoke('stash:calibrating'),
     calibrate: (on: boolean) => ipcRenderer.send('stash:calibrate', on),
     hideStash: () => ipcRenderer.send('stash:hide'),
     onState: (cb: (s: { cards: TradeCard[]; monsters: { count: number; more: boolean; at: number } | null }) => void) => {
@@ -35,6 +36,11 @@ const api = {
     status: (): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:status'),
     setWide: (wide: boolean): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:wide', wide),
     update: (patch: Partial<Config['widescreen']>): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:update', patch)
+  },
+  images: {
+    add: (): Promise<{ added: number; skipped: string[] }> => ipcRenderer.invoke('images:add'),
+    get: (id: string): Promise<string | null> => ipcRenderer.invoke('images:get', id),
+    remove: (id: string): Promise<void> => ipcRenderer.invoke('images:remove', id)
   },
   data: {
     status: (): Promise<DataStatus> => ipcRenderer.invoke('data:status'),

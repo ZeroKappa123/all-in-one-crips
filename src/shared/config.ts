@@ -34,7 +34,9 @@ export const ConfigSchema = z.object({
   ninjaBase: z.string().url(),
   hotkeys: z.array(Hotkey),
   chatCommands: z.array(ChatCommand),
-  widgets: z.array(z.object({ type: z.enum(['stopwatch', 'settings']), x: z.number(), y: z.number(), visible: z.boolean() }))
+  widgets: z.array(z.object({ type: z.enum(['stopwatch', 'settings', 'images']), x: z.number(), y: z.number(), visible: z.boolean() })),
+  /** Pictures for the overlay's image strip (cheat sheets); files live in the data folder under images/. */
+  images: z.array(z.object({ id: z.string(), file: z.string().regex(/^[a-z0-9-]+\.(png|jpg|jpeg|webp|gif)$/), name: z.string() })).default([])
 })
 export type Config = z.infer<typeof ConfigSchema>
 
@@ -74,8 +76,10 @@ export const DEFAULT_CONFIG: Config = {
   ],
   widgets: [
     { type: 'settings', x: 16, y: 16, visible: true },
-    { type: 'stopwatch', x: 16, y: 72, visible: false }
-  ]
+    { type: 'stopwatch', x: 16, y: 72, visible: false },
+    { type: 'images', x: 16, y: 128, visible: true }
+  ],
+  images: []
 }
 
 /** Accepts any stored JSON; anything invalid falls back to defaults, field by field where possible. */
@@ -91,7 +95,8 @@ export function loadConfig(raw: unknown): { config: Config; repaired: boolean } 
 /** Settings saved by an older version get the hotkeys added since, with their defaults. */
 function withNewHotkeys(c: Config): Config {
   const missing = DEFAULT_CONFIG.hotkeys.filter(d => !c.hotkeys.some(h => h.action === d.action))
-  return missing.length ? { ...c, hotkeys: [...c.hotkeys, ...missing] } : c
+  const widgets = DEFAULT_CONFIG.widgets.filter(d => !c.widgets.some(w => w.type === d.type))
+  return missing.length || widgets.length ? { ...c, hotkeys: [...c.hotkeys, ...missing], widgets: [...c.widgets, ...widgets] } : c
 }
 
 /** Returns the action already bound to these keys, if any (chat commands included). */

@@ -5,10 +5,11 @@ import { expandChatCommand } from '@shared/config'
 import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './configStore'
 import { registerProxyIpc } from './proxy'
 import { initDataUpdates } from './dataUpdate'
+import { initImages } from './images'
 import { sendChat, setActionGate, startInput, stopInput, updateInputConfig } from './input'
 import { onWidescreenChange, registerWidescreenIpc, setWide, startWidescreen, status as widescreenStatus, stopWidescreen, widescreenAction } from './widescreen'
 import { gameWindowApi } from './gameWindow'
-import { applyTheme, allWindows, getTradesWindow, setTradesInteractive, resizeTrades, setTradesMovedHandler, calibrateStash, hideStash, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
+import { applyTheme, allWindows, getTradesWindow, setTradesInteractive, resizeTrades, setTradesMovedHandler, calibrateStash, hideStash, isStashCalibrating, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
 import { initTrades } from './trades'
 import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
 import { getLogs, log } from './log'
@@ -36,6 +37,7 @@ function registerIpc(): void {
   })
   registerProxyIpc()
   initDataUpdates()
+  initImages()
   registerWidescreenIpc()
   ipcMain.handle('logs:get', () => getLogs())
   ipcMain.on('panel:hide', () => hidePanel())
@@ -48,6 +50,7 @@ function registerIpc(): void {
   ipcMain.on('stash:calibrate', (_e, on: boolean) => calibrateStash(on))
   ipcMain.on('stash:hide', () => hideStash())
   ipcMain.on('overlay:hide', () => hideOverlay())
+  ipcMain.handle('stash:calibrating', () => isStashCalibrating())
   ipcMain.on('settings:open', () => openSettings())
   ipcMain.on('shell:open', (_e, url: string) => {
     if (ALLOWED_EXTERNAL.some(re => re.test(url))) void shell.openExternal(url)

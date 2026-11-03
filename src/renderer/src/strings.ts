@@ -55,6 +55,12 @@ export const S = {
   dataFolder: 'Settings folder',
   thirdParty: "All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.",
   stopwatch: 'Stopwatch',
+  images: {
+    title: 'Cheat sheets', toggle: 'Image strip', add: 'Add images', addHelp: 'PNG, JPG, WebP or GIF',
+    remove: (n: string) => `Remove ${n}`, left: (n: string) => `Move ${n} left`, right: (n: string) => `Move ${n} right`,
+    open: (n: string) => `Show ${n} large`, close: 'Click anywhere or press Esc to close · ← → for the other pictures',
+    empty: 'Add your own pictures (syndicate board, maps, notes). Click one to show it large.'
+  },
   start: 'Start', stop: 'Stop', reset: 'Reset',
   editWidgets: 'Arrange widgets', doneEditing: 'Done',
   quit: 'Quit All-In-One CRIPS',
@@ -196,6 +202,7 @@ export const S = {
     waitingLog: 'Waiting for the game log…',
     done: 'Campaign complete.',
     prev: 'Previous page', next: 'Next page',
+    resetHold: 'Restart: hold until the ring is full (guide back to page 1, timer to zero)', resetDone: 'Guide restarted at page 1',
     holdReset: 'Hold to restart the guide', holdJump: 'Hold to jump to your current area',
     help: 'Pages turn by themselves when you enter the area at the end of a page. Click < > to browse, hold < to restart, hold > to jump to the area you are in.',
     pausedHint: 'Click to start or pause. Hold right-click to reset.',

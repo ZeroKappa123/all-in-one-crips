@@ -22,6 +22,10 @@ Hover an item and press **Ctrl+D** (**Ctrl+Alt+D** keeps the panel open). The ap
 
 **Shift+Space** opens the overlay with settings, stopwatch, guide and tree buttons. **Alt+W** opens the item in the wiki, **Ctrl+wheel** scrolls stash tabs, chat commands (F5 hideout, F9 character select, `@last` for your last whisper) are set under *Chat Commands*.
 
+## Image strip (cheat sheets)
+
+Shift+Space opens the overlay. Under *Cheat sheets* click **Add images** (PNG, JPG, WebP, GIF), then click a picture to show it large in the middle of the screen; ← → flip, Esc or a click closes it. *Arrange widgets* lets you reorder or remove pictures. The pictures are copied into the app's data folder.
+
 ## Appearance and icons
 
 Dark by default. Switch to **Light** or **System** under Settings → Price Check → Appearance; every window follows, the overlays above the game included.
@@ -48,6 +52,8 @@ Idea after the "PoE Widescreen" AutoHotkey script by Mikey, rebuilt without Auto
 | Alt+T | skill tree overlay (Q/E switch tree, hold 1–4 ascendancy, hold W overview, right-drag to align, wheel to zoom, Esc) |
 | Alt+S | paste your build's gem search into the open vendor window |
 | F3 / F4 | previous / next guide page (off by default) |
+
+To start a new run, **hold** the ↺ button in the guide until its ring is full: the guide goes back to page 1 and the timer to zero.
 
 ## Trade Helper
 

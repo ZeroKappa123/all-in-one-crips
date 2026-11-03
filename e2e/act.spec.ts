@@ -67,6 +67,15 @@ test('F11 guide follows Client.txt, F12 timer, e-exp (S11–S13)', async () => {
   await expect(guide.getByText(/^\d+\/\d+$/)).not.toHaveText(before!)
   await guide.screenshot({ path: join(shots, 'S11-guide.png') })
   await settings.screenshot({ path: join(shots, 'S14-act-settings.png') })
+  // reset: a short press does nothing, holding until the ring is full goes back to page 1
+  const reset = guide.getByTestId('act-reset')
+  const box = (await reset.boundingBox())!
+  await guide.mouse.move(box.x + box.width / 2, box.y + box.height / 2)
+  await guide.mouse.down(); await guide.waitForTimeout(300); await guide.mouse.up()
+  await expect(guide.getByText(/^1\//)).toHaveCount(0)
+  await guide.mouse.down(); await guide.waitForTimeout(1500); await guide.mouse.up()
+  await expect(guide.getByText(/^1\//)).toBeVisible()
+  await expect(guide.getByRole('button', { name: /^Act 1, paused/ })).toBeVisible()
   await app.close()
 })
 

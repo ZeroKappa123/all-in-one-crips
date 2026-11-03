@@ -94,7 +94,12 @@ export function showStashHighlight(stash: { tab: string; left: number; top: numb
   else send()
 }
 
+let stashCalibrating = false
+/** Asked by the stash window when it starts, so a request sent before it was ready isn't lost. */
+export function isStashCalibrating(): boolean { return stashCalibrating }
+
 export function calibrateStash(on: boolean): void {
+  stashCalibrating = on
   const w = getStashWindow()
   w.setIgnoreMouseEvents(!on)
   w.setFocusable(on)
@@ -104,6 +109,7 @@ export function calibrateStash(on: boolean): void {
 }
 
 export function hideStash(): void {
+  stashCalibrating = false
   if (stashWin && !stashWin.isDestroyed()) { stashWin.setIgnoreMouseEvents(true); stashWin.hide() }
 }
 let onGuideMoved: ((x: number, y: number) => void) | null = null

@@ -120,6 +120,37 @@ test('S05 overlay widgets', async () => {
   await app.close()
 })
 
+test('S06 image strip: add pictures, show one large, flip, remove', async () => {
+  const icon = join(root, 'resources/icon.png'), tray = join(root, 'resources/tray.png')
+  const { app, page } = await launch({ CRIPS_OPEN: 'overlay', CRIPS_IMAGE_PICK: `${icon}|${tray}` })
+  await expect(page.getByText('Cheat sheets')).toBeVisible()
+  await page.getByRole('button', { name: 'Add images' }).click()
+  await expect(page.getByRole('button', { name: 'Show icon large' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Show tray large' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Add images' })).toHaveCount(0) // only while arranging, once there are pictures
+  await page.getByRole('button', { name: 'Show icon large' }).click()
+  const viewer = page.getByRole('dialog', { name: 'icon' })
+  await expect(viewer.getByRole('img', { name: 'icon' })).toHaveAttribute('src', /^data:image\/png;base64,/)
+  await page.screenshot({ path: join(shots, 'S06-image-large.png') })
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByRole('dialog', { name: 'tray' })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  expect(app.windows().find(w => w.url().endsWith('#overlay'))).toBeTruthy()
+  // arranging: move and remove
+  await page.getByRole('button', { name: 'Arrange widgets' }).click()
+  await page.getByRole('button', { name: 'Move tray left' }).click()
+  await page.getByRole('button', { name: 'Remove icon' }).click()
+  await expect(page.getByRole('button', { name: 'Show icon large' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Show tray large' })).toBeVisible()
+  // the image strip can be hidden from the menu
+  await page.getByRole('button', { name: 'Done' }).click()
+  await page.getByRole('button', { name: 'Image strip' }).click()
+  await expect(page.getByText('Cheat sheets')).toHaveCount(0)
+  expect((page as any).__errors).toEqual([])
+  await app.close()
+})
+
 test('appearance: dark by default, switch to light in settings, overlays follow', async () => {
   const { app, page } = await launch({ CRIPS_OPEN: 'settings' })
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('dark')
