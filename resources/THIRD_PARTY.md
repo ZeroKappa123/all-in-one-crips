@@ -60,3 +60,6 @@ All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.
 
 ## Inter
 Inter typeface by Rasmus Andersson, licensed under the SIL Open Font License 1.1 (https://openfontlicense.org). Shipped via @fontsource-variable/inter.
+
+## Poe-Lurker (idea only)
+https://github.com/C1rdec/Poe-Lurker – the trade helper follows its idea; no code was taken.

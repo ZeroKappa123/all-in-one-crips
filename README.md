@@ -1,6 +1,6 @@
 # All-In-One CRIPS
 
-Price checks and a campaign guide for Path of Exile 1, in one overlay. Made by **zero**. No AutoHotkey needed.
+Price checks, a campaign guide and a trade helper for Path of Exile 1, in one overlay. Made by **zero**. No AutoHotkey needed.
 All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.
 
 ## Install (Windows)
@@ -49,6 +49,33 @@ Idea after the "PoE Widescreen" AutoHotkey script by Mikey, rebuilt without Auto
 | Alt+S | paste your build's gem search into the open vendor window |
 | F3 / F4 | previous / next guide page (off by default) |
 
+## Trade Helper
+
+Incoming trade whispers become cards at the edge of the screen (idea from Poe-Lurker by C1rdec). Each click sends exactly one chat command.
+
+| On a card | Does |
+| --- | --- |
+| main button | Invite → Trade → Trade again → Kick (when done) |
+| Busy / Thanks | sends your message (Settings → Trade Helper) |
+| Ctrl+click | "sold" message · Ctrl+Shift+click: "still interested?" |
+| right-click | /whois · Alt+click: make this the active trade |
+| stash button | outlines the item in your open stash tab (fit the frame once under Settings → Trade Helper) |
+
+Outgoing whispers you sent show up too (Hideout, Trade, Resend). *Auto-whisper* (off by default) whispers a trade-site message you copy; hold Shift while copying to skip it.
+
+## After a PoE patch: updates
+
+**Game data (automatic, nothing to do):** after a patch, Awakened PoE Trade publishes new item and mod data. The app checks for it on start and every 6 hours, downloads it, checks it and uses it from the next price check. If the new data doesn't work, it silently keeps the data it shipped with. Settings → Price Check → *Game data* shows the version in use and has *Check now* and an on/off switch.
+
+**Everything else (one command, on the PC with the source):**
+
+```bash
+npm run update
+```
+
+It fetches the latest game data, Act Tracker data (route, quests, gems, passive tree) and the price-check code from the public repositories (no git or GitHub account needed), runs the type check and the tests after each step and puts a step back if it breaks something. At the end it builds `dist/All-In-One-CRIPS-1.0.0-win.zip`. Send that ZIP to your friends: they replace the old folder with it, settings stay (they live in `%APPDATA%`).
+Options: `--data-only` (no code), `--no-zip`.
+
 ## Develop
 
 ```bash
@@ -56,6 +83,7 @@ npm install
 npm run dev                      # app with hot reload
 npm test                         # unit tests
 npm run build && npm run e2e     # end-to-end tests against canned responses (CRIPS_FIXTURES)
+npm run dist:zip                 # Windows ZIP
 npm run dist:win                 # Windows installer (run on Windows)
 ```
 
@@ -64,6 +92,7 @@ npm run dist:win                 # Windows installer (run on Windows)
 - Price-check logic, item parser and game data: [Awakened PoE Trade](https://github.com/SnosMe/awakened-poe-trade) © 2020 Alexander Drozdov, MIT License (in `src/apt`).
 - Campaign route and data: [exile-leveling](https://github.com/HeartofPhos/exile-leveling) © HeartofPhos, MIT License.
 - Passive tree data: Grinding Gear Games' skill tree export.
+- Trade helper idea: [Poe-Lurker](https://github.com/C1rdec/Poe-Lurker) by C1rdec (MIT); written fresh for this app.
 - Typeface: Inter, SIL Open Font License.
 
 Full licence texts: `resources/THIRD_PARTY.md`.
