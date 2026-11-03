@@ -28,7 +28,12 @@ export function parseCombo(keys: string): Binding {
 }
 
 function keyName(h: Hook, keycode: number): string | null {
-  for (const [name, code] of Object.entries(h.UiohookKey)) if (code === keycode) return name
+  for (const [name, code] of Object.entries(h.UiohookKey)) {
+    if (code !== keycode) continue
+    if (name === 'ArrowUp') return 'Up'
+    if (name === 'ArrowDown') return 'Down'
+    return name
+  }
   return null
 }
 
@@ -80,7 +85,7 @@ function onKey(keycode: number, ctrl: boolean, shift: boolean, alt: boolean): vo
   if (!key) return
   for (const hk of config.hotkeys) {
     if (!hk.enabled || hk.action === 'stashScroll') continue
-    if (matches(parseCombo(hk.keys), key, ctrl, shift, alt)) { void runAction(hk.action, ctrl); return }
+    if (matches(parseCombo(hk.keys), key, ctrl, shift, alt) && actionGate(hk.action)) { void runAction(hk.action, ctrl); return }
   }
   config.chatCommands.forEach((cmd, i) => {
     if (matches(parseCombo(cmd.keys), key, ctrl, shift, alt)) handlers!.onChat(i)
@@ -179,11 +184,15 @@ function toAccelerator(keys: string): string {
   return keys.replace('Ctrl', 'CommandOrControl')
 }
 
+/** Actions that only exist while their feature is switched on (checked before they fire). */
+let actionGate: (a: HotkeyAction) => boolean = () => true
+export function setActionGate(fn: (a: HotkeyAction) => boolean): void { actionGate = fn }
+
 function registerFallback(): void {
   globalShortcut.unregisterAll()
   if (!config || !handlers) return
   for (const hk of config.hotkeys) {
-    if (!hk.enabled || hk.action === 'stashScroll') continue
+    if (!hk.enabled || hk.action === 'stashScroll' || !actionGate(hk.action)) continue // never grab keys of a switched-off feature
     try {
       globalShortcut.register(toAccelerator(hk.keys), () => void runAction(hk.action))
     } catch (e) {

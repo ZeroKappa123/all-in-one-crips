@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
-export const HOTKEY_ACTIONS = ['priceCheck', 'priceCheckLocked', 'overlay', 'wiki', 'stashScroll', 'guideToggle', 'guidePrev', 'guideNext', 'treeOverlay', 'gemSearch'] as const
+export const HOTKEY_ACTIONS = ['priceCheck', 'priceCheckLocked', 'overlay', 'wiki', 'stashScroll', 'guideToggle', 'guidePrev', 'guideNext', 'treeOverlay', 'gemSearch', 'wideToggle', 'wideUp', 'wideDown', 'wideUpFine', 'wideDownFine'] as const
 export type HotkeyAction = (typeof HOTKEY_ACTIONS)[number]
 
 /** Keys are written as "Ctrl+Alt+D": modifiers first (Ctrl, Shift, Alt), then one key. */
-export const KeyCombo = z.string().regex(/^((Ctrl|Shift|Alt)\+){0,3}([A-Z0-9]|F([1-9]|1[0-2])|Space|Wheel)$/)
+export const KeyCombo = z.string().regex(/^((Ctrl|Shift|Alt)\+){0,3}([A-Z0-9]|F([1-9]|1[0-2])|Space|Wheel|Up|Down)$/)
 
 const Hotkey = z.object({ action: z.enum(HOTKEY_ACTIONS), keys: KeyCombo, enabled: z.boolean() })
 const ChatCommand = z.object({ text: z.string().min(1).max(200), keys: KeyCombo })
@@ -17,6 +17,8 @@ export const ConfigSchema = z.object({
   onlineOnly: z.boolean(),
   autoSearch: z.boolean().default(true),
   theme: z.enum(['dark', 'light', 'system']).default('dark'),
+  widescreen: z.object({ enabled: z.boolean(), wide: z.boolean(), zoom: z.number().min(1.05).max(2), anchorTop: z.boolean() })
+    .default({ enabled: false, wide: false, zoom: 1.35, anchorTop: false }),
   showSellerStatus: z.boolean().default(true),
   ninjaBase: z.string().url(),
   hotkeys: z.array(Hotkey),
@@ -33,6 +35,7 @@ export const DEFAULT_CONFIG: Config = {
   onlineOnly: true,
   autoSearch: true,
   theme: 'dark',
+  widescreen: { enabled: false, wide: false, zoom: 1.35, anchorTop: false },
   showSellerStatus: true,
   ninjaBase: 'https://poe.ninja/api/data',
   hotkeys: [
@@ -45,7 +48,12 @@ export const DEFAULT_CONFIG: Config = {
     { action: 'guidePrev', keys: 'F3', enabled: false },
     { action: 'guideNext', keys: 'F4', enabled: false },
     { action: 'treeOverlay', keys: 'Alt+T', enabled: true },
-    { action: 'gemSearch', keys: 'Alt+S', enabled: true }
+    { action: 'gemSearch', keys: 'Alt+S', enabled: true },
+    { action: 'wideToggle', keys: 'F2', enabled: true },
+    { action: 'wideUp', keys: 'Ctrl+Up', enabled: true },
+    { action: 'wideDown', keys: 'Ctrl+Down', enabled: true },
+    { action: 'wideUpFine', keys: 'Shift+Up', enabled: true },
+    { action: 'wideDownFine', keys: 'Shift+Down', enabled: true }
   ],
   chatCommands: [
     { text: '/hideout', keys: 'F5' },

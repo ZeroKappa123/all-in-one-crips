@@ -211,7 +211,7 @@ export function HotkeyRecorder({ value, onChange, conflict, label, allowWheel }:
   )
 }
 
-const KEY_GLYPH: Record<string, string> = { Ctrl: '⌃', Shift: '⇧', Alt: '⌥', Space: 'Space', Wheel: 'Wheel' }
+const KEY_GLYPH: Record<string, string> = { Ctrl: '⌃', Shift: '⇧', Alt: '⌥', Space: 'Space', Wheel: 'Wheel', Up: '↑', Down: '↓' }
 export function Keys({ combo }: { combo: string }) {
   return <span className="tracking-wide">{combo.split('+').map(k => KEY_GLYPH[k] ?? k).join(' ')}</span>
 }
@@ -221,5 +221,7 @@ export function normaliseKey(code: string): string | null {
   if (/^Digit[0-9]$/.test(code)) return code.slice(5)
   if (/^F([1-9]|1[0-2])$/.test(code)) return code
   if (code === 'Space') return 'Space'
+  if (code === 'ArrowUp') return 'Up'
+  if (code === 'ArrowDown') return 'Down'
   return null
 }

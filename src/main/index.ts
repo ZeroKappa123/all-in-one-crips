@@ -4,7 +4,9 @@ import type { Config } from '@shared/config'
 import { expandChatCommand } from '@shared/config'
 import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './configStore'
 import { registerProxyIpc } from './proxy'
-import { sendChat, startInput, stopInput, updateInputConfig } from './input'
+import { sendChat, setActionGate, startInput, stopInput, updateInputConfig } from './input'
+import { onWidescreenChange, registerWidescreenIpc, setWide, startWidescreen, status as widescreenStatus, stopWidescreen, widescreenAction } from './widescreen'
+import { gameWindowApi } from './gameWindow'
 import { applyTheme, allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
 import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
 import { getLogs, log } from './log'
@@ -25,11 +27,13 @@ function registerIpc(): void {
   ipcMain.handle('config:set', (_e, patch: Partial<Config>) => {
     const next = setConfig(patch)
     updateInputConfig(next)
+    if ('widescreen' in patch) { startWidescreen(); tray?.setContextMenu(trayMenu()) }
     if ('theme' in patch) applyTheme()
     for (const w of allWindows()) w.webContents.send('config:changed', next)
     return next
   })
   registerProxyIpc()
+  registerWidescreenIpc()
   ipcMain.handle('logs:get', () => getLogs())
   ipcMain.on('panel:hide', () => hidePanel())
   ipcMain.on('panel:resize', (_e, h: number) => resizePanel(h))
@@ -44,16 +48,29 @@ function registerIpc(): void {
   ipcMain.on('app:quit', () => app.quit())
 }
 
-function createTray(): void {
-  const icon = nativeImage.createFromPath(join(__dirname, '../../resources/tray.png'))
-  tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon)
-  tray.setToolTip('All-In-One CRIPS')
-  tray.setContextMenu(Menu.buildFromTemplate([
+function trayMenu(): Menu {
+  const ws = widescreenStatus()
+  return Menu.buildFromTemplate([
+    { label: 'Widescreen', type: 'checkbox', checked: ws.enabled && ws.wide, enabled: ws.supported, toolTip: ws.supported ? undefined : 'Windows only', click: item => { setWide(item.checked) } },
+    { type: 'separator' },
     { label: 'Settings', click: () => openSettings() },
     { label: 'Open data folder', click: () => void shell.openPath(dataDir()) },
     { type: 'separator' },
     { label: 'Quit', click: () => app.quit() }
-  ]))
+  ])
+}
+
+/** Every change to widescreen (tray, overlay, hotkey, settings) refreshes the menu and all windows. */
+function widescreenChanged(): void {
+  tray?.setContextMenu(trayMenu())
+  for (const w of allWindows()) w.webContents.send('config:changed', getConfig())
+}
+
+function createTray(): void {
+  const icon = nativeImage.createFromPath(join(__dirname, '../../resources/tray.png'))
+  tray = new Tray(icon.isEmpty() ? nativeImage.createEmpty() : icon)
+  tray.setToolTip('All-In-One CRIPS')
+  tray.setContextMenu(trayMenu())
   tray.on('click', () => openSettings())
 }
 
@@ -66,11 +83,15 @@ app.whenReady().then(() => {
   applyTheme()
   setGuideMovedHandler(guideOverlayMoved)
   initAct()
+  onWidescreenChange(widescreenChanged)
+  setActionGate(a => !a.startsWith('wide') || (getConfig().widescreen.enabled && !!gameWindowApi()))
   createTray()
+  startWidescreen()
   getPanel() // load early so the first check is instant
   inputMode = startInput(config, {
     onAction(action, ctx) {
       if (action === 'overlay') { toggleOverlay(); return }
+      if (action === 'wideToggle' || action === 'wideUp' || action === 'wideDown' || action === 'wideUpFine' || action === 'wideDownFine') { widescreenAction(action); return }
       if (action === 'guideToggle' || action === 'guidePrev' || action === 'guideNext' || action === 'treeOverlay' || action === 'gemSearch') { onActHotkey(action); return }
       if (action === 'wiki') {
         if (!ctx.itemText) return
@@ -106,4 +127,4 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => { /* stay in tray */ })
-app.on('will-quit', () => stopInput())
+app.on('will-quit', () => { stopInput(); stopWidescreen() })

@@ -28,6 +28,13 @@ Dark by default. Switch to **Light** or **System** under Settings → Price Chec
 Item and currency icons are shown straight from Grinding Gear Games' image server (`web.poecdn.com`), like on the official trade site. No game artwork is packaged with the app. Without a connection the short names (chaos, div) are shown instead.
 The campaign guide uses its own symbols for waypoints, towns, quests, portals, trials, crafting and the labyrinth, with the colours and gem dots of exile-leveling's guide.
 
+## Widescreen (Windows)
+
+Switch it on or off in the tray menu (*Widescreen*), in the overlay (Shift+Space, rectangle button) or under Settings → Widescreen.
+The game window becomes borderless and full screen; *Wide picture* makes it lower so the picture gets wider. **F2** switches the wide picture, **Ctrl+↑/↓** moves the window, **Shift+↑/↓** moves it by one pixel. *Wideness* sets how wide (default 1.35); lower it if black bars appear at the sides.
+Only the window frame is changed, never the game itself. If the game runs as administrator, start this app as administrator too.
+Idea after the "PoE Widescreen" AutoHotkey script by Mikey, rebuilt without AutoHotkey.
+
 ## Act Tracker
 
 1. Settings → **Act Tracker**. The game's `Client.txt` is found automatically in the usual folders; otherwise choose it by hand.

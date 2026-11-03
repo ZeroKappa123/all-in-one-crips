@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Bug, Info, Keyboard, Map as MapIcon, MessageSquare, Plus, RefreshCw, SlidersHorizontal, Trash2 } from 'lucide-react'
+import { Bug, Info, Keyboard, Map as MapIcon, MessageSquare, Plus, RectangleHorizontal, RefreshCw, SlidersHorizontal, Trash2 } from 'lucide-react'
 import { type Config, findConflict, HOTKEY_ACTIONS, KeyCombo } from '@shared/config'
 import { useLeagues } from '@/web/background/Leagues'
 import { onAptChange } from 'vue'
@@ -7,11 +7,12 @@ import { Button, Group, HotkeyRecorder, IconTile, NumberInput, Popup, Row, Segme
 import { S } from '../strings'
 import { ActSettings } from './ActSettings'
 
-type Tab = 'general' | 'act' | 'hotkeys' | 'chat' | 'debug' | 'about'
+type Tab = 'general' | 'act' | 'window' | 'hotkeys' | 'chat' | 'debug' | 'about'
 
 const NAV: { id: Tab; label: string; color: string; icon: React.ReactNode }[] = [
   { id: 'general', label: S.tabs.general, color: '#8e8e93', icon: <SlidersHorizontal className="h-[13px] w-[13px]" /> },
   { id: 'act', label: S.tabs.act, color: '#34c759', icon: <MapIcon className="h-[13px] w-[13px]" /> },
+  { id: 'window', label: S.tabs.window, color: '#30b0c7', icon: <RectangleHorizontal className="h-[13px] w-[13px]" /> },
   { id: 'hotkeys', label: S.tabs.hotkeys, color: '#0a84ff', icon: <Keyboard className="h-[13px] w-[13px]" /> },
   { id: 'chat', label: S.tabs.chat, color: '#ff9f0a', icon: <MessageSquare className="h-[13px] w-[13px]" /> },
   { id: 'debug', label: S.tabs.debug, color: '#ff375f', icon: <Bug className="h-[13px] w-[13px]" /> },
@@ -65,6 +66,7 @@ export function Settings() {
           {state.inputMode === 'fallback' && tab !== 'about' && <StatusBanner tone="warning">{S.fallbackInput}</StatusBanner>}
           {tab === 'general' && <General config={state.config} save={save} />}
           {tab === 'act' && <ActSettings />}
+          {tab === 'window' && <Widescreen config={state.config} />}
           {tab === 'hotkeys' && <Hotkeys config={state.config} save={save} />}
           {tab === 'chat' && <Chat config={state.config} save={save} />}
           {tab === 'debug' && <Debug dataDir={state.dataDir} />}
@@ -126,7 +128,8 @@ function Hotkeys({ config, save }: { config: Config; save: (p: Partial<Config>) 
   const [conflicts, setConflicts] = useState<Record<string, string | null>>({})
   const groups: { title: string; actions: (typeof HOTKEY_ACTIONS)[number][] }[] = [
     { title: S.pcSettings.priceGroup, actions: ['priceCheck', 'priceCheckLocked', 'wiki', 'overlay', 'stashScroll'] },
-    { title: S.tabs.act, actions: ['guideToggle', 'guidePrev', 'guideNext', 'treeOverlay', 'gemSearch'] }
+    { title: S.tabs.act, actions: ['guideToggle', 'guidePrev', 'guideNext', 'treeOverlay', 'gemSearch'] },
+    { title: S.wide.title, actions: ['wideToggle', 'wideUp', 'wideDown', 'wideUpFine', 'wideDownFine'] }
   ]
   return (
     <>
@@ -217,9 +220,46 @@ function About() {
         <Row label="exile-leveling" detail={S.about.leveling} />
         <Row label="Path of Exile skill tree data" detail={S.about.tree} />
         <Row label="Inter" detail={S.about.inter} />
+        <Row label="PoE Widescreen (idea)" detail={S.wide.credit} />
         <Row label="Path of Exile icons" detail={S.iconsNote} />
       </Group>
       <div className="flex justify-center"><Button variant="danger" onClick={() => window.crips.quit()}>{S.quit}</Button></div>
+    </>
+  )
+}
+
+function Widescreen({ config }: { config: Config }) {
+  const [st, setSt] = useState<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean } | null>(null)
+  const ws = config.widescreen
+  useEffect(() => {
+    const load = () => void window.crips.widescreen.status().then(setSt)
+    load()
+    const t = setInterval(load, 2000)
+    return () => clearInterval(t)
+  }, [config.widescreen])
+  const upd = async (patch: Partial<Config['widescreen']>) => setSt(await window.crips.widescreen.update(patch))
+  return (
+    <>
+      {st && !st.supported && <StatusBanner tone="warning">{S.wide.unsupported}</StatusBanner>}
+      {st?.supported && <StatusBanner tone="info">{st.found ? S.wide.running : S.wide.notRunning}</StatusBanner>}
+      <Group footer={S.wide.admin}>
+        <Row label={S.wide.enable} detail={S.wide.enableHelp} htmlFor="ws-on">
+          <Switch id="ws-on" label={S.wide.enable} checked={ws.enabled} onChange={v => void upd({ enabled: v })} />
+        </Row>
+        <Row label={S.wide.wide} detail={S.wide.wideHelp} htmlFor="ws-wide">
+          <Switch id="ws-wide" label={S.wide.wide} checked={ws.enabled && ws.wide} onChange={async v => setSt(await window.crips.widescreen.setWide(v))} />
+        </Row>
+      </Group>
+      <Group footer={S.wide.keysHelp}>
+        <Row label={S.wide.zoom} detail={S.wide.zoomHelp} htmlFor="ws-zoom">
+          <input id="ws-zoom" type="range" min={1.05} max={2} step={0.01} value={ws.zoom} onChange={e => void upd({ zoom: Number(e.target.value) })} className="w-[160px] accent-[var(--c-accent)]" />
+          <span className="text-sm tabular text-text-muted w-[40px] text-right">{ws.zoom.toFixed(2)}</span>
+        </Row>
+        <Row label={S.wide.top} detail={S.wide.topHelp} htmlFor="ws-top">
+          <Switch id="ws-top" label={S.wide.top} checked={ws.anchorTop} onChange={v => void upd({ anchorTop: v })} />
+        </Row>
+      </Group>
+      <p className="px-5 text-sm text-text-muted">{S.wide.credit}</p>
     </>
   )
 }

@@ -7,6 +7,11 @@ export type Result<T> = { ok: true; data: T } | { ok: false; error: { kind: stri
 const api = {
   proxy: (url: string, init: { method?: string; headers?: Record<string, string>; body?: string }): Promise<{ status: number; headers: Record<string, string>; body: string }> => ipcRenderer.invoke('crips:proxy', url, init),
   readData: (path: string, kind: 'text' | 'binary'): Promise<string | ArrayBuffer> => ipcRenderer.invoke('crips:data', path, kind),
+  widescreen: {
+    status: (): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:status'),
+    setWide: (wide: boolean): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:wide', wide),
+    update: (patch: Partial<Config['widescreen']>): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:update', patch)
+  },
   getConfig: (): Promise<{ config: Config; repaired: boolean; inputMode: 'hook' | 'fallback'; dataDir: string }> => ipcRenderer.invoke('config:get'),
   setConfig: (patch: Partial<Config>): Promise<Config> => ipcRenderer.invoke('config:set', patch),
   logs: (): Promise<{ at: string; level: string; msg: string }[]> => ipcRenderer.invoke('logs:get'),

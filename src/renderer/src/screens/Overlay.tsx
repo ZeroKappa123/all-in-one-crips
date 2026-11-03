@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { GripVertical, Settings as Cog, Timer, Map as MapIcon, Network, Package } from 'lucide-react'
+import { GripVertical, Settings as Cog, Timer, Map as MapIcon, Network, Package, RectangleHorizontal } from 'lucide-react'
 import type { Config } from '@shared/config'
 import { Button } from '../components/ui'
 import { S } from '../strings'
@@ -42,6 +42,11 @@ export function Overlay() {
               </Button>
               <Button aria-label={S.actions.treeOverlay} title={S.actions.treeOverlay} onClick={() => { window.crips.hideOverlay(); window.crips.act.open('tree') }}>
                 <Network aria-hidden className="h-[16px] w-[16px]" />
+              </Button>
+              <Button aria-label={S.wide.wide} title={S.wide.wide} aria-pressed={config.widescreen.enabled && config.widescreen.wide}
+                className={config.widescreen.enabled && config.widescreen.wide ? '!bg-accent !text-on-accent' : ''}
+                onClick={() => void window.crips.widescreen.setWide(!(config.widescreen.enabled && config.widescreen.wide))}>
+                <RectangleHorizontal aria-hidden className="h-[16px] w-[16px]" />
               </Button>
               <Button aria-label={S.act.gear} title={S.act.gear} onClick={() => window.crips.act.open('gear')}>
                 <Package aria-hidden className="h-[16px] w-[16px]" />

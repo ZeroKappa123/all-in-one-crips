@@ -32,7 +32,7 @@ export const S = {
   baseType: 'Same base type',
   waiting: 'Hover an item in the game and press your price-check hotkey.',
   settingsTitle: 'Settings',
-  tabs: { general: 'Price Check', act: 'Act Tracker', hotkeys: 'Keyboard', chat: 'Chat Commands', debug: 'Diagnostics', about: 'About' } as const,
+  tabs: { general: 'Price Check', act: 'Act Tracker', window: 'Widescreen', hotkeys: 'Keyboard', chat: 'Chat Commands', debug: 'Diagnostics', about: 'About' } as const,
   league: 'League',
   tolerance: 'Start searches this far below your roll',
   onlineOnly: 'Only show sellers who are online',
@@ -42,7 +42,8 @@ export const S = {
   actions: {
     priceCheck: 'Price check', priceCheckLocked: 'Price check (stays open)', overlay: 'Show overlay', wiki: 'Open item in wiki',
     stashScroll: 'Scroll stash tabs', guideToggle: 'Show or hide the guide', guidePrev: 'Guide: previous page', guideNext: 'Guide: next page',
-    treeOverlay: 'Skill tree overlay', gemSearch: 'Paste gem search into vendor'
+    treeOverlay: 'Skill tree overlay', gemSearch: 'Paste gem search into vendor',
+    wideToggle: 'Widescreen on/off', wideUp: 'Move game window up', wideDown: 'Move game window down', wideUpFine: 'Move up by 1 pixel', wideDownFine: 'Move down by 1 pixel'
   } as const,
   chatHelp: 'One message per key press. Use @last for the player you last whispered with.',
   addCommand: 'Add command',
@@ -58,6 +59,19 @@ export const S = {
   editWidgets: 'Arrange widgets', doneEditing: 'Done',
   quit: 'Quit All-In-One CRIPS',
   appName: 'All-In-One CRIPS',
+  wide: {
+    title: 'Widescreen',
+    enable: 'Manage the game window', enableHelp: 'Keeps the game window borderless and full screen. Needed for the wide picture.',
+    wide: 'Wide picture', wideHelp: 'Makes the game window lower so the picture gets wider. Also in the tray menu and the overlay.',
+    zoom: 'Wideness', zoomHelp: 'Higher is wider. If black bars appear at the sides, lower it a little.',
+    top: 'Stick to the top edge', topHelp: 'Off: the window sits a little below the top edge.',
+    unsupported: 'Moving the game window works on Windows only.',
+    notRunning: 'Path of Exile is not running. Settings apply as soon as it starts.',
+    running: 'Path of Exile found.',
+    admin: 'If the game runs as administrator, start this app as administrator too, or Windows blocks moving its window.',
+    keysHelp: 'F2 switches the wide picture, Ctrl+↑/↓ moves the window, Shift+↑/↓ moves it by one pixel. Change keys under Keyboard.',
+    credit: 'Idea: “PoE Widescreen” AutoHotkey script by Mikey. Rebuilt here without AutoHotkey.'
+  },
   appearance: { title: 'Appearance', label: 'Appearance', dark: 'Dark', light: 'Light', system: 'System', help: 'Applies to every window, the overlays above the game included.' },
   iconsNote: 'Item and currency icons are shown from Grinding Gear Games’ own image server.',
   pcSettings: {

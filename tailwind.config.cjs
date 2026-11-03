@@ -6,7 +6,7 @@ const spacing = Object.fromEntries(t.space.map((v, i) => [String(i), `${v}px`]))
 module.exports = {
   content: ['./src/renderer/**/*.{html,tsx,ts}'],
   theme: {
-    colors: { transparent: 'transparent', current: 'currentColor', ...colors },
+    colors: { transparent: 'transparent', current: 'currentColor', white: '#ffffff', black: '#000000', ...colors },
     fontSize, spacing: { ...spacing, row: 'var(--row-height)', panel: 'var(--panel-width)' },
     borderRadius: { none: '0', sm: 'var(--r-sm)', md: 'var(--r-md)', lg: 'var(--r-lg)', full: 'var(--r-pill)' },
     boxShadow: { card: 'var(--sh-card)', pop: 'var(--sh-pop)', none: 'none' },

@@ -144,3 +144,32 @@ test('light appearance in the price panel', async () => {
   await page.screenshot({ path: join(shots, 'S01-light.png') })
   await app.close()
 })
+
+test('widescreen: switch in settings, overlay menu and keyboard list', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'settings' })
+  await page.getByRole('tab', { name: 'Widescreen' }).click()
+  // this test machine is Linux: the feature explains itself instead of failing
+  await expect(page.getByText('Moving the game window works on Windows only.')).toBeVisible()
+  await page.getByLabel('Wide picture').click()
+  await expect(page.getByLabel('Manage the game window')).toBeChecked() // turning on the wide picture switches the feature on
+  await page.getByLabel('Wideness').fill('1.5')
+  await page.screenshot({ path: join(shots, 'S22-widescreen.png') })
+  const dir = await app.evaluate(async () => (globalThis as any).process.env.CRIPS_DATA_DIR)
+  await expect.poll(() => JSON.parse(readFileSync(join(dir, 'config.json'), 'utf8')).widescreen).toMatchObject({ enabled: true, wide: true, zoom: 1.5 })
+  await page.getByRole('tab', { name: 'Keyboard' }).click()
+  await expect(page.getByRole('button', { name: /^Widescreen on\/off: F2/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /^Move game window up: Ctrl\+Up/ })).toBeVisible()
+  await app.close()
+})
+
+test('widescreen: on/off button in the overlay menu', async () => {
+  const { app, page } = await launch({ CRIPS_OPEN: 'overlay' })
+  const btn = page.getByRole('button', { name: 'Wide picture' })
+  await expect(btn).toHaveAttribute('aria-pressed', 'false')
+  await btn.click()
+  await expect(btn).toHaveAttribute('aria-pressed', 'true')
+  await page.screenshot({ path: join(shots, 'S05-overlay-widescreen.png') })
+  await btn.click()
+  await expect(btn).toHaveAttribute('aria-pressed', 'false')
+  await app.close()
+})
