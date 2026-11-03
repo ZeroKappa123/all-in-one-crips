@@ -1,0 +1,776 @@
+#section Act 1
+Find and kill {kill|Hillock}
+➞ {enter|1_1_town} #Lioneye's Watch
+Hand in {quest|a1q1} #Enemy at the Gate
+➞ {enter|1_1_2} #The Coast
+#ifdef LEAGUE_START
+    Get {waypoint_get}
+#endif
+➞ {enter|1_1_3} #The Mud Flats
+Find 3x{quest_text|Glyph}
+    #sub Little streams connect the 3 Rhoa nests
+    #sub Usually form a triangle, but will rarely form a line
+➞ {enter|1_1_4_1} #The Submerged Passage
+#ifdef LEAGUE_START
+    {waypoint|1_1_2} #The Coast
+    ➞ {enter|1_1_2a} #The Tidal Island
+    Find and kill {kill|Hailrake}, take {quest_text|Medicine Chest}
+        #sub Go {dir|270}
+        #sub If you find a ledge, turn around and go {dir|90}
+        #sub Recommended Level: 4
+    {logout}
+    Hand in {quest|a1q4} #Breaking Some Eggs
+    Hand in {quest|a1q5} #Mercy Mission
+#endif
+#ifndef LEAGUE_START
+    {waypoint|1_1_town} #Lioneye's Watch
+    Hand in {quest|a1q4} #Breaking Some Eggs
+#endif
+{waypoint|1_1_4_1} #The Submerged Passage
+➞ {enter|1_1_4_0} #The Flooded Depths
+    #sub Go right of the bridge
+Find and kill {kill|The Dweller of the Deep}
+    #sub Search opposite the entrance
+    #sub Look for the large empty room
+Take the {generic|Boat} ➞ {enter|1_1_4_1} #The Submerged Passage
+➞ {enter|1_1_5} #The Ledge
+➞ {enter|1_1_6} #The Climb
+➞ {enter|1_1_7_1} #The Lower Prison
+{waypoint|1_1_town} #Lioneye's Watch
+Hand in {quest|a1q7} #The Dweller of the Deep
+Hand in {quest|a1q2|a1q2b} #The Caged Brute
+{waypoint|1_1_7_1} #The Lower Prison
+#ifdef LEAGUE_START
+    Complete {trial}
+        #sub Usually {dir|45}
+#endif
+➞ {enter|1_1_7_2} #The Upper Prison
+#ifdef LEAGUE_START
+    Find {generic|Chemist's Strongbox}
+        #sub Look for map icon, access with nearby switch
+        #sub High chance for {generic|Quicksilver Flask}
+        #sub Vendor {generic|Quicksilver Flask} + {generic|Orb of Augmentation} + Normal {generic|Boots}
+        #sub Vendor {generic|Quicksilver Flask} + {generic|Orb of Augmentation} + Movement Speed {generic|Boots}
+#endif
+➞ {arena|The Warden's Quarters}, kill {kill|Brutus, Lord Incarcerator}
+    #sub Recommended Level: 8
+{logout}
+Hand in {quest|a1q2|a1q2} #The Caged Brute
+{waypoint|1_1_8} #Prisoner's Gate
+➞ {enter|1_1_9} #The Ship Graveyard
+    #sub Go down the ledge next to the road
+Kill {kill|Captain Fairgraves}, take {quest_text|Allflame}
+➞ {enter|1_1_11_1} #The Cavern of Wrath
+{waypoint|1_1_town} #Lioneye's Watch
+Hand in {quest|a1q6} #The Marooned Mariner
+Hand in {quest|a1q3} #The Siren's Cadence
+{waypoint|1_1_11_1} #The Cavern of Wrath
+➞ {enter|1_1_11_2} #The Cavern of Anger
+    #sub Follow the water
+➞ {arena|Merveil's Lair}, kill {kill|Merveil, the Siren}
+    #sub Follow the water
+    #sub Recommended Level: 12
+#section Act 2
+➞ {enter|1_2_1} #The Southern Forest
+➞ {enter|1_2_town} #The Forest Encampment
+➞ {enter|1_2_2} #The Old Fields
+    #sub Go {dir|45}
+#ifdef LEAGUE_START
+    Find {area|1_2_2a}, place {portal|set} #The Den
+#endif
+➞ {enter|1_2_3} #The Crossroads
+    #sub Follow the road
+#ifdef LEAGUE_START
+    {waypoint|1_2_town} #The Forest Encampment
+        #sub Follow the road
+    Take {portal|use}
+    ➞ {enter|1_2_2a} #The Den
+    Find and kill {kill|The Great White Beast}
+    {logout}
+    Hand in {quest|a2q10} #The Great White Beast
+    {waypoint|1_2_3} #The Crossroads
+#endif
+#ifndef LEAGUE_START
+    Get {waypoint_get}
+#endif
+➞ {enter|1_2_6_1} #The Chamber of Sins Level 1
+    #sub Go {dir|315}
+➞ {enter|1_2_6_2} #The Chamber of Sins Level 2
+    #sub Go in same direction as {waypoint}
+#ifdef LEAGUE_START
+    Complete {trial}
+#endif
+Kill {kill|Fidelitas, the Mourning}, take {quest_text|Baleful Gem}
+    #sub Look for the long hallway
+    #sub Recommended Level: 14-15
+{logout}
+Hand in {quest|a2q6} #Intruders in Black
+{waypoint|1_2_3} #The Crossroads
+➞ {enter|1_2_15} #The Fellshrine Ruins
+    #sub Go {dir|135}
+➞ {enter|1_2_5_1} #The Crypt Level 1
+    #sub Follow the road
+#ifdef LEAGUE_START
+    Complete {trial}
+#endif
+➞ {enter|1_2_5_2} #The Crypt Level 2
+Find {quest_text|Altar}, take {quest_text|Golden Hand}
+{logout}
+Hand in {quest|a2q5} #Through Sacred Ground
+➞ {enter|1_2_7} #The Riverways
+    #sub Go {dir|225}
+Get {waypoint_get}
+    #sub Follow the road
+➞ {enter|1_2_9} #The Western Forest
+    #sub Follow the road
+Get {waypoint_get}
+    #sub Follow the road
+➞ {enter|1_2_10} #The Weaver's Chambers
+    #sub Search the side of road opposite {waypoint}
+➞ {arena|The Weaver's Nest}, kill {kill|The Weaver}, take {quest_text|Maligaro's Spike}
+    #sub Try go {dir|270}, if it's blocked go {dir|45}
+    #sub Recommended Level: 16
+{logout}
+Hand in {quest|a2q4} #Sharp and Cruel
+#ifdef BANDIT_KILL
+    {waypoint|1_2_3} #The Crossroads
+    ➞ {enter|1_2_4} #The Broken Bridge
+        #sub Go {dir|45}
+    Kill {kill|Kraityn, Scarbearer}, take {quest_text|Kraityn's Amulet}
+        #sub Follow the road
+    {logout}
+    {waypoint|1_2_7} #The Riverways
+    ➞ {enter|1_2_12} #The Wetlands
+        #sub Look for 2 pillars near {waypoint}, follow the trail
+    Find and kill {kill|Oak, Skullbreaker}, take {quest_text|Oak's Amulet}
+    {waypoint|1_2_9} #The Western Forest
+        #sub Search opposite direction of the encampment entrance
+    Kill {kill|Alira Darktongue}, take {quest_text|Alira's Amulet}
+        #sub Go {dir|180} look for the torch touching the road
+        #sub Follow the trail in the direction of the torch
+    Kill {kill|Captain Arteri}
+        #sub Follow the road {dir|225}
+    Take {quest_text|Thaumetic Emblem}, activate {quest_text|Thaumetic Seal}
+    {logout}
+    Hand in {quest|a2q7}, take {quest_text|The Apex} #Deal with the Bandits
+    {waypoint|1_1_town} #Lioneye's Watch
+    Hand in {quest|a1q9} #The Way Forward
+    {waypoint|1_2_12} #The Wetlands
+    Poison the {quest_text|Tree Roots} ➞ {enter|1_2_11} #The Vaal Ruins
+#endif
+#ifdef BANDIT_ALIRA
+    {waypoint|1_2_3} #The Crossroads
+    ➞ {enter|1_2_4} #The Broken Bridge
+        #sub Go {dir|45}
+    Kill {kill|Kraityn, Scarbearer}, take {quest_text|Kraityn's Amulet}
+        #sub Follow the road
+    {logout}
+    {waypoint|1_2_7} #The Riverways
+    ➞ {enter|1_2_12} #The Wetlands
+        #sub Look for 2 pillars near {waypoint}, follow the trail
+    Find and kill {kill|Oak, Skullbreaker}, take {quest_text|Oak's Amulet}
+    {waypoint|1_2_9} #The Western Forest
+        #sub Search opposite direction of the encampment entrance
+    Help {kill|Alira Darktongue}, take {quest_text|The Apex}
+        #sub Go {dir|180} look for the torch touching the road
+        #sub Follow the trail in the direction of the torch
+    Kill {kill|Captain Arteri}
+        #sub Follow the road {dir|225}
+    Take {quest_text|Thaumetic Emblem}, activate {quest_text|Thaumetic Seal}
+    {logout}
+    {waypoint|1_1_town} #Lioneye's Watch
+    Hand in {quest|a1q9} #The Way Forward
+    {waypoint|1_2_12} #The Wetlands
+    Poison the {quest_text|Tree Roots} ➞ {enter|1_2_11} #The Vaal Ruins
+#endif
+#ifdef BANDIT_KRAITYN
+    {waypoint|1_2_7} #The Riverways
+    ➞ {enter|1_2_12} #The Wetlands
+        #sub Look for 2 pillars near {waypoint}, follow the trail
+    Find and kill {kill|Oak, Skullbreaker}, take {quest_text|Oak's Amulet}
+    {waypoint|1_2_9} #The Western Forest
+        #sub Search opposite direction of the encampment entrance
+    Kill {kill|Alira Darktongue}, take {quest_text|Alira's Amulet}
+        #sub Go {dir|180} look for the torch touching the road
+        #sub Follow the trail in the direction of the torch
+    Kill {kill|Captain Arteri}
+        #sub Follow the road {dir|225}
+    Take {quest_text|Thaumetic Emblem}, activate {quest_text|Thaumetic Seal}
+    {logout}
+    {waypoint|1_1_town} #Lioneye's Watch
+    Hand in {quest|a1q9} #The Way Forward
+    {waypoint|1_2_3} #The Crossroads
+    ➞ {enter|1_2_4} #The Broken Bridge
+        #sub Go {dir|45}
+    Help {kill|Kraityn, Scarbearer}, take {quest_text|The Apex}
+        #sub Follow the road
+    {logout}
+    {waypoint|1_2_12} #The Wetlands
+    Poison the {quest_text|Tree Roots} ➞ {enter|1_2_11} #The Vaal Ruins
+#endif
+#ifdef BANDIT_OAK
+    {waypoint|1_2_3} #The Crossroads
+    ➞ {enter|1_2_4} #The Broken Bridge
+        #sub Go {dir|45}
+    Kill {kill|Kraityn, Scarbearer}, take {quest_text|Kraityn's Amulet}
+        #sub Follow the road
+    {logout}
+    {waypoint|1_2_9} #The Western Forest
+    Kill {kill|Alira Darktongue}, take {quest_text|Alira's Amulet}
+        #sub Go {dir|180} look for the torch touching the road
+        #sub Follow the trail in the direction of the torch
+    Kill {kill|Captain Arteri}
+        #sub Follow the road {dir|225}
+    Take {quest_text|Thaumetic Emblem}, activate {quest_text|Thaumetic Seal}
+    {logout}
+    {waypoint|1_1_town} #Lioneye's Watch
+    Hand in {quest|a1q9} #The Way Forward
+    {waypoint|1_2_7} #The Riverways
+    ➞ {enter|1_2_12} #The Wetlands
+        #sub Look for 2 pillars near {waypoint}, follow the trail
+    Find and help {kill|Oak, Skullbreaker}, take {quest_text|The Apex}
+    Poison the {quest_text|Tree Roots} ➞ {enter|1_2_11} #The Vaal Ruins
+        #sub Search opposite direction of the encampment entrance
+#endif
+➞ {enter|1_2_8} #The Northern Forest
+    #sub S shape or L shape leads to exit
+➞ {enter|1_2_14_2} #The Caverns
+Get {crafting}
+➞ {enter|1_2_14_3} #The Ancient Pyramid
+➞ {arena|Pyramid Apex}, kill {kill|Vaal Oversoul}
+    #sub First floor exit will be in one of the 3 corners
+    #sub Remaining floors will have the exit diagonally across from the entrance
+    #sub Recommended Level: 20-22
+Get {crafting}
+#section Act 3
+➞ {enter|1_3_1} #The City of Sarn
+Get {crafting}
+Help and talk to {generic|Clarissa}
+➞ {enter|1_3_town} #The Sarn Encampment
+➞ {enter|1_3_2} #The Slums
+    #sub Go {dir|0}
+➞ {enter|1_3_3_1} #The Crematorium
+    #sub Follow Stairs
+#ifdef LEAGUE_START
+    Complete {trial}
+#endif
+Find and kill {kill|Piety}, take {quest_text|Tolman's Bracelet}
+Get {crafting}
+{logout}
+Talk to {generic|Clarissa}, take {quest_text|Sewer Keys}
+Hand in {quest|a3q1} #Lost in Love
+➞ {enter|1_3_2} #The Slums
+    #sub Go {dir|0}
+➞ {enter|1_3_10_1} #The Sewers
+Find 1x{quest_text|Platinum Bust}
+Get {waypoint_get}
+Find 2x{quest_text|Platinum Bust}
+➞ {enter|1_3_5} #The Marketplace
+Get {waypoint_get}
+#ifdef LEAGUE_START
+    ➞ {enter|1_3_6} #The Catacombs
+        #sub Look around nearby
+    Complete {trial}
+    Get {crafting}
+#endif
+{logout}
+Hand in {quest|a3q11} #Victario's Secrets
+{waypoint|1_3_5} #The Marketplace
+➞ {enter|1_3_7} #The Battlefront
+    #sub Search {dir|0}
+Get {waypoint_get}
+    #sub Go {dir|315}
+Find and take {quest_text|Ribbon Spool}
+    #sub Go {dir|225}
+➞ {enter|1_3_8_1} #The Solaris Temple Level 1
+    #sub Go {dir|45}
+➞ {enter|1_3_8_2} #The Solaris Temple Level 2
+➞ {arena|Eternal Laboratory}, get {crafting}
+{waypoint|1_3_7} #The Battlefront
+➞ {enter|1_3_9} #The Docks
+    #sub Go {dir|315}
+Find and take {quest_text|Thaumetic Sulphite}
+{logout}
+{waypoint|1_3_8_2} #The Solaris Temple Level 2
+Talk to {generic|Lady Dialla}
+Hand in {quest|a3q4} #The Ribbon Spool
+Hand in {quest|a3q5}, take {quest_text|Infernal Talc} #Fiery Dust
+{waypoint|1_3_10_1} #The Sewers
+Burn the {quest_text|Undying Blockage}
+Get {crafting}
+➞ {enter|1_3_13} #The Ebony Barracks
+Get {waypoint_get}
+Kill {kill|General Gravicius}
+    #sub Go {dir|315}
+➞ {enter|1_3_14_1} #The Lunaris Temple Level 1
+➞ {enter|1_3_14_2} #The Lunaris Temple Level 2
+Find and kill {kill|Piety}, take {quest_text|Tower Key}
+    #sub Follow stairs that are going up
+    #sub At the fork in the road with wagons, go the route with 1 wagon, not 2
+Get {crafting}
+{logout}
+Hand in {quest|a3q9} #Piety's Pets
+Hand in {quest|a3q8} #Sever the Right Hand
+{waypoint|1_3_13} #The Ebony Barracks
+➞ {enter|1_3_15} #The Imperial Gardens
+    #sub Go {dir|45}
+Get {waypoint_get}
+    #sub Follow the road
+#ifdef LEAGUE_START
+    Complete {trial}
+        #sub Go {dir|0}
+    Get {crafting}
+    {logout}
+    {waypoint|1_3_15} #The Imperial Gardens
+#endif
+#ifdef LIBRARY
+    ➞ {enter|1_3_17_1} #The Library
+        #sub Go {dir|315}
+    Get {waypoint_get}
+    Find {generic|Loose Candle} ➞ {enter|1_3_17_2} #The Archives
+        #sub Look for a candle in a narrow corridor
+    Get {crafting}
+    Find 4x{quest_text|Golden Page}
+    {logout}
+    {waypoint|1_3_17_1} #The Library
+        #sub Put currency needed to buy skill gems in inventory
+    Hand in {quest|a3q12} #A Fixture of Fate
+    {waypoint|1_3_15} #The Imperial Gardens
+#endif
+➞ {enter|1_3_18_1} #The Sceptre of God
+➞ {enter|1_3_18_2} #The Upper Sceptre of God
+    #sub Stairs spawn in one of the corners
+➞ {arena|Tower Rooftop}, Kill {kill|Dominus, High Templar}
+    #sub Look for barricades
+#section Act 4
+➞ {enter|1_4_1} #The Aqueduct
+➞ {enter|1_4_town} #Highgate
+➞ {enter|1_4_2} #The Dried Lake
+Find and kill {kill|Voll, Emperor of Purity}, take {quest_text|Deshret's Banner}
+Get {crafting}
+{logout}
+Break {quest_text|Deshret's Seal}
+Hand in {quest|a4q2} #Breaking the Seal
+➞ {enter|1_4_3_1} #The Mines Level 1
+Get {crafting}
+➞ {enter|1_4_3_2} #The Mines Level 2
+Free {quest_text|Deshret}
+➞ {enter|1_4_3_3} #The Crystal Veins
+Get {crafting}
+{waypoint|1_4_town} #Highgate
+Hand in {quest|a4q6} #An Indomitable Spirit
+{waypoint|1_3_town} #The Sarn Encampment
+➞ {enter|Labyrinth_Airlock}, get {waypoint_get} #Aspirants' Plaza
+{ascend|normal}
+Get {crafting|1_Labyrinth_boss_3}
+{waypoint|1_4_3_3} #The Crystal Veins
+➞ {enter|1_4_5_1} #Daresso's Dream
+➞ {enter|1_4_5_2} #The Grand Arena
+Get {crafting}
+{waypoint|1_4_3_3} #The Crystal Veins
+➞ {enter|1_4_4_1} #Kaom's Dream
+➞ {enter|1_4_4_3} #Kaom's Stronghold
+    #sub Go {dir|45}
+    #sub Follow Bridges
+Get {crafting}
+➞ {arena|Caldera of the King}, kill {kill|King Kaom}, take {quest_text|The Eye of Fury}
+{portal|use}
+{waypoint|1_4_5_2} #The Grand Arena
+➞ {arena|The Ring of Blades}, kill {kill|Daresso, King of Swords}, take {quest_text|The Eye of Desire}
+    #sub Go {dir|225} follow the exits keeping {dir|270}
+{logout}
+{waypoint|1_4_3_3} #The Crystal Veins
+Talk to {generic|Lady Dialla}
+➞ {enter|1_4_6_1} #The Belly of the Beast Level 1
+➞ {enter|1_4_6_2} #The Belly of the Beast Level 2
+➞ {arena|The Bowels of the Beast}, kill {kill|Piety, the Abomination}
+Talk to {generic|Piety}
+Get {crafting}
+➞ {enter|1_4_6_3} #The Harvest
+Find and kill {kill|Doedre Darktongue}, take {quest_text|Malachai's Lungs}
+Find and kill {kill|Maligaro, The Inquisitor}, take {quest_text|Malachai's Heart}
+Find and kill {kill|Shavronne of Umbra}, take {quest_text|Malachai's Entrails}
+Hand in {quest|a4q5} #Corpus Malachus
+➞ {arena|The Black Core}, kill {kill|Malachai, The Nightmare}
+{logout}
+Hand in {quest|a4q1} #The Eternal Nightmare
+➞ {enter|1_4_7} #The Ascent
+Get {crafting}
+Activate {quest_text|The Resonator}, use {quest_text|Oriath Portal}
+#section Act 5
+➞ {enter|1_5_1} #The Slave Pens
+Find and kill {kill|Overseer Krow}
+    #sub Go {dir|180} until you find the hanged Karui
+    #sub Loop around clockwise to go {dir|270}
+➞ {enter|1_5_town} #Overseer's Tower
+Hand in {quest|a5q1b} #Return to Oriath
+➞ {enter|1_5_2} #The Control Blocks
+Find and take {quest_text|Miasmeter}
+    #sub Go {dir|270} as much as possible
+Find and kill {kill|Justicar Casticus}, take {quest_text|Eyes of Zeal}
+    #sub Go {dir|45} from {quest_text|Miasmeter}
+➞ {enter|1_5_3} #Oriath Square
+➞ {enter|1_5_4} #The Templar Courts
+    #sub Go {dir|45}
+➞ {enter|1_5_5} #The Chamber of Innocence
+    #sub Loop around clockwise
+    #sub Farm Level: 40-42
+Get {crafting}
+➞ {arena|Sanctum of Innocence}, kill {kill|High Templar Avarius}
+    #sub Go {dir|315} counter-clockwise spiral
+{logout}
+Hand in {quest|a5q2} #The Key to Freedom
+Hand in {quest|a5q3} #In Service to Science
+Hand in {quest|a5q4} #Death to Purity
+{waypoint|1_5_5} #The Chamber of Innocence
+➞ {enter|1_5_4b} #The Torched Courts
+➞ {enter|1_5_3b} #The Ruined Square
+    #sub Loop around counter-clockwise
+Get {waypoint_get}
+    #sub Go {dir|315}
+➞ {enter|1_5_6} #The Ossuary
+Find and take {quest_text|Sign of Purity}
+Get {crafting}
+{logout}
+{waypoint|1_5_3b} #The Ruined Square
+➞ {enter|1_5_7} #The Reliquary
+    #sub Go {dir|225} find the plaza
+    #sub Go {dir|180}
+Find 3x{quest_text|Kitava's Torment}, search in the corners of the map
+Get {crafting}
+{logout}
+Hand in {quest|a5q7} #Kitava's Torments
+{waypoint|1_5_3b} #The Ruined Square
+➞ {enter|1_5_8} #The Cathedral Rooftop
+    #sub Go {dir|225}
+➞ {arena|Cathedral Apex}, kill {kill|Kitava, the Insatiable}
+Talk to {generic|Lilly Roth}, Sail to Wraeclast
+#section Act 6
+➞ {enter|2_6_town} #Lioneye's Watch
+➞ {enter|2_6_1} #The Twilight Strand
+Kill {kill|Everything}
+{logout}
+Hand in {quest|a6q4} #Fallen from Grace
+➞ {enter|2_6_2} #The Coast
+➞ {enter|2_6_4} #The Mud Flats
+Find and kill {kill|The Dishonoured Queen}, take {quest_text|Eye of Conquest}
+    #sub {dir|45} corner of area, normally by a house
+➞ {enter|2_6_5} #The Karui Fortress
+➞ {arena|Tukohama's Keep}, kill {kill|Tukohama, Karui God of War}
+    #sub Go {dir|45}
+#ifdef LEAGUE_START
+        #sub Find and kill the pack of monster on the island {dir|225} for a {generic|Tattoo}
+#endif
+Get {crafting}
+➞ {enter|2_6_6} #The Ridge
+    #sub Go {dir|0}
+➞ {enter|2_6_7_1} #The Lower Prison
+#ifdef LEAGUE_START
+    Complete {trial}
+#endif
+Get {crafting}
+➞ {enter|2_6_7_2} #Shavronne's Tower
+➞ {arena|Prison Rooftop}, kill {kill|Shavronne the Returned} & {kill|Reassembled Brutus}
+➞ {arena|The Warden's Chambers}
+Get {crafting}
+➞ {enter|2_6_8} #Prisoner's Gate
+➞ {arena|Valley of the Fire Drinker}, kill {kill|Abberath, the Cloven One}
+    #sub Go down the ledge next to the road
+{portal|use}
+Hand in {quest|a6q7} #The Cloven One
+{waypoint|2_6_8} #Prisoner's Gate
+➞ {enter|2_6_9} #The Western Forest
+    #sub Follow the road
+Get {crafting}
+    #sub Look for the torch touching the road
+    #sub Follow the trail in the direction of the torch
+➞ {enter|2_6_10} #The Riverways
+    #sub Follow the road
+Get {waypoint_get}
+    #sub Follow the road
+➞ {enter|2_6_11} #The Wetlands
+    #sub Look for 2 pillars near {waypoint}, follow the trail
+➞ {arena|The Spawning Ground}, kill {kill|Ryslatha, the Puppet Mistress}
+    #sub Go {dir|315}
+{logout}
+Hand in {quest|a6q3} #The Father of War
+Hand in {quest|a6q2} #Essence of Umbra
+Hand in {quest|a6q6} #The Puppet Mistress
+{waypoint|2_6_10} #The Riverways
+➞ {enter|2_6_12} #The Southern Forest
+    #sub Follow the road until it ends
+    #sub Go {dir|135}
+➞ {enter|2_6_13} #The Cavern of Anger
+Take {quest_text|The Black Flag}
+➞ {enter|2_6_14} #The Beacon
+Get {crafting}
+    #sub Follow the shore
+Complete {quest_text|Pillar Push}
+Light the {quest_text|Beacon}, throw in {quest_text|The Black Flag}
+Talk to {generic|Weylam Roth}, sail to {enter|2_6_15} #The Brine King's Reef
+➞ {arena|The Bring King's Throne}, kill {kill|Tsoagoth, The Brine King}
+{logout}
+Select {generic|Pantheons}
+#section Act 7
+{waypoint|2_7_town} #The Bridge Encampment
+➞ {enter|2_7_1} #The Broken Bridge
+#ifdef LEAGUE_START
+    Find and take {quest_text|Silver Locket}
+        #sub Follow the road, look for the broken {waypoint}
+#endif
+➞ {enter|2_7_2} #The Crossroads
+    #sub Follow the road
+Get {waypoint_get}
+➞ {enter|2_7_3} #The Fellshrine Ruins
+    #sub Go {dir|135}
+➞ {enter|2_7_4} #The Crypt
+    #sub Follow the road
+#ifdef LEAGUE_START
+    Complete {trial}
+    Get {crafting}
+#endif
+Find {generic|Sarcophagus} to next floor
+Find and take {quest_text|Maligaro's Map}
+{logout}
+{waypoint|2_7_2} #The Crossroads
+➞ {enter|2_7_5_1} #The Chamber of Sins Level 1
+    #sub Go {dir|315}
+Get {crafting}
+Get {waypoint_get}
+Activate {quest_text|Map Device} with {quest_text|Maligaro's Map}
+➞ {enter|2_7_5_map} #Maligaro's Sanctum
+➞ {arena|Maligaro's Workshop}, kill {kill|Maligaro, the Artist}, take {quest_text|Black Venom}
+    #sub Follow edges of the zone and cross bridges in the corners
+    #sub Typically bridges spawn in the opposite diagonal corners
+{logout}
+Hand in {quest|a7q2} #Essence of the Artist
+#ifdef LEAGUE_START
+    Hand in {quest|a7q5} #The Silver Locket
+#endif
+{waypoint|2_7_5_1} #The Chamber of Sins Level 1
+Hand in {quest|a7q3}, take {quest_text|Obsidian Key} #Web of Secrets
+➞ {enter|2_7_5_2} #The Chamber of Sins Level 2
+    #sub Go in same direction as {waypoint}
+#ifdef LEAGUE_START
+    Complete {trial}
+        #sub Find the switch hidden behind {generic|Trial of Ascendancy Plaque} to access {generic|Hidden Gem: Quality}
+    Get {crafting}
+#endif
+Open {generic|Secret Passage} ➞ {enter|2_7_6} #The Den
+➞ {enter|2_7_7} #The Ashen Fields
+➞ {arena|The Forest Encampment}, kill {kill|Greust, Lord of the Forest}
+    #sub Go {dir|225}
+➞ {enter|2_7_8} #The Northern Forest
+Get {waypoint_get}
+➞ {enter|2_7_10} #The Causeway
+Get {crafting}
+Find and take {quest_text|Kishara's Star}
+➞ {enter|2_7_11} #The Vaal City
+Find {waypoint_get}
+{waypoint|2_7_8} #The Northern Forest
+➞ {enter|2_7_9} #The Dread Thicket
+Find and take 7x{quest_text|Firefly}
+Get {crafting}
+➞ {arena|Den of Despair}, kill {kill|Gruthkul, Mother of Despair}
+{portal|use}
+Hand in {quest|a7q1} #The Master of a Million Faces
+Hand in {quest|a7q9} #Queen of Despair
+Hand in {quest|a7q6} #Kishara's Star
+{waypoint|Labyrinth_Airlock} #Aspirants' Plaza
+{ascend|cruel}
+Get {crafting|2_Labyrinth_boss_3}
+{waypoint|2_7_11} #The Vaal City
+Hand in {quest|a7q7} #Lighting the Way
+➞ {enter|2_7_12_1} #The Temple of Decay Level 1
+    #sub In the room with a central pit, look {dir|225} or {dir|45} for a side area containing a {generic|Corrupted Unique}
+➞ {enter|2_7_12_2} #The Temple of Decay Level 2
+Get {crafting}
+➞ {arena|Arakaali's Web}, kill {kill|Arakaali, Spinner of Shadows}
+#section Act 8
+➞ {enter|2_8_1} #The Sarn Ramparts
+➞ {enter|2_8_town} #The Sarn Encampment
+➞ {enter|2_8_2_1} #The Toxic Conduits
+    #sub Go {dir|270}
+➞ {enter|2_8_2_2} #Doedre's Cesspool
+    #sub Black splashes of paint on ground points to the right direction to go
+➞ {arena|The Cauldron}, kill {kill|Doedre the Vile}
+➞ {arena|Sewer Outlet}
+Get {crafting}
+➞ {enter|2_8_8} #The Quay
+    #sub Go {dir|45}
+Find and take {quest_text|Ankh of Eternity}
+    #sub Follow {dir|270} wall
+➞ {arena|Resurrection Site}
+    #sub Go {dir|135}
+Talk to {generic|Clarissa}, kill {kill|Tolman}
+➞ {enter|2_8_9} #The Grain Gate
+Find and kill {kill|Gemling Legionnaires}
+    #sub Follow the dead guards by doorways
+    #sub Look for a book icon
+➞ {enter|2_8_10} #The Imperial Fields
+    #sub Follow the dead guards by doorways
+➞ {enter|2_8_12_1} #The Solaris Temple Level 1
+    #sub Follow the road until {waypoint}
+    #sub Go {dir|315}
+Get {waypoint_get}
+➞ {enter|2_8_12_2} #The Solaris Temple Level 2
+Find and kill {kill|Dawn, Harbinger of Solaris}, take {quest_text|Sun Orb}
+Get {crafting}
+{logout}
+Hand in {quest|a8q1} #Essence of the Hag
+Hand in {quest|a8q7} #The Gemling Legion
+Hand in {quest|a8q6} #Love is Dead
+{waypoint|2_8_12_1} #The Solaris Temple Level 1
+➞ {enter|2_8_11} #The Solaris Concourse
+➞ {enter|2_8_13} #The Harbour Bridge
+    #sub Go {dir|225}
+➞ {enter|2_8_6} #The Lunaris Concourse
+Get {waypoint_get}
+    #sub Go {dir|315}
+➞ {enter|2_8_7_1_} #The Lunaris Temple Level 1
+➞ {enter|2_8_7_2} #The Lunaris Temple Level 2
+Find and kill {kill|Dusk, Harbinger of Lunaris}, take {quest_text|Moon Orb}
+Get {crafting}
+{logout}
+{waypoint|2_8_6} #The Lunaris Concourse
+➞ {enter|2_8_13} #The Harbour Bridge
+    #sub Go {dir|135}
+➞ {arena|The Sky Shrine}, activate {generic|Statue of the Sisters}
+Kill {kill|Lunaris, Eternal Moon} & {kill|Solaris, Eternal Sun}
+➞ {enter|2_9_1} #The Blood Aqueduct
+    #sub Farm Level: 58-62
+➞ {enter|2_9_town} #Highgate
+{waypoint|2_8_6} #The Lunaris Concourse
+➞ {enter|2_8_5} #The Bath House
+    #sub Go {dir|180}
+#ifdef LEAGUE_START
+    Complete {trial}
+        #sub Search {dir|270} side
+    Get {crafting}
+#endif
+➞ {enter|2_8_4} #The High Gardens
+    #sub Search {dir|270} side
+➞ {arena|The Pools of Terror}, kill {kill|Yugul, Reflection of Terror}
+{portal|use}
+Hand in {quest|a8q4} #Reflection of Terror
+#section Act 9
+{waypoint|2_9_town} #Highgate
+➞ {enter|2_9_2} #The Descent
+➞ {enter|2_9_3} #The Vastiri Desert
+Get {waypoint_get}
+    #sub Go {dir|90}
+Get {crafting}
+Find and take {quest_text|The Storm Blade}
+➞ {enter|2_9_5} #The Foothills
+    #sub Go {dir|315}
+Get {waypoint_get}
+    #sub Go {dir|45} until you find the cliff
+    #sub Go {dir|315}
+➞ {enter|2_9_6} #The Boiling Lake
+Find and Kill {kill|The Basilisk}, take {quest_text|Basilisk Acid}
+    #sub Go {dir|45} look for petrified soldiers
+Get {crafting}
+{logout}
+Talk to {generic|Sin}
+Hand in {quest|a9q3}
+Hand in {quest|a9q5|a9q5_offer}, take {quest_text|Bottled Storm}
+{waypoint|2_9_3} #The Vastiri Desert
+➞ {enter|2_9_4} #The Oasis
+    #sub Go {dir|45}
+➞ {arena|The Sand Pit}, kill {kill|Shakari, Queen of the Sands}
+{logout}
+Hand in {quest|a9q5|a9q5} #Queen of the Sands
+{waypoint|2_9_5} #The Foothills
+➞ {enter|2_9_7} #The Tunnel
+    #sub Go {dir|315}
+#ifdef LEAGUE_START
+    Before {waypoint}, complete {trial}
+        #sub Look for the hidden switch halfway to {generic|Trial of Ascendancy Plaque} in the corner opposite the entrance to access {generic|Hidden Gem: Transfigured}
+    Get {crafting}
+#endif
+➞ {enter|2_9_8} #The Quarry
+Get {waypoint_get}
+    #sub Go {dir|315}
+Get {crafting}
+➞ {arena|Shrine of the Winds}, kill {kill|Garukhan, Queen of the Winds}, take {quest_text|Sekhema Feather}
+    #sub {dir|45} or {dir|225}
+{logout}
+Hand in {quest|a9q2} #The Ruler of Highgate
+{waypoint|2_9_8} #The Quarry
+➞ {enter|2_9_9} #The Refinery
+    #sub {dir|315} or {dir|45}
+Get {crafting}
+    #sub Look for a sewer grate leading to {arena|Refinery Tunnels}, it is attached to the cart tracks
+Find and kill {kill|General Adus}, take {quest_text|Trarthan Powder}
+    #sub Go {dir|45} follow cart tracks
+{logout}
+{waypoint|2_9_8} #The Quarry
+Talk to {generic|Sin}
+➞ {enter|2_9_10_1} #The Belly of the Beast
+➞ {enter|2_9_10_2} #The Rotting Core
+➞ {arena|The Black Core}
+Talk to {generic|Sin}
+➞ {arena|Doedre's Despair}, kill {kill|Doedre, Darksoul}
+➞ {arena|Maligaro's Misery}, kill {kill|Maligaro, The Broken}
+➞ {arena|Shavronne's Sorrow}, kill {kill|Shavronne, Unbound}
+Talk to {generic|Sin} ➞ {arena|The Black Heart}, kill {kill|The Depraved Trinity}
+{portal|use}
+#section Act 10
+{waypoint|2_10_town} #Oriath Docks
+➞ {enter|2_10_1} #The Cathedral Rooftop
+➞ {arena|Cathedral Apex}, kill {kill|Plaguewing}
+    #sub Go {dir|0}
+➞ {enter|2_10_2} #The Ravaged Square
+Place {portal|set} in the plaza
+➞ {enter|2_10_7} #The Control Blocks
+    #sub Go {dir|180}
+{waypoint|2_10_town} #Oriath Docks
+Hand in {quest|a10q1} #Safe Passage
+Take {portal|use}
+Get {waypoint_get}
+    #sub Go {dir|45}
+#ifdef LEAGUE_START
+    ➞ {enter|2_10_9} #The Ossuary
+    Get {crafting}
+    Complete {trial}
+        #sub Interact with the switch just before the zig-zagging walls, go to the opposite side to access {generic|Hidden Gem: Facetor's Lens}
+    {logout}
+#endif
+{waypoint|2_10_7} #The Control Blocks
+Find and kill {kill|Vilenta}
+{logout}
+Hand in {quest|a10q6} #Vilenta's Vengeance
+{waypoint|Labyrinth_Airlock}
+{ascend|merciless}
+Get {crafting|3_Labyrinth_boss_3}
+{waypoint|2_10_2} #The Ravaged Square
+➞ {enter|2_10_3} #The Torched Courts
+    #sub Go {dir|135}
+➞ {enter|2_10_4} #The Desecrated Chambers
+    #sub Loop around clockwise
+Get {crafting}
+➞ {arena|Sanctum of Innocence}, kill {kill|Avarius, Reassembled}, take {quest_text|The Staff of Purity}
+    #sub Go {dir|315} counter-clockwise spiral
+{logout}
+Talk to {generic|Bannon}
+Hand in {quest|a10q2} #Death and Rebirth
+{waypoint|2_10_2} #The Ravaged Square
+Talk to {generic|Innocence}
+    #sub Go {dir|45}
+➞ {enter|2_10_5} #The Canals
+➞ {enter|2_10_6} #The Feeding Trough
+Get {crafting}
+Talk to {generic|Sin}
+➞ {arena|Altar of Hunger}, kill {kill|Kitava, the Insatiable}
+Talk to {generic|Sin} ➞ {enter|2_10_town} #Oriath Docks
+Talk to {generic|Lilly Roth}, Set Sail from Oriath
+➞ {enter|2_11_endgame_town} #Karui Shores
+Get {crafting}
+#ifdef BANDIT_KILL
+    Hand in {quest|a10q3} #An End to Hunger
+        #sub Type {generic|/passives} in chat to confirm that you have all 24 passives from quests
+#endif
+#ifndef BANDIT_KILL
+    Hand in {quest|a10q3} #An End to Hunger
+        #sub Type {generic|/passives} in chat to confirm that you have all 23 passives from quests
+#endif

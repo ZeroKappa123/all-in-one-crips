@@ -1,0 +1,11 @@
+2026/11/03 18:00:00 100 aa [INFO Client 1] Connecting to instance server at 1.2.3.4:6112
+2026/11/03 18:00:01 100 aa [DEBUG Client 1] Generating level 1 area "1_1_1" with seed 11
+2026/11/03 18:00:02 100 aa [INFO Client 1] : You have entered The Twilight Strand.
+2026/11/03 18:03:00 100 aa [INFO Client 1] : Marc_Wit (Witch) is now level 2
+2026/11/03 18:04:00 100 aa [DEBUG Client 1] Generating level 1 area "1_1_town" with seed 12
+2026/11/03 18:04:01 100 aa [INFO Client 1] : You have entered Lioneye's Watch.
+2026/11/03 18:05:00 100 aa [INFO Client 1] @From <TRD> Some_Seller: Hi, want to trade?
+2026/11/03 18:06:00 100 aa [DEBUG Client 1] Generating level 2 area "1_1_2" with seed 13
+2026/11/03 18:06:01 100 aa [INFO Client 1] : You have entered The Coast.
+2026/11/03 18:07:00 100 aa [INFO Client 1] : Marc_Wit (Witch) is now level 4
+2026/11/03 18:07:30 100 aa [INFO Client 1] : AFK mode is now ON. Autoreply "back soon"

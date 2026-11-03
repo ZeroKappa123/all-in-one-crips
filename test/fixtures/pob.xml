@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PathOfBuilding>
+  <Build level="70" className="Witch" ascendClassName="Elementalist" targetVersion="3_0"/>
+  <Skills activeSkillSet="1">
+    <SkillSet id="1" title="Early">
+      <Skill enabled="true" label="Main" slot="Body Armour">
+        <Gem nameSpec="Fireball" gemId="Metadata/Items/Gems/SkillGemFireball" level="20" quality="0" enabled="true"/>
+        <Gem nameSpec="Arcane Surge" gemId="Metadata/Items/Gems/SupportGemArcaneSurge" level="1" quality="0" enabled="true"/>
+        <Gem nameSpec="Added Fire Damage" level="1" quality="0" enabled="true"/>
+      </Skill>
+      <Skill enabled="true" label="Movement" slot="Boots">
+        <Gem nameSpec="Flame Dash" gemId="Metadata/Items/Gems/SkillGemFlameDash" level="1" quality="0" enabled="true"/>
+      </Skill>
+    </SkillSet>
+    <SkillSet id="2" title="Late">
+      <Skill enabled="true" label="Main" slot="Body Armour">
+        <Gem nameSpec="Fireball" gemId="Metadata/Items/Gems/SkillGemFireball" level="20" quality="20" enabled="true"/>
+      </Skill>
+    </SkillSet>
+  </Skills>
+  <Tree activeSpec="2">
+    <Spec title="Act 2" treeVersion="3_25" classId="3" ascendClassId="2" nodes="100,200,300"/>
+    <Spec title="Act 5" treeVersion="3_25" classId="3" ascendClassId="2" nodes="100,300,400,500"/>
+  </Tree>
+</PathOfBuilding>
