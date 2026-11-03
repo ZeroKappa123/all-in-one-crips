@@ -4,6 +4,7 @@ import type { Config } from '@shared/config'
 import { expandChatCommand } from '@shared/config'
 import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './configStore'
 import { registerProxyIpc } from './proxy'
+import { initDataUpdates } from './dataUpdate'
 import { sendChat, setActionGate, startInput, stopInput, updateInputConfig } from './input'
 import { onWidescreenChange, registerWidescreenIpc, setWide, startWidescreen, status as widescreenStatus, stopWidescreen, widescreenAction } from './widescreen'
 import { gameWindowApi } from './gameWindow'
@@ -34,6 +35,7 @@ function registerIpc(): void {
     return next
   })
   registerProxyIpc()
+  initDataUpdates()
   registerWidescreenIpc()
   ipcMain.handle('logs:get', () => getLogs())
   ipcMain.on('panel:hide', () => hidePanel())

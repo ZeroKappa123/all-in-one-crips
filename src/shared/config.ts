@@ -29,6 +29,7 @@ export const ConfigSchema = z.object({
   }).default({ enabled: true, autoWhisper: false, sound: true, messages: { ...DEFAULT_MESSAGES }, stash: null, quad: 'auto', position: null }),
   widescreen: z.object({ enabled: z.boolean(), wide: z.boolean(), zoom: z.number().min(1.05).max(2), anchorTop: z.boolean() })
     .default({ enabled: false, wide: false, zoom: 1.35, anchorTop: false }),
+  dataUpdates: z.object({ auto: z.boolean() }).default({ auto: true }),
   showSellerStatus: z.boolean().default(true),
   ninjaBase: z.string().url(),
   hotkeys: z.array(Hotkey),
@@ -46,6 +47,7 @@ export const DEFAULT_CONFIG: Config = {
   autoSearch: true,
   theme: 'dark',
   widescreen: { enabled: false, wide: false, zoom: 1.35, anchorTop: false },
+  dataUpdates: { auto: true },
   trades: { enabled: true, autoWhisper: false, sound: true, messages: { ...DEFAULT_MESSAGES }, stash: null, quad: 'auto', position: null },
   showSellerStatus: true,
   ninjaBase: 'https://poe.ninja/api/data',

@@ -121,8 +121,40 @@ function General({ config, save }: { config: Config; save: (p: Partial<Config>) 
           <TextField id="wt" value={title} onChange={e => setTitle(e.target.value)} onBlur={() => { if (title.trim()) void save({ windowTitle: title.trim() }) }} className="w-[200px]" />
         </Row>
       </Group>
+      <GameData config={config} save={save} />
       {leagues.error.value && <StatusBanner tone="error">{S.leagueFailed}</StatusBanner>}
     </>
+  )
+}
+
+type DataStatus = Awaited<ReturnType<typeof window.crips.data.status>>
+const fmtDate = (iso: string) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+
+function GameData({ config, save }: { config: Config; save: (p: Partial<Config>) => Promise<void> }) {
+  const G = S.gameData
+  const [status, setStatus] = useState<DataStatus | null>(null)
+  const [result, setResult] = useState<'updated' | 'current' | 'failed' | null>(null)
+  useEffect(() => { void window.crips.data.status().then(setStatus); return window.crips.data.onChanged(setStatus) }, [])
+  if (!status) return null
+  const version = status.active ? G.downloaded(fmtDate(status.active.date)) : status.bundled ? G.shipped(fmtDate(status.bundled.date)) : '—'
+  return (
+    <Group title={G.title} footer={G.help}>
+      <Row label={G.version} detail={<span data-testid="data-version">{version}</span>}>
+        <Button size="sm" loading={status.checking} disabled={status.checking}
+          onClick={async () => { setResult(null); setResult(await window.crips.data.check()) }}>
+          <RefreshCw aria-hidden className="h-[12px] w-[12px]" />{status.checking ? G.checking : G.check}
+        </Button>
+      </Row>
+      <Row label={G.lastCheck} detail={status.lastCheck ? fmtDate(status.lastCheck) : G.never} />
+      <Row label={G.auto} detail={G.autoHelp} htmlFor="data-auto">
+        <Switch id="data-auto" label={G.auto} checked={config.dataUpdates.auto} onChange={v => void save({ dataUpdates: { auto: v } })} />
+      </Row>
+      {result && (
+        <div role="status" className={`px-5 py-3 text-sm ${result === 'failed' ? 'text-danger' : 'text-text-muted'}`}>
+          {result === 'updated' ? G.updated : result === 'current' ? G.current : G.failed(status.lastError ?? '?')}
+        </div>
+      )}
+    </Group>
   )
 }
 

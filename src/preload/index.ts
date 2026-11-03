@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type { Config } from '@shared/config'
 import type { ActLive, ActStore, Slot } from '@shared/act/state'
 import type { TradeCard, TradeAction } from '../main/trades'
+import type { DataStatus } from '../main/dataUpdate'
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: { kind: string; detail?: string; retryInSec?: number } }
 
@@ -34,6 +35,12 @@ const api = {
     status: (): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:status'),
     setWide: (wide: boolean): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:wide', wide),
     update: (patch: Partial<Config['widescreen']>): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:update', patch)
+  },
+  data: {
+    status: (): Promise<DataStatus> => ipcRenderer.invoke('data:status'),
+    check: (): Promise<'updated' | 'current' | 'failed'> => ipcRenderer.invoke('data:check'),
+    failed: (reason: string): void => ipcRenderer.send('data:failed', reason),
+    onChanged: (cb: (s: DataStatus) => void) => { const h = (_: unknown, s: DataStatus) => cb(s); ipcRenderer.on('data:changed', h); return () => { ipcRenderer.off('data:changed', h) } }
   },
   getConfig: (): Promise<{ config: Config; repaired: boolean; inputMode: 'hook' | 'fallback'; dataDir: string }> => ipcRenderer.invoke('config:get'),
   setConfig: (patch: Partial<Config>): Promise<Config> => ipcRenderer.invoke('config:set', patch),

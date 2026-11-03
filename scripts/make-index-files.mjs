@@ -123,5 +123,3 @@ export function makeIndexFiles () {
 if (fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
   makeIndexFiles()
 }
-
-makeIndexFiles()

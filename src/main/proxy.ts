@@ -2,6 +2,7 @@ import { app, ipcMain } from 'electron'
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { log } from './log'
+import { activeDataRoot } from './dataUpdate'
 
 /**
  * Network and data access for the price-check modules running in the renderer.
@@ -69,7 +70,7 @@ export function registerProxyIpc(): void {
   ipcMain.handle('crips:proxy', (_e, url: string, init: { method?: string; headers?: Record<string, string>; body?: string }) => proxy(url, init ?? {}))
   ipcMain.handle('crips:data', (_e, path: string, kind: 'text' | 'binary') => {
     if (path.includes('..')) throw new Error('bad path')
-    const buf = readFileSync(join(dataRoot(), path))
+    const buf = readFileSync(join(activeDataRoot(), path))
     return kind === 'text' ? buf.toString('utf8') : buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength)
   })
 }

@@ -101,6 +101,22 @@ export const S = {
     autoSearch: 'Search automatically', autoSearchHelp: 'Run the search right away for uniques, currency and other items that need no choices.',
     toleranceHelp: 'Minimum values start this far below your own roll.'
   },
+  gameData: {
+    title: 'Game data',
+    help: 'Item and mod data for the price check. After a Path of Exile patch, new data appears in the public Awakened PoE Trade repository; the app downloads it, checks it and only then uses it. If anything is wrong it keeps the shipped data.',
+    version: 'In use',
+    shipped: (d: string) => `Shipped with the app · ${d}`,
+    downloaded: (d: string) => `Downloaded update · ${d}`,
+    lastCheck: 'Last checked',
+    never: 'Not yet',
+    check: 'Check now',
+    checking: 'Checking…',
+    auto: 'Update automatically',
+    autoHelp: 'On start and every 6 hours.',
+    updated: 'New game data is ready. The next price check uses it.',
+    current: 'The game data is up to date.',
+    failed: (e: string) => `Couldn't update: ${e}. The current data stays in use.`
+  },
   about: {
     credits: 'Acknowledgements',
     apt: 'Price-check logic and game data. © 2020 Alexander Drozdov, MIT License.',

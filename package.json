@@ -1,7 +1,7 @@
 {
   "name": "all-in-one-crips",
   "version": "1.0.0",
-  "description": "All-In-One CRIPS – price checks and campaign guide for Path of Exile",
+  "description": "All-In-One CRIPS \u2013 price checks and campaign guide for Path of Exile",
   "main": "out/main/index.js",
   "license": "MIT",
   "private": true,
@@ -14,7 +14,9 @@
     "dist:win": "electron-vite build && electron-builder --win nsis",
     "dist:linux": "electron-vite build && electron-builder --linux AppImage",
     "tokens": "node scripts/tokens.mjs",
-    "data:index": "node scripts/make-index-files.mjs"
+    "data:index": "node scripts/make-index-files.mjs",
+    "update": "node scripts/update.mjs",
+    "dist:zip": "electron-vite build && electron-builder --win zip"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
