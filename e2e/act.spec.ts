@@ -77,14 +77,21 @@ test('F13 PoB import fills gem plan, gear tracker and tree (S14, S16, S18, S20)'
   await page.getByRole('button', { name: 'Import from clipboard' }).click()
   await expect(page.getByText(/Build imported: Witch \(Elementalist\), 2 trees/)).toBeVisible()
   await page.getByRole('button', { name: 'Plan gem pickups' }).click()
-  await expect(page.getByRole('cell', { name: 'Added Fire Damage Support', exact: true })).toBeVisible()
+  await expect(page.getByRole('cell', { name: /gem Added Fire Damage Support$/ })).toBeVisible()
   await page.getByLabel('Skip Flame Dash').click()
-  await expect(page.getByRole('cell', { name: 'Flame Dash', exact: true })).toHaveClass(/line-through/)
+  await expect(page.getByRole('cell', { name: /gem Flame Dash$/ })).toHaveClass(/line-through/)
   await page.screenshot({ path: join(shots, 'S16-gem-plan.png'), fullPage: true })
   // guide shows what to take at quest hand-ins
   const guide = await guidePage(app)
+  await expect(guide.getByRole('img', { name: 'Town' }).first()).toBeVisible() // page 1 ends in Lioneye's Watch
   await guide.getByRole('button', { name: /^Next page/ }).click()
   await expect(guide.getByText('Enemy at the Gate')).toBeVisible()
+  // own guide symbols and gem dots in the style of exile-leveling
+  await expect(guide.getByRole('img', { name: 'Quest' }).first()).toBeVisible()
+  await guide.screenshot({ path: join(shots, 'S11-guide-quest.png') })
+  for (let i = 0; i < 2; i++) await guide.getByRole('button', { name: /^Next page/ }).click()
+  await expect(guide.locator('[data-step-icon="waypoint"]').first()).toBeVisible()
+  await guide.screenshot({ path: join(shots, 'S11-guide-waypoint.png') })
   // gear tracker got the build gems
   await page.getByRole('button', { name: 'Open gear tracker' }).click()
   await expect.poll(() => app.windows().some(w => w.url().endsWith('#gear'))).toBe(true)
@@ -127,6 +134,12 @@ test('S15 editor splits pages, flags unknown areas, previews', async () => {
   await page.getByRole('button', { name: 'Preview' }).first().click()
   await expect(page.getByText('Someone', { exact: true })).toBeVisible()
   await page.screenshot({ path: join(shots, 'S15-editor.png') })
+  // every kind of step with its symbol, for a visual check
+  await first.fill('Kill {kill|Hillock} ➞ {enter|1_1_town}\n{waypoint|1_1_2} {dir|90} {dir|225}\nHand in {quest|a1q1}\nPlace {portal|set}, take {portal|use}\nComplete {trial}, get {crafting}\n{ascend|normal}\nFind {quest_text|Medicine Chest}\n{logout}')
+  await page.getByRole('button', { name: 'Preview' }).first().click()
+  await page.getByRole('button', { name: 'Preview' }).first().click()
+  for (const k of ['Town', 'Waypoint', 'Quest', 'Portal', 'Trial', 'Crafting', 'Labyrinth', 'Log out']) await expect(page.getByRole('img', { name: k }).first()).toBeVisible()
+  await page.locator('.material-hud').first().screenshot({ path: join(shots, 'S15-guide-symbols.png') })
   await page.getByRole('button', { name: 'Save guide' }).click()
   await expect(page.getByText('Unsaved changes')).toHaveCount(0)
   await app.close()

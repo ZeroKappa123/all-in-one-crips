@@ -26,6 +26,7 @@ Hover an item and press **Ctrl+D** (**Ctrl+Alt+D** keeps the panel open). The ap
 
 Dark by default. Switch to **Light** or **System** under Settings → Price Check → Appearance; every window follows, the overlays above the game included.
 Item and currency icons are shown straight from Grinding Gear Games' image server (`web.poecdn.com`), like on the official trade site. No game artwork is packaged with the app. Without a connection the short names (chaos, div) are shown instead.
+The campaign guide uses its own symbols for waypoints, towns, quests, portals, trials, crafting and the labyrinth, with the colours and gem dots of exile-leveling's guide.
 
 ## Act Tracker
 

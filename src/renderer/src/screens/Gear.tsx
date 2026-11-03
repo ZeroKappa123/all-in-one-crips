@@ -1,5 +1,7 @@
 import { Gem, Shield, Trash2 } from 'lucide-react'
 import { Badge, Button, EmptyState } from '../components/ui'
+import { GemDot } from '../act/glyphs'
+import { GEMS } from '@shared/act/data'
 import { useAct } from '../act/useAct'
 import { S } from '../strings'
 
@@ -24,7 +26,7 @@ export function Gear() {
           const ready = level !== undefined && g.level <= level
           return (
             <li key={g.id} className="flex items-center gap-4 px-5 h-[40px] text-base">
-              {g.kind === 'gem' ? <Gem aria-hidden className="h-[14px] w-[14px] text-rarity-gem" /> : <Shield aria-hidden className="h-[14px] w-[14px] text-text-muted" />}
+              {g.kind === 'gem' ? <GemDot attr={Object.values(GEMS).find(x => x.n === g.name)?.c ?? ''} /> : <Shield aria-hidden className="h-[14px] w-[14px] text-text-muted" />}
               <span className={`flex-1 truncate ${ready ? 'text-success' : ''}`}>{g.name}</span>
               <span className="text-sm tabular text-text-muted">{A.needLevel(g.level)}</span>
               {ready && <Badge tone="success">{A.gearReadyTag}</Badge>}

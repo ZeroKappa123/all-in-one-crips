@@ -6,6 +6,7 @@ import { resolveGem } from '@shared/act/gems'
 import type { ActStore, Slot } from '@shared/act/state'
 import { Badge, Button, Group, Popup, Row, Segmented, Spinner, StatusBanner, Switch, TextField } from '../components/ui'
 import { useAct, useGemPlan } from '../act/useAct'
+import { GemDot } from '../act/glyphs'
 import { S } from '../strings'
 
 const A = S.act
@@ -131,7 +132,7 @@ function GemPlanner({ index, slot }: { index: number; slot: Slot }) {
           return (
             <tr key={id} className="border-t hairline">
               <td className={`px-5 py-2 ${lib ? 'underline' : ''} ${o.removed ? 'line-through text-text-muted' : 'text-rarity-gem'}`} title={lib ? A.libraryHint : undefined}>
-                {GEMS[id]!.n}
+                <GemDot attr={GEMS[id]!.c} />{GEMS[id]!.n}
                 {starting.has(id) && <> <Badge>{A.startingGem}</Badge></>}
                 {missing && !o.removed && <> <Badge tone="warning">{A.notOffered}</Badge></>}
               </td>

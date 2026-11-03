@@ -7,6 +7,7 @@ import { expInfo } from '@shared/act/exp'
 import type { GemPlan } from '@shared/act/gems'
 import type { Slot } from '@shared/act/state'
 import { useAct, useGemPlan, usePages, usePress } from '../act/useAct'
+import { DirectionIcon, GemDot, StepIcon } from '../act/glyphs'
 import { S } from '../strings'
 
 const A = S.act
@@ -118,27 +119,33 @@ export function StepLine({ step, plan, slot }: { step: Step; plan: GemPlan | nul
 }
 
 function Frag({ f, plan, slot }: { f: Fragment; plan: GemPlan | null; slot: Slot }) {
+  const area = (id: string) => AREAS[id]
   switch (f.t) {
     case 'text': return <>{f.v}</>
-    case 'kill': return <strong className="text-danger">{f.v}</strong>
-    case 'enter': case 'area': return <span className="text-accent-text font-medium">{AREAS[f.area]?.n ?? f.area}</span>
+    case 'kill': return <strong className="text-act-enemy">{f.v}</strong>
+    case 'enter': case 'area': {
+      const a = area(f.area)
+      return <span className="whitespace-nowrap">{a?.t ? <StepIcon kind="town" /> : null}<strong className="text-act-area">{a?.n ?? f.area}</strong></span>
+    }
     case 'waypoint': return f.area
-      ? <span className="text-rarity-gem"><Waypoints aria-hidden className="inline h-[1em] w-[1em] -mt-[2px] mr-1" />{AREAS[f.area]?.n ?? f.area}</span>
-      : <span className="text-rarity-gem">waypoint</span>
-    case 'logout': return <strong className="text-text-muted">Log out</strong>
-    case 'portal': return <span className="text-rarity-magic">{f.use ? 'the portal' : 'a portal'}</span>
+      ? <span className="whitespace-nowrap"><StepIcon kind="waypoint" /><strong className="text-act-waypoint">{area(f.area)?.n ?? f.area}</strong></span>
+      : <span className="whitespace-nowrap"><StepIcon kind="waypoint" /><strong className="text-act-waypoint">Waypoint</strong></span>
+    case 'logout': return <span className="whitespace-nowrap"><StepIcon kind="logout" /><strong className="text-text-muted">Log out</strong></span>
+    case 'portal': return <span className="whitespace-nowrap"><StepIcon kind="portal" /><strong className="text-act-waypoint">{f.use ? 'Portal' : 'a Portal'}</strong></span>
     case 'quest': return <Quest id={f.id} offer={f.offer} plan={plan} slot={slot} />
-    case 'questText': case 'generic': case 'arena': return <span className="text-rarity-currency">{f.v}</span>
-    case 'dir': return <span aria-label={`direction ${f.deg} degrees`} className="font-semibold">{arrow(f.deg)}</span>
-    case 'crafting': return <span className="text-success">crafting recipe</span>
-    case 'trial': return <span className="text-rarity-magic">Trial of Ascendancy</span>
-    case 'ascend': return <span className="text-rarity-magic">{f.v} Labyrinth</span>
+    case 'questText': return <strong className="text-act-item">{f.v}</strong>
+    case 'generic': case 'arena': return <strong className="text-text">{f.v}</strong>
+    case 'dir': return <DirectionIcon deg={f.deg} />
+    case 'crafting': return <span className="whitespace-nowrap"><StepIcon kind="crafting" /><strong className="text-act-item">Crafting recipe</strong></span>
+    case 'trial': return <span className="whitespace-nowrap"><StepIcon kind="trial" /><strong className="text-act-trial">Trial of Ascendancy</strong></span>
+    case 'ascend': return <span className="whitespace-nowrap"><StepIcon kind="ascend" /><strong className="text-act-trial">{f.v[0]?.toUpperCase()}{f.v.slice(1)} Labyrinth</strong></span>
   }
 }
 
 function Quest({ id, offer, plan, slot }: { id: string; offer: string; plan: GemPlan | null; slot: Slot }) {
   const q = QUESTS[id]
-  const name = <span className="text-warning">{q?.n ?? id}</span>
+  const name = <span className="whitespace-nowrap"><StepIcon kind="quest" /><strong className="text-act-quest">{q?.n ?? id}</strong></span>
+  const gem = (g: string, extra = '') => <span key={g} className={`whitespace-nowrap ${extra}`}><GemDot attr={GEMS[g]?.c ?? ''} /><span className="text-text font-medium">{GEMS[g]?.n ?? g}</span></span>
   if (slot.gemQuests === 'off') return name
   const gemName = (g: string) => GEMS[g]?.n ?? g
   if (plan) {
@@ -148,10 +155,10 @@ function Quest({ id, offer, plan, slot }: { id: string; offer: string; plan: Gem
       <>
         {name}
         <span className="block pl-6" style={{ fontSize: '0.85em' }}>
-          {p.take && <><span className="text-text-muted">{A.take} </span><span className="text-rarity-gem">{gemName(p.take)}</span></>}
+          {p.take && <><span className="text-text-muted">{A.take} </span>{gem(p.take)}</>}
           {p.take && p.buy.length > 0 && <span className="text-text-muted"> · </span>}
           {p.buy.length > 0 && <><span className="text-text-muted">{A.buy} </span>{p.buy.map((b, i) => (
-            <span key={b.gem}>{i > 0 && ', '}<span className={plan.libraryGems.includes(b.gem) ? 'underline text-rarity-gem' : 'text-rarity-gem'}>{gemName(b.gem)}</span></span>
+            <span key={b.gem}>{i > 0 && ', '}{gem(b.gem, plan.libraryGems.includes(b.gem) ? 'underline' : '')}</span>
           ))}<span className="text-text-muted"> {A.from} {p.buy[0]!.npc}</span></>}
         </span>
       </>
@@ -162,9 +169,9 @@ function Quest({ id, offer, plan, slot }: { id: string; offer: string; plan: Gem
     const cls = slot.pob?.className ?? Object.keys(CHARACTERS).find(c => slot.character.toLowerCase().includes(c.toLowerCase()))
     const o = q?.r[offer]
     if (!cls || !o) return name
-    const options = Object.entries(o.q).filter(([, c]) => c.length === 0 || c.includes(cls)).map(([g]) => gemName(g))
+    const options = Object.entries(o.q).filter(([, c]) => c.length === 0 || c.includes(cls)).map(([g]) => g)
     if (!options.length) return name
-    return <>{name}<span className="block pl-6 text-text-muted" style={{ fontSize: '0.85em' }}>{options.join(', ')}</span></>
+    return <>{name}<span className="block pl-6" style={{ fontSize: '0.85em' }}>{options.map((g, i) => <span key={g}>{i > 0 && ', '}{gem(g)}</span>)}</span></>
   }
   return name
 }
