@@ -34,6 +34,9 @@ function keyName(h: Hook, keycode: number): string | null {
 }
 
 let config: Config | null = null
+let lastInput = Date.now()
+export const lastInputAt = () => lastInput
+export const hookActive = () => !!hook
 let handlers: InputHandlers | null = null
 let busy = false
 
@@ -43,8 +46,10 @@ export function startInput(c: Config, h: InputHandlers): 'hook' | 'fallback' {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     hook = require('uiohook-napi') as Hook
-    hook.uIOhook.on('keydown', e => onKey(e.keycode, !!e.ctrlKey, !!e.shiftKey, !!e.altKey))
-    hook.uIOhook.on('wheel', e => onWheel(!!e.ctrlKey, e.rotation))
+    hook.uIOhook.on('keydown', e => { lastInput = Date.now(); onKey(e.keycode, !!e.ctrlKey, !!e.shiftKey, !!e.altKey) })
+    hook.uIOhook.on('wheel', e => { lastInput = Date.now(); onWheel(!!e.ctrlKey, e.rotation) })
+    hook.uIOhook.on('mousedown', () => { lastInput = Date.now() })
+    hook.uIOhook.on('mousemove', () => { lastInput = Date.now() })
     hook.uIOhook.start()
     log('info', 'input hook started')
     return 'hook'
@@ -131,6 +136,21 @@ export async function copyItemText(ctrlHeld = false): Promise<string | null> {
   if (!text && !hook) text = before
   if (text !== before) setTimeout(() => clipboard.writeText(before), 150)
   return text && looksLikeItem(text) ? text : null
+}
+
+/** Focuses the in-game search box (Ctrl+F) and pastes text into it. No server action involved. */
+export async function pasteIntoSearch(text: string): Promise<void> {
+  const before = clipboard.readText()
+  clipboard.writeText(text)
+  if (!hook) { log('warn', 'search paste needs the input hook; the string is on the clipboard'); return }
+  const { uIOhook, UiohookKey } = hook
+  for (const k of [UiohookKey.Shift, UiohookKey.Alt]) uIOhook.keyToggle(k, 'up')
+  uIOhook.keyToggle(UiohookKey.Ctrl, 'down')
+  uIOhook.keyTap(UiohookKey.F)
+  uIOhook.keyTap(UiohookKey.A)
+  uIOhook.keyTap(UiohookKey.V)
+  uIOhook.keyToggle(UiohookKey.Ctrl, 'up')
+  setTimeout(() => clipboard.writeText(before), 200)
 }
 
 /** Opens chat, pastes one message, sends it. Never chains several messages. */

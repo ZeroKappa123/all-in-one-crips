@@ -46,7 +46,7 @@ export interface RouteOptions {
   library: boolean // Act 3 library gem quest
 }
 
-export interface AreaInfo { n: string; a: number; l: number; t: number; p: string; w: number }
+export interface AreaInfo { n: string; a: number; l: number; t: number; p: string | null; w: number }
 
 export const DEFAULT_OPTIONS: RouteOptions = { leagueStart: true, optionals: false, bandit: 'kill', library: true }
 

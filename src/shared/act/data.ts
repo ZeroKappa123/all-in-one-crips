@@ -7,9 +7,9 @@ import type { AreaInfo } from './route'
 import type { GemInfo, QuestInfo } from './gems'
 
 export const DEFAULT_ROUTE: string = routeText
-export const AREAS = areasJson as Record<string, AreaInfo>
+export const AREAS = areasJson as unknown as Record<string, AreaInfo>
 export const QUESTS = questsJson as unknown as Record<string, QuestInfo>
-export const GEMS = gemsJson as Record<string, GemInfo>
+export const GEMS = gemsJson as unknown as Record<string, GemInfo>
 export const CHARACTERS = charactersJson as Record<string, { start_gem_id: string; chest_gem_id: string }>
 export const CLASSES = Object.keys(CHARACTERS)
 

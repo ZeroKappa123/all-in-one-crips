@@ -86,6 +86,8 @@ test('F04/F05 settings: league, hotkey conflict, keyboard tabs (S06, S07)', asyn
   await page.screenshot({ path: join(shots, 'S06-general.png') })
   await page.getByRole('tab', { name: 'General' }).focus()
   await page.keyboard.press('ArrowRight')
+  await expect(page.getByRole('tab', { name: 'Act Tracker' })).toHaveAttribute('aria-selected', 'true')
+  await page.keyboard.press('ArrowRight')
   await expect(page.getByRole('tab', { name: 'Hotkeys' })).toHaveAttribute('aria-selected', 'true')
   await page.getByRole('button', { name: /^Open item in wiki:/ }).click()
   await page.keyboard.press('Control+D')

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { GripVertical, Settings as Cog, Timer } from 'lucide-react'
+import { GripVertical, Settings as Cog, Timer, Map as MapIcon, Network, Package } from 'lucide-react'
 import type { Config } from '@shared/config'
 import { Button } from '../components/ui'
 import { S } from '../strings'
@@ -36,6 +36,15 @@ export function Overlay() {
               <Button aria-pressed={config.widgets.find(x => x.type === 'stopwatch')?.visible} aria-label={S.stopwatch} title={S.stopwatch}
                 onClick={() => void window.assay.setConfig({ widgets: config.widgets.map(x => (x.type === 'stopwatch' ? { ...x, visible: !x.visible } : x)) })}>
                 <Timer aria-hidden className="h-[16px] w-[16px]" />
+              </Button>
+              <Button aria-label={S.actions.guideToggle} title={S.actions.guideToggle} onClick={async () => { const a = await window.assay.act.get(); await window.assay.act.update({ overlay: { ...a.store.overlay, visible: !a.store.overlay.visible } }) }}>
+                <MapIcon aria-hidden className="h-[16px] w-[16px]" />
+              </Button>
+              <Button aria-label={S.actions.treeOverlay} title={S.actions.treeOverlay} onClick={() => { window.assay.hideOverlay(); window.assay.act.open('tree') }}>
+                <Network aria-hidden className="h-[16px] w-[16px]" />
+              </Button>
+              <Button aria-label={S.act.gear} title={S.act.gear} onClick={() => window.assay.act.open('gear')}>
+                <Package aria-hidden className="h-[16px] w-[16px]" />
               </Button>
             </div>
           )}

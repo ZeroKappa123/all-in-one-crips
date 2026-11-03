@@ -8,12 +8,12 @@ import { overviewTypeFor } from '@shared/prices/ninja'
 import { getConfig, setConfig, wasRepaired, dataDir } from './configStore'
 import { aggregatorPrice, fetchListings, getLeagues, getStats, search, TradeError } from './tradeClient'
 import { sendChat, startInput, stopInput, updateInputConfig } from './input'
-import { allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay } from './windows'
+import { allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
+import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
 import { getLogs, log } from './log'
 
 let tray: Tray | null = null
 let inputMode: 'hook' | 'fallback' = 'fallback'
-let lastWhisper: string | null = null // filled from the game's log in a later version
 
 if (!app.requestSingleInstanceLock()) app.quit()
 app.on('second-instance', () => openSettings())
@@ -55,6 +55,8 @@ function registerIpc(): void {
   ipcMain.handle('logs:get', () => getLogs())
   ipcMain.on('panel:hide', () => hidePanel())
   ipcMain.on('panel:resize', (_e, h: number) => resizePanel(h))
+  ipcMain.on('guide:resize', (_e, h: number) => resizeGuide(h))
+  ipcMain.on('tree:hide', () => hideTreeOverlay())
   ipcMain.on('overlay:hide', () => hideOverlay())
   ipcMain.on('settings:open', () => openSettings())
   ipcMain.on('shell:open', (_e, url: string) => {
@@ -80,11 +82,14 @@ function createTray(): void {
 app.whenReady().then(() => {
   registerIpc()
   const config = getConfig()
+  setGuideMovedHandler(guideOverlayMoved)
+  initAct()
   createTray()
   getPanel() // load early so the first check is instant
   inputMode = startInput(config, {
     onAction(action, ctx) {
       if (action === 'overlay') { toggleOverlay(); return }
+      if (action === 'guideToggle' || action === 'guidePrev' || action === 'guideNext' || action === 'treeOverlay' || action === 'gemSearch') { onActHotkey(action); return }
       if (action === 'wiki') {
         if (!ctx.itemText) return
         const lines = ctx.itemText.split(/\r?\n/)
@@ -99,7 +104,7 @@ app.whenReady().then(() => {
     onChat(i) {
       const cmd = getConfig().chatCommands[i]
       if (!cmd) return
-      const msg = expandChatCommand(cmd.text, lastWhisper)
+      const msg = expandChatCommand(cmd.text, actLastWhisper())
       if (msg) void sendChat(msg)
     }
   })
@@ -107,10 +112,15 @@ app.whenReady().then(() => {
   if (process.env.ASSAY_OPEN === 'panel') {
     // Used by end-to-end tests: show the panel with a canned item.
     const win = showPanelAtCursor()
-    win.webContents.once('did-finish-load', () => win.webContents.send('item:checked', { text: process.env.ASSAY_ITEM ?? '', locked: true }))
+    const send = () => setTimeout(() => win.webContents.send('item:checked', { text: process.env.ASSAY_ITEM ?? '', locked: true }), 300)
+    if (win.webContents.isLoading()) win.webContents.once('did-finish-load', send)
+    else send()
   }
   if (process.env.ASSAY_OPEN === 'settings') openSettings()
   if (process.env.ASSAY_OPEN === 'overlay') toggleOverlay()
+  if (process.env.ASSAY_OPEN === 'tree') openTreeOverlay()
+  if (process.env.ASSAY_OPEN === 'gear') openGearWindow()
+  if (process.env.ASSAY_OPEN === 'editor') openEditor(0)
 })
 
 app.on('window-all-closed', () => { /* stay in tray */ })

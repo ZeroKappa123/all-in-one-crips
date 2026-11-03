@@ -2,6 +2,7 @@ import { contextBridge, ipcRenderer } from 'electron'
 import type { Config } from '@shared/config'
 import type { SearchBody } from '@shared/trade/query'
 import type { League, Listing, ParsedItem, PriceSnapshot, TradeStat } from '@shared/types'
+import type { ActLive, ActStore, Slot } from '@shared/act/state'
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: { kind: string; detail?: string; retryInSec?: number } }
 
@@ -24,6 +25,32 @@ const api = {
     const fn = (_: unknown, p: { text: string; locked: boolean }) => cb(p)
     ipcRenderer.on('item:checked', fn)
     return () => { ipcRenderer.removeListener('item:checked', fn) }
+  },
+  act: {
+    get: (): Promise<{ store: ActStore; live: ActLive }> => ipcRenderer.invoke('act:get'),
+    update: (patch: Partial<ActStore>): Promise<ActStore> => ipcRenderer.invoke('act:update', patch),
+    updateSlot: (i: number, patch: Partial<Slot>): Promise<ActStore> => ipcRenderer.invoke('act:slot:update', i, patch),
+    addSlot: (): Promise<ActStore> => ipcRenderer.invoke('act:slot:add'),
+    removeSlot: (i: number): Promise<ActStore> => ipcRenderer.invoke('act:slot:remove', i),
+    page: (cmd: 'prev' | 'next' | 'reset' | 'jump'): Promise<void> => ipcRenderer.invoke('act:page', cmd),
+    timer: (cmd: 'toggle' | 'reset'): Promise<void> => ipcRenderer.invoke('act:timer', cmd),
+    importInto: (i: number, text?: string): Promise<{ ok: boolean; message: string }> => ipcRenderer.invoke('act:import', i, text),
+    exportGuide: (i: number): Promise<string> => ipcRenderer.invoke('act:export', i),
+    pickLog: (): Promise<ActStore> => ipcRenderer.invoke('act:logpath:pick'),
+    addGear: (g: { name: string; level: number; kind: 'item' | 'gem' }): Promise<ActStore> => ipcRenderer.invoke('act:gear:add', g),
+    removeGear: (id: string): Promise<ActStore> => ipcRenderer.invoke('act:gear:remove', id),
+    addTreeImages: (): Promise<ActStore> => ipcRenderer.invoke('act:treeimg:add'),
+    treeImage: (i: number): Promise<string | null> => ipcRenderer.invoke('act:treeimg:get', i),
+    searchStrings: (): Promise<string[]> => ipcRenderer.invoke('act:searchStrings'),
+    interactive: (on: boolean) => ipcRenderer.send('act:interactive', on),
+    open: (what: 'tree' | 'gear' | 'editor', arg?: number) => ipcRenderer.send('act:open', what, arg),
+    resizeGuide: (h: number) => ipcRenderer.send('guide:resize', h),
+    hideTree: () => ipcRenderer.send('tree:hide'),
+    onState: (cb: (s: { store: ActStore; live: ActLive }) => void) => {
+      const fn = (_: unknown, s: { store: ActStore; live: ActLive }) => cb(s)
+      ipcRenderer.on('act:state', fn)
+      return () => { ipcRenderer.removeListener('act:state', fn) }
+    }
   },
   onConfig: (cb: (c: Config) => void) => {
     const fn = (_: unknown, c: Config) => cb(c)

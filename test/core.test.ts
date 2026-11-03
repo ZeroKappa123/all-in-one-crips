@@ -21,6 +21,7 @@ describe('parseItem', () => {
     expect(item.name).toBe('Gloom Whisper')
     expect(item.baseType).toBe('Imbued Wand')
     expect(item.itemLevel).toBe(84)
+    expect(item.requiredLevel).toBe(59)
     expect(item.quality).toBe(20)
     expect(item.sockets).toBe('B-B-R')
     expect(item.links).toBe(3)

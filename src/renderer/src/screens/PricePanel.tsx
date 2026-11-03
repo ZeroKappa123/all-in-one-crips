@@ -8,6 +8,8 @@ import type { Config } from '@shared/config'
 import type { Listing, ParsedItem, PriceSnapshot, PropertyFilters, StatFilter } from '@shared/types'
 import { Button, EmptyState, ItemHeader, ListingRow, NumberInput, Spinner, StatusBanner, fmt } from '../components/ui'
 import { S } from '../strings'
+import { useAct } from '../act/useAct'
+import { groupsWithGem } from '@shared/act/pob'
 
 type Phase =
   | { kind: 'idle' }
@@ -183,6 +185,8 @@ export function PricePanel() {
           </section>
         )}
 
+        {item && <BuildInfo item={item} />}
+
         {filters && item && item.rarity !== 'currency' && (
           <form
             onSubmit={e => { e.preventDefault(); if (config) void runSearch(item, filters, config) }}
@@ -280,4 +284,40 @@ function Properties({ item, props, onChange }: { item: ParsedItem; props?: Prope
     chips.push(<Chip key="b" on={props.useBaseType} onClick={() => onChange({ useBaseType: !props.useBaseType })}>{S.baseType}</Chip>)
   if (!chips.length) return null
   return <div className="flex flex-wrap gap-3 pt-4">{chips}</div>
+}
+
+/** Act tracker extras: where a gem sits in the imported build, and tracking gear for leveling. */
+function BuildInfo({ item }: { item: ParsedItem }) {
+  const act = useAct()
+  if (!act) return null
+  const slot = act.store.slots[act.store.activeSlot]
+  const name = item.rarity === 'gem' ? item.baseType.replace(/^Vaal /, '') : null
+  const groups = name && slot?.pob ? groupsWithGem(slot.pob, name) : []
+  const level = item.requiredLevel ?? (item.rarity === 'gem' ? 1 : undefined)
+  const label = item.name ?? item.baseType
+  const tracked = act.store.gear.some(g => g.name === label)
+  return (
+    <section className="mx-6 my-4 space-y-3">
+      {name && slot?.pob && (
+        <div className="rounded-md bg-surface-raised px-5 py-4">
+          <p className="text-xs text-text-muted pb-2">{S.act.inBuild}</p>
+          {groups.length === 0 && <p className="text-sm text-text-muted">{S.act.notInBuild}</p>}
+          {groups.map(({ set, group }, i) => (
+            <div key={i} className="text-sm py-1">
+              <p className="text-xs text-text-muted">{set}{group.label ? ` · ${group.label}` : ''}{group.slot ? ` · ${group.slot}` : ''}</p>
+              <p>{group.gems.map((g, j) => (
+                <span key={j} className={g.name.toLowerCase().replace(/ support$/, '') === name.toLowerCase() ? 'text-rarity-gem font-semibold' : 'text-text'}>{j > 0 && ' – '}{g.name}</span>
+              ))}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      {level !== undefined && (
+        <Button size="sm" variant="ghost" disabled={tracked}
+          onClick={() => void window.assay.act.addGear({ name: label, level, kind: item.rarity === 'gem' ? 'gem' : 'item' })}>
+          {tracked ? S.act.tracked : `${S.act.track} (${S.act.needLevel(level)})`}
+        </Button>
+      )}
+    </section>
+  )
 }

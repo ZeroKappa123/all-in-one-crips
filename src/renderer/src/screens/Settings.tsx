@@ -4,6 +4,7 @@ import { type Config, findConflict, HOTKEY_ACTIONS, KeyCombo } from '@shared/con
 import type { League } from '@shared/types'
 import { Button, HotkeyRecorder, NumberInput, Spinner, StatusBanner, Tabs } from '../components/ui'
 import { S } from '../strings'
+import { ActSettings } from './ActSettings'
 
 type Tab = keyof typeof S.tabs
 
@@ -35,6 +36,7 @@ export function Settings() {
         {state.repaired && <StatusBanner tone="warning">{S.configRepaired}</StatusBanner>}
         {state.inputMode === 'fallback' && <StatusBanner tone="warning">{S.fallbackInput}</StatusBanner>}
         {tab === 'general' && <General config={state.config} save={save} />}
+        {tab === 'act' && <ActSettings />}
         {tab === 'hotkeys' && <Hotkeys config={state.config} save={save} />}
         {tab === 'chat' && <Chat config={state.config} save={save} />}
         {tab === 'debug' && <Debug dataDir={state.dataDir} />}

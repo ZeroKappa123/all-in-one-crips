@@ -20,6 +20,79 @@ const common = {
 } as const
 
 let panel: BrowserWindow | null = null
+let guide: BrowserWindow | null = null
+let tree: BrowserWindow | null = null
+let gear: BrowserWindow | null = null
+let editor: BrowserWindow | null = null
+let onGuideMoved: ((x: number, y: number) => void) | null = null
+
+export function setGuideMovedHandler(fn: (x: number, y: number) => void): void { onGuideMoved = fn }
+
+/** The campaign guide: transparent, never takes focus, lets clicks through except on its controls. */
+export function getGuideWindow(pos: { x: number | null; y: number | null }): BrowserWindow {
+  if (guide && !guide.isDestroyed()) return guide
+  const area = screen.getPrimaryDisplay().workArea
+  const width = 560
+  guide = new BrowserWindow({
+    ...common,
+    width,
+    height: 200,
+    x: pos.x ?? Math.round(area.x + (area.width - width) / 2),
+    y: pos.y ?? area.y + area.height - 240,
+    frame: false, transparent: true, resizable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false,
+    focusable: false, title: 'Assay Guide'
+  })
+  guide.setAlwaysOnTop(true, 'screen-saver')
+  guide.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
+  guide.setIgnoreMouseEvents(true, { forward: true })
+  guide.on('moved', () => { const b = guide!.getBounds(); onGuideMoved?.(b.x, b.y) })
+  load(guide, 'guide')
+  guide.once('ready-to-show', () => guide?.showInactive())
+  return guide
+}
+
+export function toggleGuideWindow(visible: boolean): void {
+  if (visible) { const w = getGuideWindow({ x: null, y: null }); if (!w.isVisible()) w.showInactive() }
+  else if (guide && !guide.isDestroyed()) guide.hide()
+}
+
+export function setGuideInteractive(on: boolean): void {
+  if (guide && !guide.isDestroyed()) guide.setIgnoreMouseEvents(!on, { forward: true })
+}
+
+export function resizeGuide(contentHeight: number): void {
+  if (!guide || guide.isDestroyed()) return
+  const b = guide.getBounds()
+  const h = Math.max(60, Math.min(Math.ceil(contentHeight), 600))
+  if (h !== b.height) guide.setBounds({ ...b, y: b.y + (b.height - h), height: h }) // grow upwards from the bottom edge
+}
+
+export function openTreeOverlay(): void {
+  if (tree && !tree.isDestroyed()) { if (tree.isVisible()) { tree.hide(); return } tree.show(); tree.focus(); return }
+  const area = screen.getPrimaryDisplay().bounds
+  tree = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, title: 'Assay Tree' })
+  tree.setAlwaysOnTop(true, 'screen-saver')
+  load(tree, 'tree')
+  tree.once('ready-to-show', () => { tree?.show(); tree?.focus() })
+}
+
+export function hideTreeOverlay(): void {
+  if (tree && !tree.isDestroyed()) tree.hide()
+}
+
+export function openGearWindow(): void {
+  if (gear && !gear.isDestroyed()) { gear.show(); gear.focus(); return }
+  gear = new BrowserWindow({ ...common, width: 420, height: 520, title: 'Assay – Gear tracker', autoHideMenuBar: true, alwaysOnTop: true, backgroundColor: '#0e1014' })
+  load(gear, 'gear')
+  gear.once('ready-to-show', () => gear?.show())
+}
+
+export function openEditor(slot: number): void {
+  if (editor && !editor.isDestroyed()) editor.close()
+  editor = new BrowserWindow({ ...common, width: 980, height: 720, title: 'Assay – Guide editor', autoHideMenuBar: true, backgroundColor: '#0e1014' })
+  load(editor, `editor/${slot}`)
+  editor.once('ready-to-show', () => editor?.show())
+}
 let settings: BrowserWindow | null = null
 let overlay: BrowserWindow | null = null
 
@@ -102,5 +175,5 @@ export function hideOverlay(): void {
 }
 
 export function allWindows(): BrowserWindow[] {
-  return [panel, settings, overlay].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
+  return [panel, settings, overlay, guide, tree, gear, editor].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
 }

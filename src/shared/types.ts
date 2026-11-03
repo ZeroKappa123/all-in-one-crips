@@ -15,6 +15,7 @@ export interface ParsedItem {
   name?: string // unique / rare name
   baseType: string
   itemLevel?: number
+  requiredLevel?: number
   quality?: number
   gemLevel?: number
   mapTier?: number

@@ -116,6 +116,10 @@ export function parseItem(raw: string): ParsedItem {
         consumed = true
       }
     }
+    if (section[0] === 'Requirements:') {
+      const lvl = section.find(l => l.startsWith('Level: '))
+      if (lvl) item.requiredLevel = firstNumber(lvl)
+    }
     if (consumed || section[0]?.endsWith(':') || isPropertySection(section)) continue
     if (item.rarity === 'gem' || item.rarity === 'currency' || item.rarity === 'divination') continue
     for (const line of section) {
