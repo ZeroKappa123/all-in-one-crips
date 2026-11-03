@@ -1,0 +1,4 @@
+Gegenstandsklasse: Gürtel
+Seltenheit: Einzigartig
+Irgendein Gürtel
+Ledergürtel

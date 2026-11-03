@@ -1,0 +1,19 @@
+Item Class: Belts
+Rarity: Unique
+Coiled Promise
+Leather Belt
+--------
+Requirements:
+Level: 40
+--------
+Item Level: 79
+--------
++31 to maximum Life (implicit)
+--------
++48 to maximum Life
+Cannot be Frozen
+--------
+It holds what was promised,
+and nothing more.
+--------
+Corrupted

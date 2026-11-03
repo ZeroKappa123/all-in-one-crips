@@ -1,0 +1,29 @@
+Item Class: Boots
+Rarity: Rare
+Storm Stride
+Two-Toned Boots
+--------
+Armour: 120
+Energy Shield: 30
+--------
+Requirements:
+Level: 70
+Str: 62
+Int: 62
+--------
+Sockets: R-B-B G
+--------
+Item Level: 85
+--------
++12% to Fire and Cold Resistances (implicit)
+--------
++70 to maximum Life
++30 to Strength
+30% increased Movement Speed
++40% to Cold Resistance
++21% to Lightning Resistance
++12% to Chaos Resistance
+12% reduced Attribute Requirements
++15 to maximum Mana (crafted)
+--------
+Fractured Item

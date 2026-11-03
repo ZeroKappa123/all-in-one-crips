@@ -1,0 +1,25 @@
+Item Class: Wands
+Rarity: Rare
+Gloom Whisper
+Imbued Wand
+--------
+Wand
+Quality: +20% (augmented)
+Physical Damage: 33-62
+Critical Strike Chance: 7.00%
+Attacks per Second: 1.50
+--------
+Requirements:
+Level: 59
+Int: 188
+--------
+Sockets: B-B-R
+--------
+Item Level: 84
+--------
+36% increased Spell Damage (implicit)
+--------
++1 to Level of all Fire Spell Skill Gems
+Adds 20 to 38 Fire Damage to Spells
++38 to maximum Mana
++33% to Fire Resistance

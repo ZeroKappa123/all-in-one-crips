@@ -1,0 +1,35 @@
+{
+  "_note": "Test fixture in the shape of GET /api/trade/data/stats. IDs are placeholders, not the real trade IDs (except the pseudo IDs, which the app checks against the live list at runtime).",
+  "result": [
+    { "label": "Pseudo", "entries": [
+      { "id": "pseudo.pseudo_total_life", "text": "+# total maximum Life", "type": "pseudo" },
+      { "id": "pseudo.pseudo_total_elemental_resistance", "text": "+#% total Elemental Resistance", "type": "pseudo" },
+      { "id": "pseudo.pseudo_total_chaos_resistance", "text": "+#% total Chaos Resistance", "type": "pseudo" },
+      { "id": "pseudo.pseudo_increased_movement_speed", "text": "#% increased Movement Speed", "type": "pseudo" }
+    ]},
+    { "label": "Explicit", "entries": [
+      { "id": "explicit.t_life", "text": "+# to maximum Life", "type": "explicit" },
+      { "id": "explicit.t_mana", "text": "+# to maximum Mana", "type": "explicit" },
+      { "id": "explicit.t_fire_res", "text": "+#% to Fire Resistance", "type": "explicit" },
+      { "id": "explicit.t_cold_res", "text": "+#% to Cold Resistance", "type": "explicit" },
+      { "id": "explicit.t_light_res", "text": "+#% to Lightning Resistance", "type": "explicit" },
+      { "id": "explicit.t_chaos_res", "text": "+#% to Chaos Resistance", "type": "explicit" },
+      { "id": "explicit.t_all_ele", "text": "+#% to all Elemental Resistances", "type": "explicit" },
+      { "id": "explicit.t_str", "text": "+# to Strength", "type": "explicit" },
+      { "id": "explicit.t_spell_dmg", "text": "#% increased Spell Damage", "type": "explicit" },
+      { "id": "explicit.t_fire_spells", "text": "Adds # to # Fire Damage to Spells", "type": "explicit" },
+      { "id": "explicit.t_fire_gems", "text": "+# to Level of all Fire Spell Skill Gems", "type": "explicit" },
+      { "id": "explicit.t_ms", "text": "#% increased Movement Speed", "type": "explicit" },
+      { "id": "explicit.t_stun", "text": "#% increased Stun and Block Recovery", "type": "explicit" },
+      { "id": "explicit.t_attr_req", "text": "#% increased Attribute Requirements", "type": "explicit" },
+      { "id": "explicit.t_cannot_freeze", "text": "Cannot be Frozen", "type": "explicit" }
+    ]},
+    { "label": "Implicit", "entries": [
+      { "id": "implicit.t_spell_dmg", "text": "#% increased Spell Damage", "type": "implicit" },
+      { "id": "implicit.t_life", "text": "+# to maximum Life", "type": "implicit" }
+    ]},
+    { "label": "Crafted", "entries": [
+      { "id": "crafted.t_mana", "text": "+# to maximum Mana", "type": "crafted" }
+    ]}
+  ]
+}
