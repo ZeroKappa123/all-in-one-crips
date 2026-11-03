@@ -1,12 +1,35 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import type { Config } from '@shared/config'
 import type { ActLive, ActStore, Slot } from '@shared/act/state'
+import type { TradeCard, TradeAction } from '../main/trades'
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: { kind: string; detail?: string; retryInSec?: number } }
 
 const api = {
   proxy: (url: string, init: { method?: string; headers?: Record<string, string>; body?: string }): Promise<{ status: number; headers: Record<string, string>; body: string }> => ipcRenderer.invoke('crips:proxy', url, init),
   readData: (path: string, kind: 'text' | 'binary'): Promise<string | ArrayBuffer> => ipcRenderer.invoke('crips:data', path, kind),
+  trades: {
+    get: (): Promise<{ cards: TradeCard[]; monsters: { count: number; more: boolean; at: number } | null }> => ipcRenderer.invoke('trades:get'),
+    action: (id: string, action: TradeAction): Promise<void> => ipcRenderer.invoke('trades:action', id, action),
+    clearDone: (): Promise<void> => ipcRenderer.invoke('trades:clearDone'),
+    interactive: (on: boolean) => ipcRenderer.send('trades:interactive', on),
+    resize: (h: number) => ipcRenderer.send('trades:resize', h),
+    show: () => ipcRenderer.send('trades:show'),
+    calibrate: (on: boolean) => ipcRenderer.send('stash:calibrate', on),
+    hideStash: () => ipcRenderer.send('stash:hide'),
+    onState: (cb: (s: { cards: TradeCard[]; monsters: { count: number; more: boolean; at: number } | null }) => void) => {
+      const fn = (_: unknown, s: { cards: TradeCard[]; monsters: { count: number; more: boolean; at: number } | null }) => cb(s)
+      ipcRenderer.on('trades:state', fn)
+      return () => { ipcRenderer.removeListener('trades:state', fn) }
+    },
+    onNew: (cb: () => void) => { const fn = () => cb(); ipcRenderer.on('trades:new', fn); return () => { ipcRenderer.removeListener('trades:new', fn) } },
+    onHighlight: (cb: (p: { stash: { tab: string; left: number; top: number }; item: string }) => void) => {
+      const fn = (_: unknown, p: { stash: { tab: string; left: number; top: number }; item: string }) => cb(p)
+      ipcRenderer.on('stash:highlight', fn)
+      return () => { ipcRenderer.removeListener('stash:highlight', fn) }
+    },
+    onCalibrate: (cb: (on: boolean) => void) => { const fn = (_: unknown, on: boolean) => cb(on); ipcRenderer.on('stash:calibrate', fn); return () => { ipcRenderer.removeListener('stash:calibrate', fn) } }
+  },
   widescreen: {
     status: (): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:status'),
     setWide: (wide: boolean): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:wide', wide),

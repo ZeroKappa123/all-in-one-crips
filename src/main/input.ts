@@ -39,7 +39,10 @@ function keyName(h: Hook, keycode: number): string | null {
 
 let config: Config | null = null
 let lastInput = Date.now()
+let shiftDown = false
 export const lastInputAt = () => lastInput
+/** Left/right Shift currently held (for cancelling automatic whispers). */
+export const isShiftHeld = () => shiftDown
 export const hookActive = () => !!hook
 let handlers: InputHandlers | null = null
 let busy = false
@@ -50,7 +53,8 @@ export function startInput(c: Config, h: InputHandlers): 'hook' | 'fallback' {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     hook = require('uiohook-napi') as Hook
-    hook.uIOhook.on('keydown', e => { lastInput = Date.now(); onKey(e.keycode, !!e.ctrlKey, !!e.shiftKey, !!e.altKey) })
+    hook.uIOhook.on('keydown', e => { lastInput = Date.now(); shiftDown = !!e.shiftKey; onKey(e.keycode, !!e.ctrlKey, !!e.shiftKey, !!e.altKey) })
+    hook.uIOhook.on('keyup', e => { shiftDown = !!e.shiftKey && e.keycode !== hook!.UiohookKey.Shift && e.keycode !== hook!.UiohookKey.ShiftRight })
     hook.uIOhook.on('wheel', e => { lastInput = Date.now(); onWheel(!!e.ctrlKey, e.rotation) })
     hook.uIOhook.on('mousedown', () => { lastInput = Date.now() })
     hook.uIOhook.on('mousemove', () => { lastInput = Date.now() })

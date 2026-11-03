@@ -38,6 +38,74 @@ let guide: BrowserWindow | null = null
 let tree: BrowserWindow | null = null
 let gear: BrowserWindow | null = null
 let editor: BrowserWindow | null = null
+let trades: BrowserWindow | null = null
+let stashWin: BrowserWindow | null = null
+let onTradesMoved: ((x: number, y: number) => void) | null = null
+export function setTradesMovedHandler(fn: (x: number, y: number) => void): void { onTradesMoved = fn }
+
+/** Incoming and outgoing trade cards: transparent, never steals focus, clicks pass through except on cards. */
+export function getTradesWindow(show = false): BrowserWindow {
+  if (trades && !trades.isDestroyed()) { if (show && !trades.isVisible()) trades.showInactive(); return trades }
+  const area = screen.getPrimaryDisplay().workArea
+  const width = 380
+  const pos = getConfig().trades.position
+  trades = new BrowserWindow({
+    ...common, width, height: 120,
+    x: pos?.x ?? Math.round(area.x + area.width - width - 24), y: pos?.y ?? area.y + 80,
+    frame: false, transparent: true, resizable: false, skipTaskbar: true, alwaysOnTop: true, hasShadow: false, focusable: false,
+    title: 'All-In-One CRIPS – Trades'
+  })
+  trades.setAlwaysOnTop(true, 'screen-saver')
+  trades.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
+  trades.setIgnoreMouseEvents(true, { forward: true })
+  trades.on('moved', () => { const b = trades!.getBounds(); onTradesMoved?.(b.x, b.y) })
+  load(trades, 'trades')
+  trades.once('ready-to-show', () => { if (show) trades?.showInactive() })
+  return trades
+}
+
+export function setTradesInteractive(on: boolean): void {
+  if (trades && !trades.isDestroyed()) trades.setIgnoreMouseEvents(!on, { forward: true })
+}
+
+export function resizeTrades(h: number): void {
+  if (!trades || trades.isDestroyed()) return
+  const b = trades.getBounds()
+  const height = Math.max(1, Math.min(Math.ceil(h), 700))
+  if (height !== b.height) trades.setBounds({ ...b, height })
+  if (h < 4 && trades.isVisible()) trades.hide()
+}
+
+/** Fullscreen click-through layer that outlines the traded item in the stash, or lets you calibrate the stash grid. */
+export function getStashWindow(): BrowserWindow {
+  if (stashWin && !stashWin.isDestroyed()) return stashWin
+  const area = screen.getPrimaryDisplay().bounds
+  stashWin = new BrowserWindow({ ...common, ...area, frame: false, transparent: true, skipTaskbar: true, alwaysOnTop: true, resizable: false, hasShadow: false, focusable: false, title: 'All-In-One CRIPS – Stash' })
+  stashWin.setAlwaysOnTop(true, 'screen-saver')
+  stashWin.setIgnoreMouseEvents(true)
+  load(stashWin, 'stash')
+  return stashWin
+}
+
+export function showStashHighlight(stash: { tab: string; left: number; top: number }, item: string): void {
+  const w = getStashWindow()
+  const send = () => { w.showInactive(); w.webContents.send('stash:highlight', { stash, item }) }
+  if (w.webContents.isLoading()) w.webContents.once('did-finish-load', send)
+  else send()
+}
+
+export function calibrateStash(on: boolean): void {
+  const w = getStashWindow()
+  w.setIgnoreMouseEvents(!on)
+  w.setFocusable(on)
+  const send = () => { w.show(); if (on) w.focus(); w.webContents.send('stash:calibrate', on) }
+  if (w.webContents.isLoading()) w.webContents.once('did-finish-load', send)
+  else send()
+}
+
+export function hideStash(): void {
+  if (stashWin && !stashWin.isDestroyed()) { stashWin.setIgnoreMouseEvents(true); stashWin.hide() }
+}
 let onGuideMoved: ((x: number, y: number) => void) | null = null
 
 export function setGuideMovedHandler(fn: (x: number, y: number) => void): void { onGuideMoved = fn }
@@ -189,5 +257,5 @@ export function hideOverlay(): void {
 }
 
 export function allWindows(): BrowserWindow[] {
-  return [panel, settings, overlay, guide, tree, gear, editor].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
+  return [panel, settings, overlay, guide, tree, gear, editor, trades, stashWin].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
 }

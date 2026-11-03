@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { DEFAULT_MESSAGES } from './trade/whisper'
 
 export const HOTKEY_ACTIONS = ['priceCheck', 'priceCheckLocked', 'overlay', 'wiki', 'stashScroll', 'guideToggle', 'guidePrev', 'guideNext', 'treeOverlay', 'gemSearch', 'wideToggle', 'wideUp', 'wideDown', 'wideUpFine', 'wideDownFine'] as const
 export type HotkeyAction = (typeof HOTKEY_ACTIONS)[number]
@@ -17,6 +18,15 @@ export const ConfigSchema = z.object({
   onlineOnly: z.boolean(),
   autoSearch: z.boolean().default(true),
   theme: z.enum(['dark', 'light', 'system']).default('dark'),
+  trades: z.object({
+    enabled: z.boolean(),
+    autoWhisper: z.boolean(),
+    sound: z.boolean(),
+    messages: z.object({ busy: z.string(), sold: z.string(), stillInterested: z.string(), thanks: z.string() }),
+    stash: z.object({ x: z.number(), y: z.number(), width: z.number(), height: z.number() }).nullable(),
+    quad: z.enum(['auto', 'normal', 'quad']),
+    position: z.object({ x: z.number(), y: z.number() }).nullable()
+  }).default({ enabled: true, autoWhisper: false, sound: true, messages: { ...DEFAULT_MESSAGES }, stash: null, quad: 'auto', position: null }),
   widescreen: z.object({ enabled: z.boolean(), wide: z.boolean(), zoom: z.number().min(1.05).max(2), anchorTop: z.boolean() })
     .default({ enabled: false, wide: false, zoom: 1.35, anchorTop: false }),
   showSellerStatus: z.boolean().default(true),
@@ -36,6 +46,7 @@ export const DEFAULT_CONFIG: Config = {
   autoSearch: true,
   theme: 'dark',
   widescreen: { enabled: false, wide: false, zoom: 1.35, anchorTop: false },
+  trades: { enabled: true, autoWhisper: false, sound: true, messages: { ...DEFAULT_MESSAGES }, stash: null, quad: 'auto', position: null },
   showSellerStatus: true,
   ninjaBase: 'https://poe.ninja/api/data',
   hotkeys: [

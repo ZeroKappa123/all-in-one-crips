@@ -16,7 +16,7 @@ export class LogWatcher {
   private buf = new LineBuffer()
   path: string | null = null
 
-  constructor(private onEvents: (events: LogEvent[], initial: boolean) => void) {}
+  constructor(private onEvents: (events: LogEvent[], initial: boolean) => void, private onLines?: (lines: string[], initial: boolean) => void) {}
 
   start(preferred: string | null): 'ok' | 'missing' {
     this.stop()
@@ -31,6 +31,7 @@ export class LogWatcher {
     // the first line of the tail is probably cut in half; drop it
     const lines = from > 0 ? initial.slice(1) : initial
     this.onEvents(lines.map(parseLogLine).filter((e): e is LogEvent => !!e), true)
+    this.onLines?.(lines, true)
     this.timer = setInterval(() => this.poll(), POLL_MS)
     return 'ok'
   }
@@ -50,6 +51,7 @@ export class LogWatcher {
     this.pos = size
     const events = lines.map(parseLogLine).filter((e): e is LogEvent => !!e)
     if (events.length) this.onEvents(events, false)
+    if (lines.length) this.onLines?.(lines, false)
   }
 
   private read(from: number, to: number): string[] {

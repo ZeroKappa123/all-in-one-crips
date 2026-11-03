@@ -11,6 +11,7 @@ import { AREAS, DEFAULT_ROUTE } from '@shared/act/data'
 import { type ActLive, type ActStore, type Slot, defaultActStore, loadActStore, newSlot } from '@shared/act/state'
 import { dataDir } from './configStore'
 import { LogWatcher } from './logWatcher'
+import { onTradeLines } from './trades'
 import { log } from './log'
 import { lastInputAt, hookActive, pasteIntoSearch } from './input'
 import { allWindows, getGuideWindow, setGuideInteractive, openTreeOverlay, openGearWindow, openEditor, toggleGuideWindow } from './windows'
@@ -109,7 +110,7 @@ function writeRun(): void {
 
 function startWatcher(): void {
   watcher?.stop()
-  watcher = new LogWatcher(onEvents)
+  watcher = new LogWatcher(onEvents, (lines, initial) => { if (!initial) onTradeLines(lines) })
   live.logStatus = watcher.start(store.logPath)
   live.logPath = watcher.path
   broadcast()

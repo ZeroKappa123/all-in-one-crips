@@ -32,7 +32,7 @@ export const S = {
   baseType: 'Same base type',
   waiting: 'Hover an item in the game and press your price-check hotkey.',
   settingsTitle: 'Settings',
-  tabs: { general: 'Price Check', act: 'Act Tracker', window: 'Widescreen', hotkeys: 'Keyboard', chat: 'Chat Commands', debug: 'Diagnostics', about: 'About' } as const,
+  tabs: { general: 'Price Check', act: 'Act Tracker', trades: 'Trade Helper', window: 'Widescreen', hotkeys: 'Keyboard', chat: 'Chat Commands', debug: 'Diagnostics', about: 'About' } as const,
   league: 'League',
   tolerance: 'Start searches this far below your roll',
   onlineOnly: 'Only show sellers who are online',
@@ -59,6 +59,27 @@ export const S = {
   editWidgets: 'Arrange widgets', doneEditing: 'Done',
   quit: 'Quit All-In-One CRIPS',
   appName: 'All-In-One CRIPS',
+  trades: {
+    title: 'Trades', outgoing: 'Your offers', drag: 'Drag to move', from: 'Offer from', to: 'Your offer to',
+    invite: 'Invite', trade: 'Trade', tradeAgain: 'Trade again', kick: 'Kick', thanks: 'Thanks', busy: 'Busy', dismiss: 'Dismiss',
+    visit: 'Hideout', resend: 'Send offer again', inArea: 'here', noPrice: 'no price', highlight: 'Show in stash',
+    cell: (l: number, t: number) => `left ${l}, top ${t}`,
+    monstersTitle: 'Monsters remaining in this area',
+    resize: 'Resize', cancel: 'Cancel', save: 'Save frame', calibrateHelp: 'Open a stash tab and fit the frame to its grid.',
+    settings: {
+      enable: 'Show incoming and outgoing trades', enableHelp: 'Trade whispers from the game log appear as cards.',
+      sound: 'Sound for new offers',
+      autoWhisper: 'Send copied trade-site whispers', autoWhisperHelp: 'When you click "Whisper" on a trade site, the message goes straight into the game. Hold Shift while copying to skip it.',
+      messages: 'Messages', busy: 'Busy', sold: 'Already sold', stillInterested: 'Still interested?', thanks: 'Thanks',
+      tokens: 'You can use {Buyer}, {Item}, {Price} and {League}.',
+      stash: 'Stash highlight', calibrate: 'Calibrate stash frame', calibrated: 'Calibrated', notCalibrated: 'Not calibrated yet',
+      quad: 'Tab size', quadAuto: 'Automatic', quadNormal: 'Normal', quadQuad: 'Quad',
+      show: 'Show trade cards now',
+      clicks: 'Clicks: Invite, then Trade, then Kick. Ctrl+click sends “already sold”, Ctrl+Shift+click “still interested?”, Alt+click makes a card the active one, right-click shows /whois.',
+      oneAction: 'Every click sends one message. Thanking and kicking after a trade are two clicks, so the app never acts for you in the game.',
+      credit: 'Idea and click scheme: Poe-Lurker by C1rdec (MIT). Rebuilt here.'
+    }
+  },
   wide: {
     title: 'Widescreen',
     enable: 'Manage the game window', enableHelp: 'Keeps the game window borderless and full screen. Needed for the wide picture.',

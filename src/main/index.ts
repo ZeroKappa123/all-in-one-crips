@@ -7,7 +7,8 @@ import { registerProxyIpc } from './proxy'
 import { sendChat, setActionGate, startInput, stopInput, updateInputConfig } from './input'
 import { onWidescreenChange, registerWidescreenIpc, setWide, startWidescreen, status as widescreenStatus, stopWidescreen, widescreenAction } from './widescreen'
 import { gameWindowApi } from './gameWindow'
-import { applyTheme, allWindows, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
+import { applyTheme, allWindows, getTradesWindow, setTradesInteractive, resizeTrades, setTradesMovedHandler, calibrateStash, hideStash, getPanel, hideOverlay, hidePanel, openSettings, resizePanel, showPanelAtCursor, toggleOverlay, resizeGuide, setGuideMovedHandler, hideTreeOverlay, openTreeOverlay, openGearWindow, openEditor } from './windows'
+import { initTrades } from './trades'
 import { initAct, onActHotkey, lastWhisper as actLastWhisper, guideOverlayMoved } from './act'
 import { getLogs, log } from './log'
 
@@ -39,6 +40,11 @@ function registerIpc(): void {
   ipcMain.on('panel:resize', (_e, h: number) => resizePanel(h))
   ipcMain.on('guide:resize', (_e, h: number) => resizeGuide(h))
   ipcMain.on('tree:hide', () => hideTreeOverlay())
+  ipcMain.on('trades:interactive', (_e, on: boolean) => setTradesInteractive(on))
+  ipcMain.on('trades:resize', (_e, h: number) => resizeTrades(h))
+  ipcMain.on('trades:show', () => getTradesWindow(true))
+  ipcMain.on('stash:calibrate', (_e, on: boolean) => calibrateStash(on))
+  ipcMain.on('stash:hide', () => hideStash())
   ipcMain.on('overlay:hide', () => hideOverlay())
   ipcMain.on('settings:open', () => openSettings())
   ipcMain.on('shell:open', (_e, url: string) => {
@@ -83,6 +89,9 @@ app.whenReady().then(() => {
   applyTheme()
   setGuideMovedHandler(guideOverlayMoved)
   initAct()
+  initTrades()
+  setTradesMovedHandler((x, y) => setConfig({ trades: { ...getConfig().trades, position: { x, y } } }))
+  getTradesWindow()
   onWidescreenChange(widescreenChanged)
   setActionGate(a => !a.startsWith('wide') || (getConfig().widescreen.enabled && !!gameWindowApi()))
   createTray()
@@ -124,6 +133,7 @@ app.whenReady().then(() => {
   if (process.env.CRIPS_OPEN === 'tree') openTreeOverlay()
   if (process.env.CRIPS_OPEN === 'gear') openGearWindow()
   if (process.env.CRIPS_OPEN === 'editor') openEditor(0)
+  if (process.env.CRIPS_OPEN === 'stash') calibrateStash(true)
 })
 
 app.on('window-all-closed', () => { /* stay in tray */ })

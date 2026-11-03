@@ -8,6 +8,8 @@ import { Guide } from './screens/Guide'
 import { Tree } from './screens/Tree'
 import { Gear } from './screens/Gear'
 import { Editor } from './screens/Editor'
+import { Trades } from './screens/Trades'
+import { Stash } from './screens/Stash'
 
 function Router() {
   const [route, setRoute] = useState(location.hash.slice(1) || 'panel')
@@ -30,6 +32,8 @@ function Router() {
   if (route === 'guide') return <Guide />
   if (route === 'tree') return <Tree />
   if (route === 'gear') return <Gear />
+  if (route === 'trades') return <Trades />
+  if (route === 'stash') return <Stash />
   if (route.startsWith('editor/')) return <Editor slotIndex={Number(route.slice(7)) || 0} />
   if (route === 'overlay') return <Overlay />
   return <PriceCheck />

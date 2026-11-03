@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Bug, Info, Keyboard, Map as MapIcon, MessageSquare, Plus, RectangleHorizontal, RefreshCw, SlidersHorizontal, Trash2 } from 'lucide-react'
+import { ArrowLeftRight, Bug, Info, Keyboard, Map as MapIcon, MessageSquare, Plus, RectangleHorizontal, RefreshCw, SlidersHorizontal, Trash2 } from 'lucide-react'
 import { type Config, findConflict, HOTKEY_ACTIONS, KeyCombo } from '@shared/config'
 import { useLeagues } from '@/web/background/Leagues'
 import { onAptChange } from 'vue'
@@ -7,11 +7,12 @@ import { Button, Group, HotkeyRecorder, IconTile, NumberInput, Popup, Row, Segme
 import { S } from '../strings'
 import { ActSettings } from './ActSettings'
 
-type Tab = 'general' | 'act' | 'window' | 'hotkeys' | 'chat' | 'debug' | 'about'
+type Tab = 'general' | 'act' | 'trades' | 'window' | 'hotkeys' | 'chat' | 'debug' | 'about'
 
 const NAV: { id: Tab; label: string; color: string; icon: React.ReactNode }[] = [
   { id: 'general', label: S.tabs.general, color: '#8e8e93', icon: <SlidersHorizontal className="h-[13px] w-[13px]" /> },
   { id: 'act', label: S.tabs.act, color: '#34c759', icon: <MapIcon className="h-[13px] w-[13px]" /> },
+  { id: 'trades', label: S.tabs.trades, color: '#ff9500', icon: <ArrowLeftRight className="h-[13px] w-[13px]" /> },
   { id: 'window', label: S.tabs.window, color: '#30b0c7', icon: <RectangleHorizontal className="h-[13px] w-[13px]" /> },
   { id: 'hotkeys', label: S.tabs.hotkeys, color: '#0a84ff', icon: <Keyboard className="h-[13px] w-[13px]" /> },
   { id: 'chat', label: S.tabs.chat, color: '#ff9f0a', icon: <MessageSquare className="h-[13px] w-[13px]" /> },
@@ -66,6 +67,7 @@ export function Settings() {
           {state.inputMode === 'fallback' && tab !== 'about' && <StatusBanner tone="warning">{S.fallbackInput}</StatusBanner>}
           {tab === 'general' && <General config={state.config} save={save} />}
           {tab === 'act' && <ActSettings />}
+          {tab === 'trades' && <TradeSettings config={state.config} save={save} />}
           {tab === 'window' && <Widescreen config={state.config} />}
           {tab === 'hotkeys' && <Hotkeys config={state.config} save={save} />}
           {tab === 'chat' && <Chat config={state.config} save={save} />}
@@ -221,6 +223,7 @@ function About() {
         <Row label="Path of Exile skill tree data" detail={S.about.tree} />
         <Row label="Inter" detail={S.about.inter} />
         <Row label="PoE Widescreen (idea)" detail={S.wide.credit} />
+        <Row label="Poe-Lurker (idea)" detail={S.trades.settings.credit} />
         <Row label="Path of Exile icons" detail={S.iconsNote} />
       </Group>
       <div className="flex justify-center"><Button variant="danger" onClick={() => window.crips.quit()}>{S.quit}</Button></div>
@@ -260,6 +263,41 @@ function Widescreen({ config }: { config: Config }) {
         </Row>
       </Group>
       <p className="px-5 text-sm text-text-muted">{S.wide.credit}</p>
+    </>
+  )
+}
+
+function TradeSettings({ config, save }: { config: Config; save: (p: Partial<Config>) => Promise<void> }) {
+  const t = config.trades
+  const T = S.trades.settings
+  const [msgs, setMsgs] = useState(t.messages)
+  useEffect(() => setMsgs(t.messages), [t.messages])
+  const upd = (patch: Partial<Config['trades']>) => void save({ trades: { ...t, ...patch } })
+  return (
+    <>
+      <Group footer={T.clicks}>
+        <Row label={T.enable} detail={T.enableHelp} htmlFor="tr-on"><Switch id="tr-on" label={T.enable} checked={t.enabled} onChange={v => upd({ enabled: v })} /></Row>
+        <Row label={T.sound} htmlFor="tr-snd"><Switch id="tr-snd" label={T.sound} checked={t.sound} onChange={v => upd({ sound: v })} /></Row>
+        <Row label={T.autoWhisper} detail={T.autoWhisperHelp} htmlFor="tr-aw"><Switch id="tr-aw" label={T.autoWhisper} checked={t.autoWhisper} onChange={v => upd({ autoWhisper: v })} /></Row>
+        <Row label={T.show} onClick={() => window.crips.trades.show()} />
+      </Group>
+      <Group title={T.messages} footer={<>{T.tokens} {T.oneAction}</>}>
+        {(['busy', 'sold', 'stillInterested', 'thanks'] as const).map(k => (
+          <Row key={k} label={T[k]} htmlFor={`msg-${k}`}>
+            <TextField id={`msg-${k}`} value={msgs[k]} maxLength={200} className="w-[320px]"
+              onChange={e => setMsgs({ ...msgs, [k]: e.target.value })} onBlur={() => { if (msgs[k].trim()) upd({ messages: msgs }) }} />
+          </Row>
+        ))}
+      </Group>
+      <Group title={T.stash}>
+        <Row label={T.calibrate} detail={t.stash ? T.calibrated : T.notCalibrated}>
+          <Button size="sm" onClick={() => window.crips.trades.calibrate(true)}>{T.calibrate}</Button>
+        </Row>
+        <Row label={T.quad}>
+          <Segmented label={T.quad} value={t.quad} onChange={v => upd({ quad: v })}
+            options={[{ value: 'auto', label: T.quadAuto }, { value: 'normal', label: T.quadNormal }, { value: 'quad', label: T.quadQuad }]} />
+        </Row>
+      </Group>
     </>
   )
 }
