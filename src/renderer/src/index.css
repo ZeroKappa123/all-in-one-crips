@@ -1,0 +1,13 @@
+@import './tokens.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { margin: 0; height: 100%; }
+body { font-family: var(--font-sans); color: var(--c-text); background: transparent; -webkit-font-smoothing: antialiased; font-size: 14px; }
+body.solid { background: var(--c-bg); }
+:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 1px; }
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-thumb { background: var(--c-border); border-radius: 4px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
