@@ -19,7 +19,7 @@ export function Omni() {
     ro.observe(root.current)
     return () => ro.disconnect()
   }, [])
-  const label = (id: string, l: string) => id === 'page' ? O.pageGems : id === 'all' ? O.allGems : l
+  const label = (_id: string, l: string) => l === 'page' ? O.pageGems : l === 'all' ? O.allGems : O.items
 
   return (
     <div ref={root} className="guide-classic w-full" style={{ background: 'rgba(var(--g-bg), 0.94)', border: '1px solid var(--g-frame)', fontSize: '15px' }}>
@@ -32,7 +32,7 @@ export function Omni() {
           <li key={e.id} className="flex items-center gap-2 px-3 py-[0.2em] hover:bg-[#1c1c1c]">
             <span aria-hidden className="text-[0.7em]">◆</span>
             {e.parts.length === 1
-              ? <button className="flex-1 text-left truncate" style={{ color: e.kind === 'gems' ? 'var(--g-buy)' : 'var(--g-text)' }} title={e.parts[0]} onClick={() => window.crips.omni.pick(e.id, 0)}>{label(e.id, e.label)}</button>
+              ? <button className="flex-1 text-left truncate" style={{ color: e.kind === 'gems' ? 'var(--g-buy)' : 'var(--g-text)' }} title={e.parts[0]} aria-description={e.kind === 'items' ? O.itemsDetail : undefined} onClick={() => window.crips.omni.pick(e.id, 0)}>{label(e.id, e.label)}</button>
               : <>
                 <span className="flex-1 truncate" style={{ color: 'var(--g-buy)' }}>{label(e.id, e.label)}</span>
                 {e.parts.map((p, i) => <button key={i} className="g-btn" title={p} aria-label={`${label(e.id, e.label)}, ${O.part(i + 1, e.parts.length)}`} onClick={() => window.crips.omni.pick(e.id, i)}>{i + 1}</button>)}

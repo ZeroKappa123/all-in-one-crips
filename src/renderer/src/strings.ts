@@ -109,12 +109,12 @@ export const S = {
   },
   omni: {
     group: 'Omni key',
-    help: 'Hold the key at a vendor (in a town or your hideout) and pick what to look for: the gems this guide page asks you to buy, all gems of your build, or one of the item searches below. The search string goes into the shop’s search box (Ctrl+F); nothing is bought for you. Search strings use Path of Exile’s search syntax: regular expressions in quotes, matched line by line.',
+    help: 'Hold the key at a vendor (in a town or your hideout) and pick Gems or Items. Gems are the ones this guide page asks you to buy, or all gems of your build when the page buys none. Items searches for everything switched on below at once. The search string goes into the shop’s search box (Ctrl+F); nothing is bought for you. Search strings use Path of Exile’s search syntax: regular expressions in quotes, matched line by line.',
     button: 'Key', middle: 'Middle mouse', mouse4: 'Mouse 4', mouse5: 'Mouse 5', off: 'Off',
     anywhere: 'Also outside towns', anywhereHelp: 'Normally the key only opens the menu in towns and hideouts, so it keeps working as a skill key elsewhere.',
-    strings: 'Item searches', add: 'Add search', reset: 'Restore defaults', name: 'Name', regex: 'Search string', remove: (n: string) => `Remove ${n}`,
+    strings: 'Item searches (combined into one)', add: 'Add search', reset: 'Restore defaults', name: 'Name', regex: 'Search string', remove: (n: string) => `Remove ${n}`,
     tooLong: 'At most 250 characters (the game cuts longer searches).',
-    title: 'Vendor search', pageGems: 'Gems for this step', allGems: 'All gems of your build', noBuild: 'Import your build (Path of Building) in Settings → Act Tracker for gem searches.',
+    title: 'Vendor search', pageGems: 'Gems (this step)', allGems: 'Gems (whole build)', items: 'Items', itemsDetail: 'All item searches below in one', noBuild: 'Import your build (Path of Building) in Settings → Act Tracker for gem searches.',
     part: (i: number, n: number) => `part ${i} of ${n}`, hint: 'Click to put it into the shop search · click elsewhere to close'
   },
   gameData: {

@@ -17,12 +17,13 @@ test('S24 omni key menu: vendor searches in the guide look, a pick closes it', a
   for (let i = 0; i < 40 && !page; i++) { page = app.windows().find(w => w.url().endsWith('#omni')); if (!page) await new Promise(r => setTimeout(r, 250)) }
   if (!page) throw new Error('omni window not found')
   await expect(page.getByText('Vendor search')).toBeVisible()
-  for (const n of ['Movement speed', '3-link or more', '4-link or more', 'Red-green-blue link', '+1 to gem levels', 'Physical damage weapon']) await expect(page.getByRole('button', { name: n })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Items' })).toBeVisible()
+  await expect(page.getByRole('listitem')).toHaveCount(1) // no build imported: only items
   await expect(page.getByText(/Import your build/)).toBeVisible() // no build: no gem searches yet
   await page.locator('.guide-classic').screenshot({ path: join(shots, 'S24-omni.png') })
   const visible = () => app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().find(w => w.webContents.getURL().endsWith('#omni'))?.isVisible())
   expect(await visible()).toBe(true)
-  await page.getByRole('button', { name: 'Movement speed' }).click()
+  await page.getByRole('button', { name: 'Items' }).click()
   await expect.poll(visible).toBe(false)
   await app.close()
 })

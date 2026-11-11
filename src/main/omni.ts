@@ -4,6 +4,7 @@ import { omniContext } from './act'
 import { pasteIntoSearch, setMouseHandler } from './input'
 import { getOmniWindow, hideOmni, omniBounds, resizeOmni, showOmniAt } from './windows'
 import { vendorSearchStrings } from '@shared/act/plan'
+import { combineItemSearches } from '@shared/omni'
 
 /**
  * Omni key, after Exile-UI: hold a mouse button (middle by default) for a moment at a vendor and
@@ -19,12 +20,14 @@ const BUTTON: Record<string, number> = { middle: 3, mouse4: 4, mouse5: 5 }
 let holdTimer: ReturnType<typeof setTimeout> | null = null
 let menu: OmniMenu = { entries: [], noBuild: false }
 
+/** Two choices: the gems (this guide page's, else the whole build's) and the items. */
 export function buildMenu(): OmniMenu {
   const ctx = omniContext()
   const entries: OmniEntry[] = []
-  if (ctx.pageGems.length) entries.push({ id: 'page', label: 'page', kind: 'gems', parts: vendorSearchStrings(ctx.pageGems) })
-  if (ctx.allGems.length) entries.push({ id: 'all', label: 'all', kind: 'gems', parts: ctx.allGems })
-  getConfig().omni.strings.forEach((s, i) => { if (s.enabled) entries.push({ id: `item-${i}`, label: s.name, kind: 'items', parts: [s.regex] }) })
+  const gems = ctx.pageGems.length ? vendorSearchStrings(ctx.pageGems) : ctx.allGems
+  if (gems.length) entries.push({ id: 'gems', label: ctx.pageGems.length ? 'page' : 'all', kind: 'gems', parts: gems })
+  const items = combineItemSearches(getConfig().omni.strings.filter(s => s.enabled).map(s => s.regex))
+  if (items.length) entries.push({ id: 'items', label: 'items', kind: 'items', parts: items })
   return { entries, noBuild: !ctx.hasBuild }
 }
 

@@ -50,3 +50,19 @@ describe('omni key gem searches', () => {
     for (const part of all) expect(part.length).toBeLessThanOrEqual(250)
   })
 })
+
+import { combineItemSearches } from '../src/shared/omni'
+describe('omni key items entry', () => {
+  it('joins all item searches into one quoted search that still finds each kind of item', () => {
+    const parts = combineItemSearches(DEFAULT_OMNI_STRINGS.map(x => x.regex))
+    expect(parts).toHaveLength(1)
+    expect(parts[0]!.length).toBeLessThanOrEqual(250)
+    for (const item of [boots, wand, sword]) expect(matches(parts[0]!, item)).toBe(true)
+    expect(matches(parts[0]!, ring)).toBe(false)
+  })
+  it('splits when the game limit would be exceeded', () => {
+    const parts = combineItemSearches(Array.from({ length: 12 }, (_, i) => `"${'x'.repeat(30)}${i}"`))
+    expect(parts.length).toBeGreaterThan(1)
+    for (const p of parts) expect(p.length).toBeLessThanOrEqual(250)
+  })
+})
