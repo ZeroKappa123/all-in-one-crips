@@ -45,6 +45,9 @@ export const lastInputAt = () => lastInput
 export const isShiftHeld = () => shiftDown
 export const hookActive = () => !!hook
 let handlers: InputHandlers | null = null
+/** Mouse buttons as the hook numbers them: 1 left, 2 right, 3 middle, 4 and 5 the side buttons. */
+let mouseHandler: ((kind: 'down' | 'up', button: number) => void) | null = null
+export function setMouseHandler(fn: typeof mouseHandler): void { mouseHandler = fn }
 let busy = false
 
 export function startInput(c: Config, h: InputHandlers): 'hook' | 'fallback' {
@@ -56,7 +59,8 @@ export function startInput(c: Config, h: InputHandlers): 'hook' | 'fallback' {
     hook.uIOhook.on('keydown', e => { lastInput = Date.now(); shiftDown = !!e.shiftKey; onKey(e.keycode, !!e.ctrlKey, !!e.shiftKey, !!e.altKey) })
     hook.uIOhook.on('keyup', e => { shiftDown = !!e.shiftKey && e.keycode !== hook!.UiohookKey.Shift && e.keycode !== hook!.UiohookKey.ShiftRight })
     hook.uIOhook.on('wheel', e => { lastInput = Date.now(); onWheel(!!e.ctrlKey, e.rotation) })
-    hook.uIOhook.on('mousedown', () => { lastInput = Date.now() })
+    hook.uIOhook.on('mousedown', e => { lastInput = Date.now(); mouseHandler?.('down', Number(e.button)) })
+    hook.uIOhook.on('mouseup', e => { mouseHandler?.('up', Number(e.button)) })
     hook.uIOhook.on('mousemove', () => { lastInput = Date.now() })
     hook.uIOhook.start()
     log('info', 'input hook started')

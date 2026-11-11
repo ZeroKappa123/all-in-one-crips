@@ -148,7 +148,7 @@ test('S15 editor splits pages, flags unknown areas, previews', async () => {
   await page.getByRole('button', { name: 'Preview' }).first().click()
   await page.getByRole('button', { name: 'Preview' }).first().click()
   for (const k of ['Town', 'Waypoint', 'Quest', 'Portal', 'Trial', 'Crafting', 'Labyrinth', 'Log out']) await expect(page.getByRole('img', { name: k }).first()).toBeVisible()
-  await page.locator('.material-hud').first().screenshot({ path: join(shots, 'S15-guide-symbols.png') })
+  await page.locator('.guide-classic').first().screenshot({ path: join(shots, 'S15-guide-symbols.png') })
   await page.getByRole('button', { name: 'Save guide' }).click()
   await expect(page.getByText('Unsaved changes')).toHaveCount(0)
   await app.close()

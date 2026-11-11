@@ -1,4 +1,6 @@
 @import '@fontsource-variable/inter';
+@import '@fontsource/alegreya-sc/500.css';
+@import '@fontsource/alegreya-sc/700.css';
 @import './tokens.css';
 @tailwind base;
 @tailwind components;
@@ -46,3 +48,33 @@ input, textarea, select { user-select: text; }
 @keyframes pop-in { from { opacity: 0; transform: scale(.97) translateY(4px); } to { opacity: 1; transform: none; } }
 .animate-pop { animation: pop-in var(--m-base) var(--m-ease); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* Leveling guide in the game's look (after Exile-UI / exile-leveling): black panel, thin grey frame,
+   small-caps serif, one colour per kind of word. Always dark, whatever the app's appearance. */
+.guide-classic {
+  --g-bg: 0, 0, 0;
+  --g-frame: #4d4d4d;
+  --g-text: #f2f2f2;
+  --g-muted: #a8a8a8;
+  --g-quest: #ffd23f;
+  --g-enter: #f2a65a;
+  --g-area: #c9a7ff;
+  --g-waypoint: #66d4ff;
+  --g-kill: #ff5c5c;
+  --g-item: #3ddc6e;
+  --g-trial: #4fd6c3;
+  --g-buy: #ec4fec;
+  --g-str: #ff4d4d;
+  --g-dex: #3ddc6e;
+  --g-int: #5c9dff;
+  font-family: 'Alegreya SC', 'Palatino Linotype', Georgia, serif;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--g-text);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.9);
+}
+.guide-classic .g-btn {
+  display: grid; place-items: center; height: 1.55em; min-width: 1.55em; padding: 0 0.25em;
+  border: 1px solid var(--g-frame); background: #0d0d0d; color: var(--g-text); font-size: 0.95em;
+}
+.guide-classic .g-btn:hover { border-color: #8a8a8a; background: #1a1a1a; }

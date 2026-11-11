@@ -254,6 +254,8 @@ function About() {
         <Row label="exile-leveling" detail={S.about.leveling} />
         <Row label="Path of Exile skill tree data" detail={S.about.tree} />
         <Row label="Inter" detail={S.about.inter} />
+        <Row label="Alegreya SC" detail={S.about.alegreya} />
+        <Row label="Exile-UI (idea)" detail={S.about.exileUi} />
         <Row label="PoE Widescreen (idea)" detail={S.wide.credit} />
         <Row label="Poe-Lurker (idea)" detail={S.trades.settings.credit} />
         <Row label="Path of Exile icons" detail={S.iconsNote} />

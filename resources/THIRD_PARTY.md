@@ -58,8 +58,14 @@ SOFTWARE.
 https://github.com/grindinggear/skilltree-export – published by Grinding Gear Games for community tools.
 All-In-One CRIPS isn't affiliated with or endorsed by Grinding Gear Games.
 
+## Alegreya SC
+Alegreya SC typeface by Juan Pablo del Peral (Huerta Tipográfica), licensed under the SIL Open Font License 1.1 (https://openfontlicense.org). Shipped via @fontsource/alegreya-sc; used for the leveling guide.
+
 ## Inter
 Inter typeface by Rasmus Andersson, licensed under the SIL Open Font License 1.1 (https://openfontlicense.org). Shipped via @fontsource-variable/inter.
 
 ## Poe-Lurker (idea only)
 https://github.com/C1rdec/Poe-Lurker – the trade helper follows its idea; no code was taken.
+
+## Exile-UI (idea only)
+https://github.com/Lailloken/Exile-UI – the omni key and the leveling guide's look follow its idea; no code or images were taken.

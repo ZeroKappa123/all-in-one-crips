@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { DEFAULT_OMNI_STRINGS, type Config } from '@shared/config'
 import { Copy, FileText, ImagePlus, Package, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { GEMS, CHARACTERS } from '@shared/act/data'
 import { buildGems } from '@shared/act/pob'
@@ -56,6 +57,8 @@ export function ActSettings() {
           <span className="text-sm tabular text-text-muted w-[36px] text-right">{Math.round(store.overlay.opacity * 100)}%</span>
         </Row>
       </Group>
+
+      <OmniSettings />
 
       <Group title={A.tools} footer={A.thirdParty}>
         <Row label={A.treeImages} detail={`${store.treeImages.length}`}>
@@ -148,5 +151,44 @@ function GemPlanner({ index, slot }: { index: number; slot: Slot }) {
         })}
       </tbody>
     </table>
+  )
+}
+
+const O = S.omni
+type OmniCfg = Config['omni']
+
+/** Omni key: which mouse button, where it works, and the item searches in its menu. */
+function OmniSettings() {
+  const [cfg, setCfg] = useState<OmniCfg | null>(null)
+  useEffect(() => {
+    void window.crips.getConfig().then(r => setCfg(r.config.omni))
+    return window.crips.onConfig(c => setCfg(c.omni))
+  }, [])
+  if (!cfg) return null
+  const save = (next: OmniCfg) => { setCfg(next); void window.crips.setConfig({ omni: next }) }
+  const setString = (i: number, patch: Partial<OmniCfg['strings'][number]>) => save({ ...cfg, strings: cfg.strings.map((s, j) => (j === i ? { ...s, ...patch } : s)) })
+  return (
+    <Group title={O.group} footer={O.help}>
+      <Row label={O.button}>
+        <Segmented label={O.button} size="sm" value={cfg.button} onChange={v => save({ ...cfg, button: v })}
+          options={(['middle', 'mouse4', 'mouse5', 'off'] as const).map(v => ({ value: v, label: O[v] }))} />
+      </Row>
+      <Row label={O.anywhere} detail={O.anywhereHelp} htmlFor="omni-anywhere">
+        <Switch id="omni-anywhere" label={O.anywhere} checked={cfg.anywhere} onChange={v => save({ ...cfg, anywhere: v })} />
+      </Row>
+      <div className="px-5 pt-3 pb-1 text-sm font-semibold text-text-muted">{O.strings}</div>
+      {cfg.strings.map((s, i) => (
+        <div key={i} className="flex items-center gap-3 px-5 py-2">
+          <Switch size="sm" label={s.name} checked={s.enabled} onChange={v => setString(i, { enabled: v })} />
+          <TextField aria-label={`${O.name} ${i + 1}`} value={s.name} maxLength={40} className="w-[170px]" onChange={e => setString(i, { name: e.target.value || ' ' })} />
+          <TextField aria-label={`${O.regex} ${i + 1}`} value={s.regex} maxLength={250} className="flex-1 font-mono" onChange={e => setString(i, { regex: e.target.value || '""' })} />
+          <Button size="sm" variant="plain" aria-label={O.remove(s.name)} onClick={() => save({ ...cfg, strings: cfg.strings.filter((_, j) => j !== i) })}><Trash2 aria-hidden className="h-[12px] w-[12px]" /></Button>
+        </div>
+      ))}
+      <div className="flex gap-3 px-5 py-3">
+        <Button size="sm" disabled={cfg.strings.length >= 30} onClick={() => save({ ...cfg, strings: [...cfg.strings, { name: 'New search', regex: '""', enabled: true }] })}><Plus aria-hidden className="h-[12px] w-[12px]" />{O.add}</Button>
+        <Button size="sm" variant="plain" onClick={() => save({ ...cfg, strings: DEFAULT_OMNI_STRINGS })}>{O.reset}</Button>
+      </div>
+    </Group>
   )
 }

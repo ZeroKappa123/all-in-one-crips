@@ -3,6 +3,7 @@ import type { Config } from '@shared/config'
 import type { ActLive, ActStore, Slot } from '@shared/act/state'
 import type { TradeCard, TradeAction } from '../main/trades'
 import type { DataStatus } from '../main/dataUpdate'
+import type { OmniMenu } from '../main/omni'
 
 export type Result<T> = { ok: true; data: T } | { ok: false; error: { kind: string; detail?: string; retryInSec?: number } }
 
@@ -36,6 +37,13 @@ const api = {
     status: (): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:status'),
     setWide: (wide: boolean): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:wide', wide),
     update: (patch: Partial<Config['widescreen']>): Promise<{ supported: boolean; found: boolean; wide: boolean; enabled: boolean }> => ipcRenderer.invoke('widescreen:update', patch)
+  },
+  omni: {
+    get: (): Promise<OmniMenu> => ipcRenderer.invoke('omni:get'),
+    pick: (id: string, part: number): void => ipcRenderer.send('omni:pick', id, part),
+    resize: (h: number): void => ipcRenderer.send('omni:resize', h),
+    close: (): void => ipcRenderer.send('omni:close'),
+    onMenu: (cb: (m: OmniMenu) => void) => { const h = (_: unknown, m: OmniMenu) => cb(m); ipcRenderer.on('omni:menu', h); return () => { ipcRenderer.off('omni:menu', h) } }
   },
   images: {
     add: (): Promise<{ added: number; skipped: string[] }> => ipcRenderer.invoke('images:add'),

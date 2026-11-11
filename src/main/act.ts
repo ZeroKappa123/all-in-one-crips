@@ -15,7 +15,7 @@ import { onTradeLines } from './trades'
 import { log } from './log'
 import { lastInputAt, hookActive, pasteIntoSearch } from './input'
 import { allWindows, getGuideWindow, setGuideInteractive, openTreeOverlay, openGearWindow, openEditor, toggleGuideWindow } from './windows'
-import { vendorSearchStrings } from '@shared/act/gems'
+import { allBuildGemStrings, gemPlanFor, gemsToBuyOnPage } from '@shared/act/plan'
 import { GEMS } from '@shared/act/data'
 import { buildGems } from '@shared/act/pob'
 import { resolveGem } from '@shared/act/gems'
@@ -178,10 +178,15 @@ async function importInto(index: number, text: string): Promise<{ ok: boolean; m
 }
 
 function currentSearchStrings(): string[] {
-  const b = slot().pob
-  if (!b) return []
-  const names = buildGems(b).map(g => { const id = resolveGem(g, GEMS); return id ? GEMS[id]!.n : null }).filter((n): n is string => !!n)
-  return vendorSearchStrings(names)
+  return allBuildGemStrings(slot())
+}
+
+/** Where the player is and what the current guide page asks to buy, for the omni key. */
+export function omniContext(): { inTown: boolean; pageGems: string[]; allGems: string[]; hasBuild: boolean } {
+  const id = live.areaId
+  const inTown = !!id && (!!AREAS[id]?.t || /hideout/i.test(id))
+  const s = slot()
+  return { inTown, pageGems: gemsToBuyOnPage(gemPlanFor(s), pages()[s.page]), allGems: allBuildGemStrings(s), hasBuild: !!s.pob }
 }
 
 export function onActHotkey(action: 'guideToggle' | 'guidePrev' | 'guideNext' | 'treeOverlay' | 'gemSearch'): void {

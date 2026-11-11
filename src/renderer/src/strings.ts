@@ -107,6 +107,16 @@ export const S = {
     autoSearch: 'Search automatically', autoSearchHelp: 'Run the search right away for uniques, currency and other items that need no choices.',
     toleranceHelp: 'Minimum values start this far below your own roll.'
   },
+  omni: {
+    group: 'Omni key',
+    help: 'Hold the key at a vendor (in a town or your hideout) and pick what to look for: the gems this guide page asks you to buy, all gems of your build, or one of the item searches below. The search string goes into the shop’s search box (Ctrl+F); nothing is bought for you. Search strings use Path of Exile’s search syntax: regular expressions in quotes, matched line by line.',
+    button: 'Key', middle: 'Middle mouse', mouse4: 'Mouse 4', mouse5: 'Mouse 5', off: 'Off',
+    anywhere: 'Also outside towns', anywhereHelp: 'Normally the key only opens the menu in towns and hideouts, so it keeps working as a skill key elsewhere.',
+    strings: 'Item searches', add: 'Add search', reset: 'Restore defaults', name: 'Name', regex: 'Search string', remove: (n: string) => `Remove ${n}`,
+    tooLong: 'At most 250 characters (the game cuts longer searches).',
+    title: 'Vendor search', pageGems: 'Gems for this step', allGems: 'All gems of your build', noBuild: 'Import your build (Path of Building) in Settings → Act Tracker for gem searches.',
+    part: (i: number, n: number) => `part ${i} of ${n}`, hint: 'Click to put it into the shop search · click elsewhere to close'
+  },
   gameData: {
     title: 'Game data',
     help: 'Item and mod data for the price check. After a Path of Exile patch, new data appears in the public Awakened PoE Trade repository; the app downloads it, checks it and only then uses it. If anything is wrong it keeps the shipped data.',
@@ -128,7 +138,9 @@ export const S = {
     apt: 'Price-check logic and game data. © 2020 Alexander Drozdov, MIT License.',
     leveling: 'Campaign route, areas, quests and gems. © HeartofPhos, MIT License.',
     tree: 'Passive tree export published by Grinding Gear Games.',
-    inter: 'Typeface by Rasmus Andersson, SIL Open Font License.'
+    inter: 'Typeface by Rasmus Andersson, SIL Open Font License.',
+    alegreya: 'Typeface of the leveling guide, by Juan Pablo del Peral, SIL Open Font License.',
+    exileUi: 'Omni key and the leveling guide’s look, by Lailloken. Written fresh for this app.'
   },
   madeBy: 'Made by zero',
   pc: {
@@ -210,7 +222,9 @@ export const S = {
     exp: (min: number, max: number) => `${min}–${max}`,
     expTitle: 'Area levels with full experience',
     gearReady: (n: number) => `${n} gear ready`,
-    take: 'Take', buy: 'Buy', from: 'from',
+    take: 'Take', buy: 'Buy gems', from: 'from',
+    omniHold: (k: string) => `hold ${k}`,
+    omniHelp: (k: string) => `At a vendor, hold ${k} to pick a search string for the gems and items you need.`,
     pageOf: (a: number, b: number) => `${a}/${b}`,
     // tree
     treeHelp: 'Q/E switch tree · hold 1–4 for ascendancy · hold W for overview · drag with right mouse · wheel to zoom · Esc closes',

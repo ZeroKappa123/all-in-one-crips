@@ -53,6 +53,8 @@ Idea after the "PoE Widescreen" AutoHotkey script by Mikey, rebuilt without Auto
 | Alt+S | paste your build's gem search into the open vendor window |
 | F3 / F4 | previous / next guide page (off by default) |
 
+**Omni key (middle mouse):** in a town or your hideout, hold the middle mouse button for a moment and a small menu opens at the cursor: the gems this guide page tells you to buy, all gems of your imported build, and item searches for levelling (movement speed, 3-/4-links, R-G-B, +1 gem levels, physical damage). A click puts the search into the shop's search box. Key, item searches and "also outside towns" are under Settings → Act Tracker → Omni key.
+
 To start a new run, **hold** the ↺ button in the guide until its ring is full: the guide goes back to page 1 and the timer to zero.
 
 ## Trade Helper
@@ -99,6 +101,7 @@ npm run dist:win                 # Windows installer (run on Windows)
 - Campaign route and data: [exile-leveling](https://github.com/HeartofPhos/exile-leveling) © HeartofPhos, MIT License.
 - Passive tree data: Grinding Gear Games' skill tree export.
 - Trade helper idea: [Poe-Lurker](https://github.com/C1rdec/Poe-Lurker) by C1rdec (MIT); written fresh for this app.
-- Typeface: Inter, SIL Open Font License.
+- Typefaces: Inter and Alegreya SC (leveling guide), SIL Open Font License.
+- Omni key and guide look: idea from [Exile-UI](https://github.com/Lailloken/Exile-UI); written fresh.
 
 Full licence texts: `resources/THIRD_PARTY.md`.

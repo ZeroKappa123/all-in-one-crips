@@ -9,6 +9,7 @@ import { Tree } from './screens/Tree'
 import { Gear } from './screens/Gear'
 import { Editor } from './screens/Editor'
 import { Trades } from './screens/Trades'
+import { Omni } from './screens/Omni'
 import { Stash } from './screens/Stash'
 
 function Router() {
@@ -34,6 +35,7 @@ function Router() {
   if (route === 'gear') return <Gear />
   if (route === 'trades') return <Trades />
   if (route === 'stash') return <Stash />
+  if (route === 'omni') return <Omni />
   if (route.startsWith('editor/')) return <Editor slotIndex={Number(route.slice(7)) || 0} />
   if (route === 'overlay') return <Overlay />
   return <PriceCheck />

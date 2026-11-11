@@ -6,6 +6,7 @@ import { getConfig, setConfig, wasRepaired, dataDir, migrateOldData } from './co
 import { registerProxyIpc } from './proxy'
 import { initDataUpdates } from './dataUpdate'
 import { initImages } from './images'
+import { initOmni } from './omni'
 import { sendChat, setActionGate, startInput, stopInput, updateInputConfig } from './input'
 import { onWidescreenChange, registerWidescreenIpc, setWide, startWidescreen, status as widescreenStatus, stopWidescreen, widescreenAction } from './widescreen'
 import { gameWindowApi } from './gameWindow'
@@ -95,6 +96,7 @@ app.whenReady().then(() => {
   setGuideMovedHandler(guideOverlayMoved)
   initAct()
   initTrades()
+  initOmni()
   setTradesMovedHandler((x, y) => setConfig({ trades: { ...getConfig().trades, position: { x, y } } }))
   getTradesWindow()
   onWidescreenChange(widescreenChanged)

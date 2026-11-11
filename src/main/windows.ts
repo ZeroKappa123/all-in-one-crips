@@ -76,6 +76,43 @@ export function resizeTrades(h: number): void {
   if (h < 4 && trades.isVisible()) trades.hide()
 }
 
+let omniWin: BrowserWindow | null = null
+const OMNI_WIDTH = 360
+
+/** Small menu at the cursor for the omni key. Never takes focus, so the game keeps the keyboard. */
+export function getOmniWindow(): BrowserWindow {
+  if (omniWin && !omniWin.isDestroyed()) return omniWin
+  omniWin = new BrowserWindow({
+    ...common, width: OMNI_WIDTH, height: 200, frame: false, transparent: true, resizable: false, skipTaskbar: true,
+    alwaysOnTop: true, hasShadow: false, focusable: false, title: 'All-In-One CRIPS – Vendor search'
+  })
+  omniWin.setAlwaysOnTop(true, 'screen-saver')
+  load(omniWin, 'omni')
+  return omniWin
+}
+
+/** Shows the menu with its top-left corner at the cursor, kept on the cursor's screen. */
+export function showOmniAt(p: { x: number; y: number }): void {
+  const w = getOmniWindow()
+  const area = screen.getDisplayNearestPoint(p).workArea
+  const b = w.getBounds()
+  const x = Math.min(Math.max(area.x, p.x + 8), area.x + area.width - OMNI_WIDTH)
+  const y = Math.min(Math.max(area.y, p.y + 8), area.y + area.height - b.height)
+  w.setBounds({ x, y, width: OMNI_WIDTH, height: b.height })
+  w.showInactive()
+}
+
+export function resizeOmni(h: number): void {
+  if (!omniWin || omniWin.isDestroyed()) return
+  const b = omniWin.getBounds()
+  const area = screen.getDisplayNearestPoint({ x: b.x, y: b.y }).workArea
+  const height = Math.max(40, Math.min(Math.ceil(h), 640))
+  omniWin.setBounds({ ...b, height, y: Math.min(b.y, area.y + area.height - height) })
+}
+
+export function hideOmni(): void { if (omniWin && !omniWin.isDestroyed() && omniWin.isVisible()) omniWin.hide() }
+export function omniBounds(): Electron.Rectangle | null { return omniWin && !omniWin.isDestroyed() && omniWin.isVisible() ? omniWin.getBounds() : null }
+
 /** Fullscreen click-through layer that outlines the traded item in the stash, or lets you calibrate the stash grid. */
 export function getStashWindow(): BrowserWindow {
   if (stashWin && !stashWin.isDestroyed()) return stashWin
@@ -263,5 +300,5 @@ export function hideOverlay(): void {
 }
 
 export function allWindows(): BrowserWindow[] {
-  return [panel, settings, overlay, guide, tree, gear, editor, trades, stashWin].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
+  return [panel, settings, overlay, guide, tree, gear, editor, trades, stashWin, omniWin].filter((w): w is BrowserWindow => !!w && !w.isDestroyed())
 }
